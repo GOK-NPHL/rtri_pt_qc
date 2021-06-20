@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Http\Controllers\Service;
+
+use App\Http\Controllers\Controller;
+use App\submission as SubmissionModel;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
+class Submission extends Controller
+{
+
+
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
+
+    public function createSubmission(Request $request)
+    {
+        try {
+            $submission = $request->submission;
+            Log::info($request->submission);
+            $submissionModel = new SubmissionModel([
+
+                "testing_date" => $submission["testingDate"],
+                "kit_date_received" => $submission["kitReceivedDate"],
+                "lot_date_received" => $submission["qcLotReceivedDate"],
+                "kit_expiry_date" => $submission["kitExpiryDate"],
+                "kit_lot_no" => $submission["kitLotNo"],
+
+                "result_lt_control_line" => $submission["resultLongterm"]["c"],
+                "result_lt_verification_line" => $submission["resultLongterm"]["v"],
+                "result_lt_longterm_line" => $submission["resultLongterm"]["lt"],
+
+                "result_recent_control_line" => $submission["resultRecent"]["c"],
+                "result_recent_verification_line" => $submission["resultRecent"]["v"],
+                "result_recent_longterm_line" => $submission["resultRecent"]["lt"],
+
+                "result_negative_control_line" => $submission["resultNegative"]["c"],
+                "result_negative_verification_line" => $submission["resultNegative"]["v"],
+                "result_negative_longterm_line" => $submission["resultNegative"]["lt"],
+
+                "interpretation_longterm" => $submission["qcLongtermIntepreation"],
+                "interpretation_recent" => $submission["qcRecentIntepreation"],
+                "interpretation_negative" => $submission["qcNegativeIntepreation"],
+            ]);
+
+            $submissionModel->save();
+            return response()->json(['Message' => 'Saved successfully'], 200);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            return response()->json(['Message' => 'Could not save organisation units: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function getSubmissions()
+    {
+       
+        try {
+            return SubmissionModel::all();
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
+        }
+    }
+}
