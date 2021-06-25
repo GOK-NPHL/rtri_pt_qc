@@ -6,8 +6,7 @@ import StackedHorizontal from '../utils/charts/StackedHorizontal'
 import SubmitResults from './SubmitResults'
 import { FetchSubmissions } from '../utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
-import SiteLevelBarColumnCharts from '../reports/spi/SiteLevelBarColumnCharts';
-import OverallPerformanceRadar from '../reports/spi/OverallPerformanceRadar';
+
 
 
 
