@@ -7,7 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Hash;
 use Session;
 use App\User;
+use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class CustomAuthController extends Controller
 
@@ -30,15 +33,13 @@ class CustomAuthController extends Controller
 
     public function customLogin(Request $request)
     {
-        Log::info("atempt called 12 " . $request->user_type);
         $request->validate([
             'email' => 'required',
             'password' => 'required',
             'user_type' => 'required',
         ]);
 
-        $credentials = $request->only('email', 'password');
-        Log::info("u type " . $request->user_type);
+        $credentials = $request->only('email', 'password', 'user_type');
         if ($request->user_type == "participant") {
             if (Auth::attempt($credentials)) {
 
@@ -51,9 +52,11 @@ class CustomAuthController extends Controller
 
                 return Redirect()->route('dashboard')
                     ->withSuccess('Signed in');
+            } else {
+                return Redirect::back()->withErrors(['Email or Password incorrect']);
             }
         } else {
-            Session::flush();
+            FacadesSession::flush();
             Auth::logout();
             return Redirect()->route('participant_login_page');
         }
