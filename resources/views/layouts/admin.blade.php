@@ -37,139 +37,104 @@ use Illuminate\Support\Facades\Gate;
 
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body>
+    <style>
+        .nav-link {
+            color: white !important;
+        }
+
+        .nav-link:hover,
+        .bg-light>a:hover {
+            color: #1900ff !important;
+            ;
+        }
+
+        .bg-light,
+        .bg-light>a {
+            color: white !important;
+        }
+    </style>
     <!-- Page Wrapper -->
-    <div id="app" class="wrapper">
+    <div id="admin_page" class="wrapper">
 
         <!-- Navbar -->
-        <nav style="background-color: #3c8dbc;" class="main-header navbar navbar-expand navbar-white navbar-light">
-            <!-- Left navbar links -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" style="color: white;" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
-            </ul>
-        </nav>
+        <div style="background-color: #2c3e50;" class="container-fluid">
+            <div class="container">
+                <nav style="background-color: #2c3e50 !important;" class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="#">KNEQAS PT</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto flex-fill">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Configure
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Manage
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Reports
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Logout
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
         <!-- /.navbar -->
 
-        <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
-            <a href="index3.html" style="padding: 2.4px; background-color: #3c8dbc;" class="brand-link">
-                <img style="max-width: 20%" src="{{URL('/images/coat.png')}}" alt="">
-                <span class="brand-text" style="font-weight: 300; 
-                                                font-size: 20px;
-                                                line-height: 50px;
-                                                text-align: center;
-                                                font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
-                                                font-weight: 300">
-                    RTRI QC
-                </span>
-            </a>
-
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
-
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                        <li class="nav-item has-treeview menu-open">
-                            <a href="{{ route('home') }}" class="nav-link active">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    Home
-                                </p>
-                            </a>
-                        </li>
-
-                        <!-- system actions -->
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-copy"></i>
-                                <p>
-                                    Reports
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Individual reports</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Summary</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- end system actions -->
-
-
-                        <!-- Account features-->
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-user"></i>
-                                <p>
-                                    My Account
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>My Login Information</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Change password</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- end account features -->
-
-                        <li class="nav-item">
-                            <a href="pages/widgets.html" class="nav-link">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <p>
-                                    Logout
-
-                                </p>
-                            </a>
-                        </li>
-
-                        <!-- <li class="nav-header">EXAMPLES</li>
-                        <li class="nav-item">
-                            <a href="pages/calendar.html" class="nav-link">
-                                <i class="nav-icon far fa-calendar-alt"></i>
-                                <p>
-                                    Calendar
-                                    <span class="badge badge-info right">2</span>
-                                </p>
-                            </a>
-                        </li> -->
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
-            </div>
-            <!-- /.sidebar -->
-        </aside>
 
         <!-- Content Wrapper. Contains page content -->
         <div style="background-color: white;" class="content-wrapper">
             <!-- Content Header (Page header) -->
             <div class="content-header">
-                <div class="container-fluid">
+                <div class="container">
 
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
@@ -178,9 +143,6 @@ use Illuminate\Support\Facades\Gate;
 
                 </div><!-- /.container-fluid -->
             </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
 
             <!-- /.content -->
         </div>
@@ -188,8 +150,8 @@ use Illuminate\Support\Facades\Gate;
         <footer class="main-footer">
             <strong>Copyright &copy; 2014- <script>
                     document.write(new Date().getFullYear());
-                </script> <a href="https://nphl.go.ke/">NPHL KNEQAS - Oncology PT</a>.</strong>
-            All rights reserved. | <a href="http://helpdesk.nphl.go.ke/">Oncology PT HELP DESK</a>
+                </script> <a href="https://nphl.go.ke/">NPHL KNEQAS -QC/PT</a>.</strong>
+            All rights reserved. | <a href="http://helpdesk.nphl.go.ke/">Recency QC/PT HELP DESK</a>
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 1.0.0
             </div>
