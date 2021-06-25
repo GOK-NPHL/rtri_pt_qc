@@ -12,7 +12,7 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-require('./components/dashboard/Dashboard');
+require('./user/qc/Dashboard');
 
 // require('./components/reports/summaries/SummariesReport');
 

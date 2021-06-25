@@ -33,7 +33,7 @@
 
                     @csrf
                     @if($errors->any())
-                    <h4 style="color:red">{{$errors->first()}}</h4>
+                    <span style="color:red">{{$errors->first()}}</span>
                     @endif
                     <input id="user_type" type="text" class="form-control" value="admin" name="user_type" hidden>
                     <div class="form-group">

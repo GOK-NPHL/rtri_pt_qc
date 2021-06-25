@@ -25,9 +25,9 @@
 <body style="background-image: url('{{asset('images/pt.png')}}');
             background-repeat: no-repeat;
             background-size: cover; overflow: hidden;">
-    <div id="app" >
+    <div id="app">
 
-        <main class="py-4" >
+        <main class="py-4">
             @yield('content')
         </main>
     </div>

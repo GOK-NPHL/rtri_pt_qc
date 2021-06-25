@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LineGraph from '../utils/charts/LineGraph';
-import RTCard from '../utils/RTCard';
-import StackedHorizontal from '../utils/charts/StackedHorizontal'
-import SubmitResults from './SubmitResults'
-import { FetchSubmissions } from '../utils/Helpers';
+import LineGraph from '../../components/utils/charts/LineGraph';
+import RTCard from '../../components/utils/RTCard';
+import StackedHorizontal from '../../components/utils/charts/StackedHorizontal'
+import SubmitResults from '../../components/dashboard/SubmitResults'
+import { FetchSubmissions } from '../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 
 
