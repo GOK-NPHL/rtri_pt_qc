@@ -12,7 +12,7 @@
             color:white;">
                 <div>
 
-                    <h2 class="color:white;">Login - <span> Proficiency Testing</span></h2>
+                    <h2 class="color:white;">Login - <span> RTRI Quality Control</span></h2>
                 </div>
                 <form name="loginForm" id="login_form" class="form-vertical" method="POST" action="{{ route('part_login') }}">
                     @csrf
