@@ -55,10 +55,10 @@
                         @if (Route::has('password.request'))
                         <a class="btn btn-link" href="{{ route('password.request') }}">
                             {{ __('Forgot Your Password?') }}
-                        </a> 
+                        </a>
                         @endif
                         |
-                        <a class="btn btn-link" href="http://helpdesk.nphl.go.ke/">
+                        <a class="btn btn-link" href="http://helpdesk.nphl.go.ke/index.php?a=add">
                             RTRI HELP DESK
                         </a>
                     </div>
@@ -68,5 +68,62 @@
 
         </div>
     </div>
+
+    <style>
+        #footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            /* Height of the footer */
+            /* background: #6cf; */
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            /* background-color: #333333; */
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background-color: #111111;
+            color: white;
+        }
+    </style>
+    <footer class="text-center" id="footer">
+
+        <div class="row d-flex justify-content-center">
+            <!--Grid column-->
+            <div class="col-sm-12">
+
+                <ul class="d-flex justify-content-center">
+                    <li><a href="#home">Home |</a></li>
+                    <li><a href="#news">About Us |</a></li>
+                    <li><a href="#contact">Resources |</a></li>
+                    <li><a href="#about">FAQ |</a></li>
+                    <li><a href="{{ route('admin-login') }}">Admin Login |</a></li>
+                    <li><a href="#about">NPHL Help Desk |</a></li>
+                    <li><a href="#about">2020 © National Public Health Laboratory</a></li>
+                </ul>
+            </div>
+            <!--Grid column-->
+        </div>
+
+    </footer>
+
 </div>
 @endsection

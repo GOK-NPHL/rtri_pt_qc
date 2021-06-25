@@ -25,6 +25,6 @@ class Rtri extends Controller
     public function dashboard()
 
     {   
-        return view('home');
+        return view('dashboard');
     }
 }

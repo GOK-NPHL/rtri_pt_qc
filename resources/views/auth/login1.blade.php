@@ -66,7 +66,7 @@
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     {{ __('Forgot Your Password?') }}
                                 </a> |
-                                <a class="btn btn-link" href="http://helpdesk.nphl.go.ke/">
+                                <a class="btn btn-link" href="http://helpdesk.nphl.go.ke/index.php?a=add">
                                     RTRI HELP DESK
                                 </a>
                                 @endif

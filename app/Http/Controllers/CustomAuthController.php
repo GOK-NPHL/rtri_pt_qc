@@ -15,7 +15,7 @@ class CustomAuthController extends Controller
 
     public function index()
     {
-        return view('layouts.home_page');
+        return view('home_page');
     }
 
     public function getParticipantLoginPage()
@@ -23,26 +23,38 @@ class CustomAuthController extends Controller
         return view('auth.login');
     }
 
+    public function adminLogin()
+    {
+        return view('auth.admin_login');
+    }
+
     public function customLogin(Request $request)
-    {   
-        Log::info("atempt called 12 ".$request->user_type);
+    {
+        Log::info("atempt called 12 " . $request->user_type);
         $request->validate([
             'email' => 'required',
             'password' => 'required',
             'user_type' => 'required',
         ]);
-        
+
         $credentials = $request->only('email', 'password');
+        Log::info("u type " . $request->user_type);
         if ($request->user_type == "participant") {
             if (Auth::attempt($credentials)) {
-                
+
+                return Redirect()->route('dashboard')
+                    ->withSuccess('Signed in');
+            }
+        } else if ($request->user_type == "admin") {
+            Log::info($request->user_type);
+            if (Auth::attempt($credentials)) {
+
                 return Redirect()->route('dashboard')
                     ->withSuccess('Signed in');
             }
         } else {
             Session::flush();
             Auth::logout();
-
             return Redirect()->route('participant_login_page');
         }
 

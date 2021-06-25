@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('index', [CustomAuthController::class, 'index'])->name('index');
 Route::get('login', [CustomAuthController::class, 'index'])->name('login'); 
+Route::get('admin-login', [CustomAuthController::class, 'adminLogin'])->name('admin-login'); 
 Route::get('participant_login_page', [CustomAuthController::class, 'getParticipantLoginPage'])->name('participant_login_page');
 Route::post('part_login', [CustomAuthController::class, 'customLogin'])->name('part_login'); 
 Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
