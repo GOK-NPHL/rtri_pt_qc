@@ -32,6 +32,9 @@
                 <form style="text-align:justify" name="loginForm" id="login_form" method="POST" action="{{ route('part_login') }}">
 
                     @csrf
+                    @if($errors->any())
+                    <h4 style="color:red">{{$errors->first()}}</h4>
+                    @endif
                     <input id="user_type" type="text" class="form-control" value="admin" name="user_type" hidden>
                     <div class="form-group">
                         <label style="color: black;" for="email" class="uname" data-icon="u"><strong> Email </strong></label>
