@@ -14,7 +14,7 @@
 
                     <h2 class="color:white;">Login - <span> RTRI Quality Control</span></h2>
                 </div>
-                <form name="loginForm" id="login_form" class="form-vertical" method="POST" action="{{ route('part_login') }}">
+                <form name="loginForm" id="login_form" class="form-vertical" method="POST" action="{{ route('do-login') }}">
                     @csrf
                     <input id="user_type" type="text" class="form-control" value="participant" name="user_type" hidden>
                     <div class="form-group">
@@ -53,12 +53,11 @@
                         <!-- <a href="/auth/reset-password" style="font-size:0.8em;color:white;">Forgot Password?</a> -->
                         <!--<a href="/contact-us" style="">Don't have a login ? Click here to contact us</a>-->
                         @if (Route::has('password.request'))
-                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                        <a style="display: inline-block;" class="btn btn-link" href="{{ route('password.request') }}">
                             {{ __('Forgot Your Password?') }}
                         </a>
                         @endif
-                        |
-                        <a class="btn btn-link" href="http://helpdesk.nphl.go.ke/index.php?a=add">
+                        | <a style="display: inline-block;" class="btn btn-link" href="http://helpdesk.nphl.go.ke/index.php?a=add">
                             RTRI HELP DESK
                         </a>
                     </div>

@@ -99,7 +99,7 @@
                 <div style="margin-top: 30px;" class="text-center">
                     <div class="clearfix">&nbsp;</div>
                     <div>
-                        <a style="background-color: purple; color:white" href="{{ route('participant_login_page') }}" class="btn home-purple btn-lg ">Click to login</a>
+                        <a style="background-color: purple; color:white" href="{{ route('participant-login') }}" class="btn home-purple btn-lg ">Click to login</a>
                     </div>
                     </p>
                 </div>

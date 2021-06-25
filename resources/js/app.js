@@ -12,8 +12,8 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-require('./user/qc/Dashboard');
-
+require('./user/qc/participant/Dashboard');
+require('./user/qc/admin/Dashboard');
 // require('./components/reports/summaries/SummariesReport');
 
 require("datatables.net");

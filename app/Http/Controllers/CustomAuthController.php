@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Hash;
 use Session;
 use App\User;
+use Facade\FlareClient\View;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
@@ -31,7 +32,7 @@ class CustomAuthController extends Controller
         return view('auth.admin_login');
     }
 
-    public function customLogin(Request $request)
+    public function doLogin(Request $request)
     {
         $request->validate([
             'email' => 'required',
@@ -42,27 +43,23 @@ class CustomAuthController extends Controller
         $credentials = $request->only('email', 'password', 'user_type');
         if ($request->user_type == "participant") {
             if (Auth::attempt($credentials)) {
-
-                return Redirect()->route('dashboard')
-                    ->withSuccess('Signed in');
+                return redirect()->route('participant-home');
+            } else {
+                return Redirect::back()->withErrors(['Email or Password incorrect']);
             }
         } else if ($request->user_type == "admin") {
-            Log::info($request->user_type);
             if (Auth::attempt($credentials)) {
-
-                return Redirect()->route('dashboard')
-                    ->withSuccess('Signed in');
+                return redirect()->route('admin-home');
             } else {
                 return Redirect::back()->withErrors(['Email or Password incorrect']);
             }
         } else {
             FacadesSession::flush();
             Auth::logout();
-            return Redirect()->route('participant_login_page');
         }
 
 
-        return redirect()->route('participant_login_page')->withSuccess('Login details are not valid');
+        return redirect()->route('participant-login')->withSuccess('Login details are not valid');
     }
 
 
@@ -102,6 +99,6 @@ class CustomAuthController extends Controller
         Session::flush();
         Auth::logout();
 
-        return Redirect()->route('participant_login_page');
+        return Redirect()->route('participant-login');
     }
 }
