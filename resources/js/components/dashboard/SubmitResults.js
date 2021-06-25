@@ -203,6 +203,15 @@ class SubmitResults extends React.Component {
 
                             </div>
                         </div>
+                        {/* row two */}
+                        <div style={labInfo} className="row mt-1">
+                            <div style={boxLineLeft} className="col-sm-3">
+                                <p>Tester Name</p>
+                                Duncan
+                            </div>
+
+                        </div>
+                        {/* row two */}
                         {/* End lab basic info */}
                         <hr />
                     </div>
@@ -221,6 +230,7 @@ class SubmitResults extends React.Component {
                                 <p><strong>Result Due Date</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
+                                <p>N/A</p>
                             </div>
                         </div>
                         {/* end submission form  header */}
@@ -232,9 +242,34 @@ class SubmitResults extends React.Component {
                                 <p><strong>Testing Date *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-
                                 <input onChange={() => this.onTestingDateHandler(event)} className="form-control" type="date" />
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+                                <p><strong></strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
 
+                            </div>
+
+                        </div>
+                        {/* end testing dates */}
+                    </div>
+
+                    <div className="col-sm-12  pl-4 pr-4 mt-2">
+                        {/* Test Kit Information */}
+                        Test Kit Information
+                        {/* end Test Kit Information */}
+                    </div>
+
+                    <div className="col-sm-12  pl-4 pr-4">
+                        {/* testing dates */}
+                        <div className="row">
+                            <div style={boxLine} className="col-sm-3">
+                                <p><strong>Name of test *</strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+
+                                <input className="form-control" type="text" />
                             </div>
                             <div style={boxLine} className="col-sm-3">
                                 <p><strong>RTRI Kit Lot No. *</strong></p>
@@ -246,6 +281,7 @@ class SubmitResults extends React.Component {
                         </div>
                         {/* end testing dates */}
                     </div>
+
                     <div style={labInfo} className="col-sm-12  pl-4 pr-4">
                         {/* kit info */}
                         <div className="row">
@@ -268,23 +304,63 @@ class SubmitResults extends React.Component {
                         {/* end  kit info  */}
 
                     </div>
+
+                    <div className="col-sm-12  pl-4 pr-4 mt-2">
+                        {/* Test Kit Information */}
+                        QC sample Information
+                        {/* end Test Kit Information */}
+                    </div>
+
                     <div className="col-sm-12  pl-4 pr-4">
                         {/* QC Lot info */}
                         <div className="row">
+                            <div style={boxLine} className="col-sm-3">
+                                <p><strong>QC Lot Number: *</strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+
+                                <input className="form-control" type="text" />
+                            </div>
+
                             <div style={boxLineLeft} className="col-sm-3">
                                 <p><strong>QC Lot Date Received *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
                                 <input onChange={() => this.onQcLotReceiceDateHandler(event)} className="form-control" type="date" />
                             </div>
+
+                        </div>
+
+                        <div className="row">
                             <div style={boxLine} className="col-sm-3">
-                                <p><strong> </strong></p>
+                                <p><strong>Date QC Samples Reconstituted:</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-
+                                <input className="form-control" type="date" />
                             </div>
                         </div>
                         {/* end  QC Lot info  */}
+                        <hr />
+                    </div>
+
+
+                    <div className="col-sm-12  pl-4 pr-4">
+                        {/* Test justification */}
+                        <div className="row">
+                            <div style={boxLine} className="col-sm-3">
+                                <p><strong>Jutification for QC testing: *</strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+                                <select className="custom-select" aria-label="Default select example">
+                                    <option selected>Biweekly testing as per the protocol</option>
+                                    <option value="1">New kit lot/batch</option>
+                                    <option value="2">Change in environmental conditions</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        {/* End Test justification */}
+
                         <hr />
                     </div>
 
