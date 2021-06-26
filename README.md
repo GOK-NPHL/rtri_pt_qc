@@ -1,4 +1,4 @@
-# RT-CQI Analytics Portal.
+# RTRI QC/PT
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
@@ -21,7 +21,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-The RT-CQI Analytics Portal is a platform build on top of the ODK platform to allow for analyses of collected data, user access and report generation.
+The RTRI PT/QC
 .
 
 <!-- GETTING STARTED -->
