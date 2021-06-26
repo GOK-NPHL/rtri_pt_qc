@@ -77,10 +77,11 @@ use Illuminate\Support\Facades\Gate;
                                     Configure
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <a class="dropdown-item" href="#">PT/QC Managers</a>
+                                    <a class="dropdown-item" href="#">PT/QC Laboratories</a>
+                                    <a class="dropdown-item" href="#">PT/QC Personell</a>
+                                    <!-- <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Something else here</a> -->
                                 </div>
                             </li>
 
@@ -89,10 +90,8 @@ use Illuminate\Support\Facades\Gate;
                                     Manage
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <a class="dropdown-item" href="#">PT Shipment</a>
+
                                 </div>
                             </li>
 
@@ -101,10 +100,9 @@ use Illuminate\Support\Facades\Gate;
                                     Reports
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <a class="dropdown-item" href="#">PT Indicator Reports</a>
+                                    <a class="dropdown-item" href="#">QC Indicator Reports</a>
+
                                 </div>
                             </li>
 
@@ -116,10 +114,8 @@ use Illuminate\Support\Facades\Gate;
                                     Logout
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <a class="dropdown-item" href="#">Profile</a>
+                                    <a class="dropdown-item"  href="{{route('logout')}}">Logout</a>
                                 </div>
                             </li>
                         </ul>

@@ -139,7 +139,7 @@ use Illuminate\Support\Facades\Gate;
                         <!-- end account features -->
 
                         <li class="nav-item">
-                            <a href="pages/widgets.html" class="nav-link">
+                            <a href="{{route('logout')}}" class="nav-link">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <p>
                                     Logout
