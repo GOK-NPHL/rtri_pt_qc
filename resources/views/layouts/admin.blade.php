@@ -60,7 +60,7 @@ use Illuminate\Support\Facades\Gate;
         <!-- Navbar -->
         <div style="background-color: #2c3e50;" class="container-fluid">
             <div class="container">
-                <nav style="background-color: #2c3e50 !important;" class="navbar navbar-expand-lg navbar-light bg-light">
+                <nav style="background-color: #2c3e50 !important;" class="navbar navbar-expand-md navbar-light bg-light">
                     <a class="navbar-brand" href="#">KNEQAS PT</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
