@@ -14,7 +14,7 @@
 
                     <h2 class="color:white;">Login - <span> RTRI Quality Control</span></h2>
                 </div>
-                <form name="loginForm" id="login_form" class="form-vertical" method="POST" action="{{ route('do-login') }}">
+                <form name="loginForm" id="login_form" class="form-vertical" method="POST" action="{{ route('participant-login') }}">
                     @csrf
                     <input id="user_type" type="text" class="form-control" value="participant" name="user_type" hidden>
                     <div class="form-group">
