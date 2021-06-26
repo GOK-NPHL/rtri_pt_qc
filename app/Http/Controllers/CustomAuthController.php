@@ -24,7 +24,7 @@ class CustomAuthController extends Controller
 
     public function getParticipantLoginPage()
     {
-        return view('auth.login');
+        return view('auth.participant_login');
     }
 
     public function adminLogin()
@@ -59,7 +59,7 @@ class CustomAuthController extends Controller
         }
 
 
-        return redirect()->route('participant-login')->withSuccess('Login details are not valid');
+        return redirect()->route('login')->withSuccess('Login details are not valid');
     }
 
 
@@ -99,6 +99,6 @@ class CustomAuthController extends Controller
         Session::flush();
         Auth::logout();
 
-        return Redirect()->route('participant-login');
+        return Redirect()->route('index');
     }
 }
