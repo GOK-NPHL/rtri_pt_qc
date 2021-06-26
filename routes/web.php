@@ -36,6 +36,8 @@ Route::get('logout', [CustomAuthController::class, 'signOut'])->name('logout');
 
 
 Route::get('participant-home', 'QC\QCParticipantController@participantHome')->name('participant-home');
-Route::get('admin-home', 'QC\QCAdminController@adminHome')->name('admin-home')->middleware('admin');
+Route::get('admin-home', 'QC\QCAdminController@adminHome')->name('admin-home');
 
-Route::get('dashboard', 'Service\Rtri@dashboard')->name('dashboard');
+Route::get('add-admin-user', 'QC\QCAdminController@addUser')->name('add-admin-user');
+Route::get('add-personel', 'QC\QCAdminController@addPersonel')->name('add-personel');
+Route::get('add-lab', 'QC\QCAdminController@addLab')->name('add-lab');
