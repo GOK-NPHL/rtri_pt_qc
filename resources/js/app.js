@@ -17,6 +17,9 @@ require('./user/qc/admin/Dashboard');
 require('./user/qc/admin/AddLab');
 require('./user/qc/admin/AddPersonel');
 require('./user/qc/admin/AddUser');
+require('./user/qc/admin/ListLab');
+require('./user/qc/admin/ListPersonel');
+require('./user/qc/admin/ListUser');
 
 require("datatables.net");
 

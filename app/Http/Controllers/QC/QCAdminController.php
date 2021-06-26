@@ -43,4 +43,19 @@ class QCAdminController extends Controller
     {
         return view('user.qc.admin.add_personel');
     }
+
+    public function listUser()
+    {
+        return view('user.qc.admin.list_user');
+    }
+
+    public function listLab()
+    {
+        return view('user.qc.admin.list_lab');
+    }
+
+    public function listPersonel()
+    {
+        return view('user.qc.admin.list_personel');
+    }
 }
