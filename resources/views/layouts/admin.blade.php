@@ -69,7 +69,7 @@ use Illuminate\Support\Facades\Gate;
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto flex-fill">
                             <li class="nav-item active">
-                                <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="{{route('admin-home')}}">Dashboard <span class="sr-only">(current)</span></a>
                             </li>
 
                             <li class="nav-item dropdown">
@@ -78,10 +78,12 @@ use Illuminate\Support\Facades\Gate;
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#">PT/QC Managers</a>
+                                    <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">PT/QC Laboratories</a>
+                                    <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">PT/QC Personell</a>
-                                    <!-- <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Something else here</a> -->
+
+                                    <!--    <a class="dropdown-item" href="#">Something else here</a> -->
                                 </div>
                             </li>
 
@@ -115,7 +117,7 @@ use Illuminate\Support\Facades\Gate;
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#">Profile</a>
-                                    <a class="dropdown-item"  href="{{route('logout')}}">Logout</a>
+                                    <a class="dropdown-item" href="{{route('logout')}}">Logout</a>
                                 </div>
                             </li>
                         </ul>
