@@ -29,7 +29,7 @@
                     </h2>
                 </div>
 
-                <form style="text-align:justify" name="loginForm" id="login_form" method="POST" action="{{ route('do-login') }}">
+                <form style="text-align:justify" name="loginForm" id="login_form" method="POST" action="{{ route('admin-login') }}">
 
                     @csrf
                     @if($errors->any())
