@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\QC;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
-class QCController extends Controller
+class QCParticipantController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -16,7 +15,7 @@ class QCController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->middleware('guest:admin');
+        $this->middleware('participant');
     }
 
     /**
@@ -27,15 +26,5 @@ class QCController extends Controller
     public function participantHome()
     {
         return view('user.qc.participant.dashboard');
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function adminHome()
-    {
-        return view('user.qc.admin.dashboard');
     }
 }

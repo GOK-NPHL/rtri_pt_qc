@@ -35,7 +35,7 @@ Route::post('custom-registration', [CustomAuthController::class, 'customRegistra
 Route::get('logout', [CustomAuthController::class, 'signOut'])->name('logout');
 
 
-Route::get('participant-home', 'QC\QCController@participantHome')->name('participant-home')->middleware('participant');
-Route::get('admin-home', 'QC\QCController@adminHome')->name('admin-home')->middleware('admin');
+Route::get('participant-home', 'QC\QCParticipantController@participantHome')->name('participant-home');
+Route::get('admin-home', 'QC\QCAdminController@adminHome')->name('admin-home')->middleware('admin');
 
 Route::get('dashboard', 'Service\Rtri@dashboard')->name('dashboard');
