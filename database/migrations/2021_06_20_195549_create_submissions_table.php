@@ -13,7 +13,7 @@ class CreateSubmissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('submissions', function (Blueprint $table) {
+        Schema::create('qcsubmissions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 
@@ -48,6 +48,6 @@ class CreateSubmissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('submissions');
+        Schema::dropIfExists('qcsubmissions');
     }
 }

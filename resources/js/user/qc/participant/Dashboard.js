@@ -56,7 +56,7 @@ class Dashboard extends React.Component {
             <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right">
                     <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-                    <li className="breadcrumb-item active">Dashboard v1</li>
+                    <li className="breadcrumb-item active">Dashboard</li>
                 </ol>
             </div>
         </div>

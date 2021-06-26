@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Service;
 
 use App\Http\Controllers\Controller;
-use App\submission as SubmissionModel;
+use App\qcsubmission as SubmissionModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -63,7 +63,7 @@ class Submission extends Controller
 
     public function getSubmissions()
     {
-       
+
         try {
             return SubmissionModel::all();
         } catch (Exception $ex) {

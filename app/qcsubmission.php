@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class submission extends Model
+class qcsubmission extends Model
 {
     protected $fillable = [
         "testing_date",
