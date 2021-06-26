@@ -31,14 +31,14 @@ class AddUser extends React.Component {
 
         return (
             <React.Fragment>
-                alert(dahsboard);
+                alert(AddUser);
             </React.Fragment>
         );
     }
 
 }
 
-export default Dashboard;
+export default AddUser;
 
 if (document.getElementById('add_admin_user')) {
     ReactDOM.render(<AddUser />, document.getElementById('add_admin_user'));

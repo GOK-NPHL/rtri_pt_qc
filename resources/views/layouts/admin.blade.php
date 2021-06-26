@@ -61,7 +61,7 @@ use Illuminate\Support\Facades\Gate;
         <div style="background-color: #2c3e50;" class="container-fluid">
             <div class="container">
                 <nav style="background-color: #2c3e50 !important;" class="navbar navbar-expand-md navbar-light bg-light">
-                    <a class="navbar-brand" href="#">KNEQAS PT</a>
+                    <a class="navbar-brand" href="{{route('admin-home')}}">KNEQAS PT</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -77,11 +77,11 @@ use Illuminate\Support\Facades\Gate;
                                     Configure
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">PT/QC Managers</a>
+                                    <a class="dropdown-item" href="{{route('add-admin-user')}}">PT/QC Managers</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">PT/QC Laboratories</a>
+                                    <a class="dropdown-item" href="{{route('add-lab')}}">PT/QC Laboratories</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">PT/QC Personell</a>
+                                    <a class="dropdown-item" href="{{route('add-personel')}}">PT/QC Personell</a>
 
                                     <!--    <a class="dropdown-item" href="#">Something else here</a> -->
                                 </div>
