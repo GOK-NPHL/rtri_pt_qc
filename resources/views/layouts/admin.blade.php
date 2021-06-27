@@ -117,7 +117,7 @@ use Illuminate\Support\Facades\Gate;
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#">Profile</a>
-                                    <a class="dropdown-item" href="{{route('logout')}}">Logout</a>
+                                    <a class="dropdown-item" href="{{route('admin-logout')}}">Logout</a>
                                 </div>
                             </li>
                         </ul>

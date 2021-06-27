@@ -27,41 +27,22 @@ class CustomAuthController extends Controller
         return view('auth.participant_login');
     }
 
-    public function adminLogin()
-    {
-        return view('auth.admin_login');
-    }
-
     public function doLogin(Request $request)
     {
         $request->validate([
             'email' => 'required',
             'password' => 'required',
-            'user_type' => 'required',
         ]);
 
-        $credentials = $request->only('email', 'password', 'user_type');
-        if ($request->user_type == "participant") {
-            if (Auth::attempt($credentials)) {
-                return redirect()->route('participant-home');
-            } else {
-                return Redirect::back()->withErrors(['Email or Password incorrect']);
-            }
-        } else if ($request->user_type == "admin") {
-            if (Auth::attempt($credentials)) {
-                return redirect()->route('admin-home');
-            } else {
-                return Redirect::back()->withErrors(['Email or Password incorrect']);
-            }
+        $credentials = $request->only('email', 'password');
+        if (Auth::attempt($credentials)) {
+            return redirect()->route('participant-home');
         } else {
-            FacadesSession::flush();
-            Auth::logout();
+            return Redirect::back()->withErrors(['Email or Password incorrect']);
         }
-
 
         return redirect()->route('login')->withSuccess('Login details are not valid');
     }
-
 
 
     public function registration()

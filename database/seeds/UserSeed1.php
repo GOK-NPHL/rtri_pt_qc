@@ -14,20 +14,11 @@ class UserSeed extends Seeder
     public function run()
     {
         $dataUser = array(
-            
+
             array(
                 'name' => 'duncan',
                 'email' => 'duncanndiithi@yahoo.com',
                 'password' => '$2y$10$wCyQ7j2mwl.NGD3brp1RSuCo3nIv9b1pDO4Cb8v0xjmfBshm93bGm',
-                'user_type' => 'participant',
-                'created_at' => new \dateTime,
-                'updated_at' => new \dateTime,
-            ),
-            array(
-                'name' => 'duncan',
-                'email' => 'duncanndiithi@gmail.com',
-                'password' => '$2y$10$wCyQ7j2mwl.NGD3brp1RSuCo3nIv9b1pDO4Cb8v0xjmfBshm93bGm',
-                'user_type' => 'admin',
                 'created_at' => new \dateTime,
                 'updated_at' => new \dateTime,
             )
@@ -40,7 +31,6 @@ class UserSeed extends Seeder
                 'name' => 'duncan',
                 'email' => 'duncanndiithi@gmail.com',
                 'password' => '$2y$10$wCyQ7j2mwl.NGD3brp1RSuCo3nIv9b1pDO4Cb8v0xjmfBshm93bGm',
-                'user_type' => 'participant',
                 'created_at' => new \dateTime,
                 'updated_at' => new \dateTime,
             )
@@ -51,8 +41,8 @@ class UserSeed extends Seeder
         User::query()->truncate();
         $authObj->insert($dataUser);
 
-        // $authObjAdmin = new Admin();
-        // Admin::query()->truncate();
-        // $authObjAdmin->insert($dataAdmin);
+        $authObjAdmin = new Admin();
+        Admin::query()->truncate();
+        $authObjAdmin->insert($dataAdmin);
     }
 }
