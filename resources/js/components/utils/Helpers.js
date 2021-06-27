@@ -12,7 +12,7 @@ export async function FetchOrgunits() {
     if (cacheOrgUnit == null || JSON.parse(cacheOrgUnit).payload[0].length == 0) {
         let response;
         try {
-            response = await axios.get(`${settings.rtcqiBaseApi}/org_units`);
+            response = await axios.get(`${settings.serverBaseApi}/org_units`);
             const orgunitList = response.data;
             localStorage.setItem("orgunitList", JSON.stringify(orgunitList));
             return orgunitList;
@@ -29,7 +29,7 @@ export async function FetchOdkData(orgUnitIds, orgTimeline, siteType, startDate,
     try {
         const response = await axios({
             method: 'post',
-            url: `${settings.rtcqiBaseApi}/odk_data`,
+            url: `${settings.serverBaseApi}/odk_data`,
             data: {
                 orgUnitIds: orgUnitIds,
                 orgTimeline: orgTimeline,
@@ -48,7 +48,7 @@ export async function FetchOdkData(orgUnitIds, orgTimeline, siteType, startDate,
 export async function FetchRoles() {
 
     try {
-        const response = await axios.get(`${settings.rtcqiBaseApi}/roles`);
+        const response = await axios.get(`${settings.serverBaseApi}/roles`);
         const rolesList = response.data;
         return rolesList;
     } catch (err) {
@@ -61,7 +61,7 @@ export async function FetchRoles() {
 export async function FetchAuthorities() {
 
     try {
-        const response = await axios.get(`${settings.rtcqiBaseApi}/authorities`);
+        const response = await axios.get(`${settings.serverBaseApi}/authorities`);
         const authoritiesList = response.data;
         return authoritiesList;
     } catch (err) {
@@ -74,7 +74,7 @@ export async function FetchAuthorities() {
 export async function FetchUserAuthorities() {
 
     try {
-        let response = await axios.get(`${settings.rtcqiBaseApi}/user_authorities`);
+        let response = await axios.get(`${settings.serverBaseApi}/user_authorities`);
         return response.data;
     } catch (err) {
         // Handle Error Here
@@ -87,7 +87,7 @@ export async function SaveRole(roleName, authoritiesSelected) {
     try {
         const response = await axios({
             method: 'post',
-            url: `${settings.rtcqiBaseApi}/save_role`,
+            url: `${settings.serverBaseApi}/save_role`,
             data: {
                 name: roleName,
                 authoritiesSelected: authoritiesSelected
@@ -106,7 +106,7 @@ export async function DeleteRole(roleId) {
     try {
         response = await axios({
             method: 'post',
-            url: `${settings.rtcqiBaseApi}/delete_role`,
+            url: `${settings.serverBaseApi}/delete_role`,
             data: {
                 role_id: roleId,
             }
@@ -124,7 +124,7 @@ export async function UpdateRole(role_id, roleName, authoritiesSelected) {
     try {
         const response = await axios({
             method: 'post',
-            url: `${settings.rtcqiBaseApi}/update_role`,
+            url: `${settings.serverBaseApi}/update_role`,
             data: {
                 role_id: role_id,
                 name: roleName,
@@ -142,7 +142,7 @@ export async function SaveOrgUnits(orgUnits, orgunitMetadata) {
     try {
         response = await axios({
             method: 'post',
-            url: `${settings.rtcqiBaseApi}/save_orgunits`,
+            url: `${settings.serverBaseApi}/save_orgunits`,
             data: {
                 orgunits: orgUnits,
                 orgunit_metadata: orgunitMetadata,
@@ -159,7 +159,7 @@ export async function UpdateOrg(org_unit_id, name) {
     try {
         const response = await axios({
             method: 'put',
-            url: `${settings.rtcqiBaseApi}/update_org`,
+            url: `${settings.serverBaseApi}/update_org`,
             data: {
                 id: org_unit_id,
                 name, name
@@ -179,7 +179,7 @@ export async function DeleteOrg(org) {
     try {
         const response = await axios({
             method: 'delete',
-            url: `${settings.rtcqiBaseApi}/delete_org`,
+            url: `${settings.serverBaseApi}/delete_org`,
             data: {
                 org: org,
             }
@@ -197,7 +197,7 @@ export async function DeleteAllOrgs() {
 
         const response = await axios({
             method: 'delete',
-            url: `${settings.rtcqiBaseApi}/delete_all_orgs`
+            url: `${settings.serverBaseApi}/delete_all_orgs`
         });
         localStorage.removeItem('orgunitList');
         localStorage.removeItem('treeStruc');
@@ -215,7 +215,7 @@ export async function AddSubOrg(org, name) {
     try {
         response = await axios({
             method: 'put',
-            url: `${settings.rtcqiBaseApi}/add_sub_org`,
+            url: `${settings.serverBaseApi}/add_sub_org`,
             data: {
                 parent_org: org,
                 child_org: name
@@ -239,7 +239,7 @@ export async function Saveuser(first_name, last_name, email, password, orgunits,
 
         const response = await axios({
             method: 'put',
-            url: `${settings.rtcqiBaseApi}/save_user`,
+            url: `${settings.serverBaseApi}/save_user`,
             data: {
                 name: first_name,
                 last_name: last_name,
@@ -261,7 +261,7 @@ export async function Saveuser(first_name, last_name, email, password, orgunits,
 export async function FetchUsers() {
 
     try {
-        const response = await axios.get(`${settings.rtcqiBaseApi}/users`);
+        const response = await axios.get(`${settings.serverBaseApi}/users`);
         const userList = response.data;
         return userList;
     } catch (err) {
@@ -274,7 +274,7 @@ export async function FetchUsers() {
 export async function FetchUserProfile() {
 
     try {
-        const response = await axios.get(`${settings.rtcqiBaseApi}/get_user_profile`);
+        const response = await axios.get(`${settings.serverBaseApi}/get_user_profile`);
         const userProfile = response.data;
         return userProfile;
     } catch (err) {
@@ -288,7 +288,7 @@ export async function updateUserProfile(first_name, last_name, email, password) 
     try {
         const response = await axios({
             method: 'post',
-            url: `${settings.rtcqiBaseApi}/update_user_profile`,
+            url: `${settings.serverBaseApi}/update_user_profile`,
             data: {
                 name: first_name,
                 last_name: last_name,
@@ -306,7 +306,7 @@ export async function DeleteUser(user) {
     try {
         const response = await axios({
             method: 'delete',
-            url: `${settings.rtcqiBaseApi}/delete_user`,
+            url: `${settings.serverBaseApi}/delete_user`,
             data: {
                 user: user,
             }
@@ -399,7 +399,7 @@ export async function SaveSubmission(submission) {
     try {
         const response = await axios({
             method: 'post',
-            url: `${settings.rtcqiBaseApi}/save_submission`,
+            url: `${settings.serverBaseApi}/save_submission`,
             data: {
                 submission: submission,
             }
@@ -416,12 +416,27 @@ export async function SaveSubmission(submission) {
 export async function FetchSubmissions() {
 
     try {
-        const response = await axios.get(`${settings.rtcqiBaseApi}/get_submissions`);
-        const userProfile = response.data;
-        return userProfile;
+        const response = await axios.get(`${settings.serverBaseApi}/get_submissions`);
+        const responseData = response.data;
+        return responseData;
     } catch (err) {
         // Handle Error Here
         return err.response
     }
 
 }
+
+
+export async function FetchAdminUsers() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_admin_users`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
+

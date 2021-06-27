@@ -1,3 +1,3 @@
 export const settings = {
-    rtcqiBaseApi: '/api',
+    serverBaseApi: '/api',
   }
