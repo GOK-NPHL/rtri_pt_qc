@@ -10,7 +10,7 @@ class AdminAuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('guest:admin', ['except' => ['admin-logout']]);
+        $this->middleware('guest:admin', ['except' => ['signOut']]);
     }
 
     public function adminLogin()
