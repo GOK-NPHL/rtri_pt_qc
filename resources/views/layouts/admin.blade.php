@@ -77,11 +77,11 @@ use Illuminate\Support\Facades\Gate;
                                     Configure
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{route('add-admin-user')}}">PT/QC Managers</a>
+                                    <a class="dropdown-item" href="{{route('list-admin-user')}}">PT/QC Managers</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{route('add-lab')}}">PT/QC Laboratories</a>
+                                    <a class="dropdown-item" href="{{route('list-lab')}}">PT/QC Laboratories</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{route('add-personel')}}">PT/QC Personell</a>
+                                    <a class="dropdown-item" href="{{route('list-personel')}}">PT/QC Personell</a>
 
                                     <!--    <a class="dropdown-item" href="#">Something else here</a> -->
                                 </div>
