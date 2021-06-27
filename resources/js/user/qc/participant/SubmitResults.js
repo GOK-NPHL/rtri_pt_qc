@@ -367,18 +367,44 @@ class SubmitResults extends React.Component {
                     <div className="col-sm-12 mb-4  pl-4 pr-4">
                         {/* Test justification */}
                         <div className="form-check text-center">
-                            <input 
-                            className="form-check-input" 
-                            onClick={()=>{
-                                $("#qc-test-results").toggle();
-                            }}
-                             type="checkbox" 
-                             value="" id="qcTestDone" />
-                            <label className="form-check-label" for="qcTestDone">
+                            <input
+                                className="form-check-input"
+                                onClick={() => {
+                                    $("#qc-test-results").toggle();
+                                    $("#test-not-done-section").toggle();
+
+                                }}
+                                type="checkbox"
+                                value="" id="qcTestDone" />
+                            <label className="form-check-label" htmlFor="qcTestDone">
                                 <strong>Was the QC test done?</strong>
                             </label>
                         </div>
                         {/* End Test justification */}
+
+                    </div>
+
+                    <div id="test-not-done-section" style={{ "display": "none" }} className="col-sm-12 mb-4 ">
+                        {/* why test not done */}
+                        <form style={{ "paddingRight": "20%", "paddingLeft": "20%" }}>
+                            <div class="form-group" >
+                                <label htmlFor="exampleFormControlSelect1">Pick a reason</label>
+                                <select class="form-control" id="exampleFormControlSelect1">
+                                    <option>Issue with sample</option>
+                                    <option>Issue with RTRI kit lot</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label htmlFor="exampleFormControlTextarea1">Your comments</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label htmlFor="exampleFormControlTextarea1">Do you need any support from the PT Provider ?</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                        </form>
+                        {/* End why test not done */}
 
                     </div>
 
@@ -529,20 +555,20 @@ class SubmitResults extends React.Component {
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="d-flex w-100 pt-5 justify-content-center">
 
-                                <button type="button " onClick={() => this.submitForm()} className="btn btn-primary float-left mx-2">Submit</button>
-                                <button type="button" onClick={() => {
-                                    this.props.toggleView();
-                                }} className="btn btn-danger float-left mx-2">Cancel</button>
-                            </div>
                         </div>
 
                         {/* End QC Test results fields */}
                         <hr />
 
                     </div>
+                    <div className="d-flex w-100 justify-content-center">
 
+                        <button type="button " onClick={() => this.submitForm()} className="btn btn-primary float-left mx-2">Submit</button>
+                        <button type="button" onClick={() => {
+                            this.props.toggleView();
+                        }} className="btn btn-danger float-left mx-2">Cancel</button>
+                    </div>
                 </div>
 
                 {/* user persist alert box */}
