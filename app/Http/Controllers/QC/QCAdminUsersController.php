@@ -12,8 +12,7 @@ class QCAdminUsersController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:sanctum');
-        $this->middleware('is_admin');
+        $this->middleware('auth:admin');
     }
 
     public function getAdminUsers(Request $request)
