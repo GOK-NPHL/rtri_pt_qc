@@ -41,10 +41,10 @@ Route::get('admin-home', 'QC\QCAdminController@adminHome')->name('admin-home');
 
 
 Route::get('add-admin-user', 'QC\QCAdminController@addUser')->name('add-admin-user');
-Route::get('list-admin-user', 'QC\QCAdminController@addUser')->name('list-admin-user');
+Route::get('list-admin-user', 'QC\QCAdminController@listUser')->name('list-admin-user');
 
 Route::get('add-personel', 'QC\QCAdminController@addPersonel')->name('add-personel');
-Route::get('list-personel', 'QC\QCAdminController@addPersonel')->name('list-personel');
+Route::get('list-personel', 'QC\QCAdminController@listPersonel')->name('list-personel');
 
 Route::get('add-lab', 'QC\QCAdminController@addLab')->name('add-lab');
-Route::get('list-lab', 'QC\QCAdminController@addLab')->name('list-lab');
+Route::get('list-lab', 'QC\QCAdminController@listLab')->name('list-lab');
