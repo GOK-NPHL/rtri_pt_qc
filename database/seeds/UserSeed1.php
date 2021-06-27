@@ -31,6 +31,7 @@ class UserSeed extends Seeder
                 'name' => 'duncan',
                 'email' => 'duncanndiithi@gmail.com',
                 'password' => '$2y$10$wCyQ7j2mwl.NGD3brp1RSuCo3nIv9b1pDO4Cb8v0xjmfBshm93bGm',
+                'phone_number' => '0710238034',
                 'created_at' => new \dateTime,
                 'updated_at' => new \dateTime,
             )
