@@ -364,8 +364,25 @@ class SubmitResults extends React.Component {
                         <hr />
                     </div>
 
+                    <div className="col-sm-12 mb-4  pl-4 pr-4">
+                        {/* Test justification */}
+                        <div className="form-check text-center">
+                            <input 
+                            className="form-check-input" 
+                            onClick={()=>{
+                                $("#qc-test-results").toggle();
+                            }}
+                             type="checkbox" 
+                             value="" id="qcTestDone" />
+                            <label className="form-check-label" for="qcTestDone">
+                                <strong>Was the QC test done?</strong>
+                            </label>
+                        </div>
+                        {/* End Test justification */}
 
-                    <div className="col-sm-12 ">
+                    </div>
+
+                    <div id='qc-test-results' className="col-sm-12 ">
 
                         {/* QC Test results fields */}
                         <div className="row ml-5 mr-5">
@@ -386,7 +403,7 @@ class SubmitResults extends React.Component {
                                                     </tbody>
                                                 </table>
                                             </th>
-                                            <th>Recency Interpretation  *</th>
+                                            <th>RTRI Interpretation  *</th>
                                         </tr>
                                     </thead>
                                     <tbody>

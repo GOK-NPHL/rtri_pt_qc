@@ -31,14 +31,14 @@ class ListUser extends React.Component {
 
         return (
             <React.Fragment>
-                alert(AddUser);
+                alert(ListUser);
             </React.Fragment>
         );
     }
 
 }
 
-export default AddUser;
+export default ListUser;
 
 if (document.getElementById('list_admin_user')) {
     ReactDOM.render(<ListUser />, document.getElementById('list_admin_user'));

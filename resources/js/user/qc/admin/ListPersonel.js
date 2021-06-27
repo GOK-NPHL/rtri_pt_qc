@@ -38,7 +38,7 @@ class ListPersonel extends React.Component {
 
 }
 
-export default AddPersonel;
+export default ListPersonel;
 
 if (document.getElementById('list_personel')) {
     ReactDOM.render(<ListPersonel />, document.getElementById('list_personel'));

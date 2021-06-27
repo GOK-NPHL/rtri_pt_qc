@@ -38,7 +38,7 @@ class ListLab extends React.Component {
 
 }
 
-export default AddLab;
+export default ListLab;
 
 if (document.getElementById('list_lab')) {
     ReactDOM.render(<ListLab />, document.getElementById('list_lab'));
