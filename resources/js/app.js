@@ -21,7 +21,6 @@ require('./user/qc/admin/ListLab');
 require('./user/qc/admin/ListPersonel');
 require('./user/qc/admin/ListUser');
 
-require("datatables.net");
 
 //Intrface code
 require('./components/system/org-unit/OrgUnits');
