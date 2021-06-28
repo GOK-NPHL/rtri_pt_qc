@@ -129,7 +129,7 @@ use Illuminate\Support\Facades\Gate;
 
 
         <!-- Content Wrapper. Contains page content -->
-        <div style="background-color: white;" class="content-wrapper">
+        <div style="background-color: white;" class="">
             <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container">
@@ -145,7 +145,16 @@ use Illuminate\Support\Facades\Gate;
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        <footer class="main-footer">
+        <style>
+            .m-footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+        </style>
+        <footer class="m-footer pl-3 pr-3">
             <strong>Copyright &copy; 2014- <script>
                     document.write(new Date().getFullYear());
                 </script> <a href="https://nphl.go.ke/">NPHL KNEQAS -QC/PT</a>.</strong>
