@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
 use Illuminate\Http\Request;
 use Auth;
+use Exception;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 
 class AdminAuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('guest:admin', ['except' => ['signOut']]);
+        // $this->middleware('guest:admin', ['except' => ['signOut']]);
+        $this->middleware('auth:admin', ['except' => ['signOut']]);
     }
 
     public function adminLogin()
@@ -36,6 +41,22 @@ class AdminAuthController extends Controller
         return redirect()->back()->withInput($request->only('email', 'remember'));
     }
 
+    public function create(Request $request)
+    {
+        try {
+            Admin::create([
+                'name' => $request->user['name'],
+                'email' => $request->user['email'],
+                'phone_number' => $request->user['phone_number'],
+                'is_admin' => 1,
+                'password' => Hash::make($request->user['password'])
+            ]);
+            return response()->json(['Message' => 'Created successfully'], 200);
+        } catch (Exception $ex) {
+
+            return ['Error' => '500', 'Message' => 'Could not save user ' . $ex->getMessage()];
+        }
+    }
 
     public function signOut()
     {
