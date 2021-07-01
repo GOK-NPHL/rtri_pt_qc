@@ -60,18 +60,18 @@ class AddUser extends React.Component {
         });
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (
-            prevState.email != this.state.email ||
-            prevState.phoneNumber != this.state.phoneNumber ||
-            prevState.name != this.state.name ||
-            prevState.password != this.state.password
-        ) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (
+    //         prevState.email != this.state.email ||
+    //         prevState.phoneNumber != this.state.phoneNumber ||
+    //         prevState.name != this.state.name ||
+    //         prevState.password != this.state.password
+    //     ) {
+    //         return false;
+    //     } else {
+    //         return true;
+    //     }
+    // }
     saveUser() {
         
         if (
@@ -160,8 +160,8 @@ class AddUser extends React.Component {
 
                                 <div className="form-group row">
                                     <div className="col-sm-10">
-                                        <button onClick={() => this.saveUser()} type="" className="d-inline m-2 btn btn-primary m">Add</button>
-                                        <a href="list-admin-user" className="d-inline m-2 btn btn-primary">Cancel</a>
+                                        <a href="#"  onClick={() => this.saveUser()} type="" className="d-inline m-2 btn btn-primary m">Add</a>
+                                        <a href="list-admin-user" className="d-inline m-2 btn btn-danger">Cancel</a>
                                     </div>
                                 </div>
                             </form>
