@@ -457,3 +457,32 @@ export async function SaveAdminUser(user) {
         return err.response
     }
 }
+
+export async function FetchParticipantList() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_participants`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
+export async function SaveParticipant(lab) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/create_participant`,
+            data: {
+                lab: lab,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+}
