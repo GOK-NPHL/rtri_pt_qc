@@ -440,3 +440,20 @@ export async function FetchAdminUsers() {
 
 }
 
+
+export async function SaveAdminUser(user) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/create_admin`,
+            data: {
+                user: user,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+}
