@@ -26,3 +26,4 @@ Route::post('/save_submission', 'Service\Submission@createSubmission');
 Route::get('/get_submissions', 'Service\Submission@getSubmissions');
 
 Route::get('/get_admin_users', 'QC\QCAdminUsersController@getAdminUsers');
+Route::post('create_admin', 'AdminAuthController@create');
