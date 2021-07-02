@@ -74,7 +74,7 @@ class ListLab extends React.Component {
                     <td>{element.mfl_code}</td>
                     <td>{element.lab_name}</td>
                     <td>{element.email}</td>
-                    <td>{element.is_active ? 'True' : 'False'}</td>
+                    <td>{element.is_active ? 'Active' : 'Inactive'}</td>
 
                     {
 
@@ -140,7 +140,7 @@ class ListLab extends React.Component {
                         className="form-control" placeholder="search participant"></input>
                 </div>
 
-                <table className="table table-striped">
+                <table className="table table-striped table-sm">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
