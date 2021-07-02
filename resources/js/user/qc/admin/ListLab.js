@@ -140,7 +140,7 @@ class ListLab extends React.Component {
                         className="form-control" placeholder="search participant"></input>
                 </div>
 
-                <table className="table table-striped table-sm">
+                <table className="table table-striped table-sm  table-hover">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
