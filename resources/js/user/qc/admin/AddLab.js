@@ -172,7 +172,7 @@ class AddLab extends React.Component {
         return (
             <React.Fragment>
 
-                <div className="card">
+                <div className="card" style={{"backgroundColor": "#ecf0f1"}}>
                     <div className="card-body">
                         <h5 className="card-title">Add New Participant</h5><br />
                         <hr />
