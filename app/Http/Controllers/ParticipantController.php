@@ -23,7 +23,7 @@ class ParticipantController extends Controller
 
     public function createParticipant(Request $request)
     {
-        Log::info($request->lab);
+
         try {
             Laboratory::create([
                 'institute_name' => $request->lab['institute_name'],
@@ -44,18 +44,16 @@ class ParticipantController extends Controller
     public function createLabPersonel(Request $request)
     {
         try {
-            Log::info($request->personel);
-
             $user = new User([
                 'name' => $request->personel['first_name'],
                 'second_name' => $request->personel['second_name'],
                 'email' => $request->personel['email'],
                 'phone_number' => $request->personel['phone_number'],
+                'is_active' => $request->personel['is_active'],
                 'password' => Hash::make($request->personel['password']),
                 'has_qc_access' => $request->personel['has_qc_access'],
                 'has_pt_access' => $request->personel['has_pt_access'],
             ]);
-            Log::info($user);
             $lab = Laboratory::find($request->personel['facility']);
             $lab->personel()->save($user);
 
@@ -68,7 +66,20 @@ class ParticipantController extends Controller
     public function getLabPersonel(Request $request)
     {
         try {
-            return User::all();
+
+            $users = User::select(
+                'users.name',
+                'users.email',
+                'laboratories.lab_name',
+                'users.has_qc_access',
+                'users.phone_number',
+                'users.has_pt_access',
+                'users.is_active',
+                'users.second_name'
+            )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
+                ->get();
+
+            return $users;
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Could fetch lab personel: ' . $ex->getMessage()], 500);
         }
