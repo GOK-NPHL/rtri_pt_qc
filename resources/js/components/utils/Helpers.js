@@ -486,3 +486,33 @@ export async function SaveParticipant(lab) {
         return err.response
     }
 }
+
+
+export async function FetchLabPersonel() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_lab_personel`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
+export async function SaveLabPersonel(personel) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/create_lab_personel`,
+            data: {
+                personel: personel,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+}
