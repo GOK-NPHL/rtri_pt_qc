@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",
+        "bootstrap-select": "^1.13.18",
         "datatables.net": "^1.10.24",
         "datatables.net-autofill": "^2.3.9",
         "datatables.net-autofill-bs4": "^2.3.9",
