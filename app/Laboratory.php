@@ -23,4 +23,9 @@ class Laboratory extends Model
         'facility_level',
         'county'
     ];
+
+    public function personel()
+    {
+        return $this->hasMany('\App\User');
+    }
 }
