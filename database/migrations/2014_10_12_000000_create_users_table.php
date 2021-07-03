@@ -16,11 +16,21 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('second_name');
             $table->string('email')->unique();
+            $table->unsignedBigInteger('laboratory_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('has_qc_access');
+            $table->boolean('has_pt_access');
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::table('users', function ($table) {
+            $table->foreign('laboratory_id')
+                ->references('id')->on('laboratories')
+                ->onDelete('cascade');
         });
     }
 
