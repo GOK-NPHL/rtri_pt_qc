@@ -68,11 +68,12 @@ class ListPersonel extends React.Component {
         if (this.state.data.length > 0) {
 
             this.state.data.map((element, index) => {
-
+                console.log(element);
                 tableElem.push(<tr key={index}>
                     <th scope="row">{index + 1}</th>
-                    <td>{element.mfl_code}</td>
                     <td>{element.lab_name}</td>
+                    <td>{element.name} {element.second_name}</td>
+                    <td>{element.phone_number}</td>
                     <td>{element.email}</td>
                     <td>{element.is_active ? 'Active' : 'Inactive'}</td>
 
