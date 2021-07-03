@@ -22,6 +22,8 @@ require('./user/qc/admin/ListPersonel');
 require('./user/qc/admin/ListUser');
 
 
+
+
 //Intrface code
 require('./components/system/org-unit/OrgUnits');
 require('./components/system/role/Roles');
@@ -31,7 +33,8 @@ require('./components/system/auth/axios_login');
 require('xlsx');
 require("uuid/v4");
 require("react-datepicker");
-require("react-js-pagination")
+require("react-js-pagination");
+require('bootstrap-select');
 require('../../node_modules/@fortawesome/fontawesome-free/js/fontawesome.js');
 
 require('../../node_modules/jquery.easing/jquery.easing.min.js');
