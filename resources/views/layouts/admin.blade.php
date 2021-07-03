@@ -81,7 +81,7 @@ use Illuminate\Support\Facades\Gate;
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{route('list-lab')}}">PT/QC Laboratories</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{route('list-personel')}}">PT/QC Personell</a>
+                                    <a class="dropdown-item" href="{{route('list-personel')}}">PT/QC Lab Personel</a>
 
                                     <!--    <a class="dropdown-item" href="#">Something else here</a> -->
                                 </div>
@@ -113,7 +113,7 @@ use Illuminate\Support\Facades\Gate;
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Logout
+                                    Account
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#">Profile</a>
