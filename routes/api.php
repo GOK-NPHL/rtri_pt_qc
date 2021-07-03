@@ -30,5 +30,8 @@ Route::get('/get_admin_users', 'QC\QCAdminUsersController@getAdminUsers');
 Route::post('create_admin', 'AdminAuthController@create');
 
 
-Route::get('/get_participants',[ParticipantController::class, 'getParticipants'])->name('get_participants')->middleware('auth:admin');;
-Route::post('/create_participant',[ParticipantController::class, 'createParticipant'])->name('create_participant')->middleware('auth:admin');;
+Route::get('/get_participants',[ParticipantController::class, 'getParticipants'])->name('get_participants')->middleware('auth:admin');
+Route::post('/create_participant',[ParticipantController::class, 'createParticipant'])->name('create_participant')->middleware('auth:admin');
+
+Route::get('/get_lab_personel',[ParticipantController::class, 'getLabPersonel'])->name('get_lab_personel')->middleware('auth:admin');
+Route::post('/create_lab_personel',[ParticipantController::class, 'createLabPersonel'])->name('create_lab_personel')->middleware('auth:admin');
