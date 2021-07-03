@@ -24,6 +24,7 @@ class AddPersonel extends React.Component {
             password: '',
             hasQcAccess: true,
             hasPtAccess: true,
+            isActive: 'true',
             participantList: []
         }
 
@@ -35,7 +36,7 @@ class AddPersonel extends React.Component {
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleIsQcActiveChange = this.handleIsQcActiveChange.bind(this);
         this.handleIsPtActiveChange = this.handleIsPtActiveChange.bind(this);
-
+        this.handleIsActiveChange = this.handleIsActiveChange.bind(this);
 
     }
 
@@ -48,6 +49,15 @@ class AddPersonel extends React.Component {
             })
         })();
 
+    }
+
+
+
+    handleIsActiveChange(isActive) {
+        
+        this.setState({
+            isActive: isActive
+        });
     }
 
     handleFacilityChange(facility) {
@@ -116,7 +126,7 @@ class AddPersonel extends React.Component {
             });
             $('#addLabModal').modal('toggle');
         } else {
-
+            
             (async () => {
                 let personel = {};
                 personel['email'] = this.state.email;
@@ -127,6 +137,7 @@ class AddPersonel extends React.Component {
                 personel['password'] = this.state.password;
                 personel['has_qc_access'] = this.state.hasQcAccess ? 1 : 0;
                 personel['has_pt_access'] = this.state.hasPtAccess ? 1 : 0;
+                personel['is_active'] = this.state.isActive=='true' ? 1 : 0;
 
                 let response = await SaveLabPersonel(personel);
 
@@ -253,6 +264,24 @@ class AddPersonel extends React.Component {
                                 <div className="form-row">
 
                                     <div className="col-md-6 mb-3">
+                                        <label htmlFor="u_active" >Active</label>
+                                        <select
+                                            id="u_active"
+                                            value={this.state.isActive} className="custom-select"
+                                            onChange={(event) => this.handleIsActiveChange(event.target.value)}
+                                        >
+                                            <option value={true}>True</option>
+                                            <option value={false}>False</option>
+                                        </select>
+                                    </div>
+
+
+
+                                </div>
+
+                                <div className="form-row">
+
+                                    <div className="col-md-6 mb-3">
 
                                         <input
                                             value={this.state.hasQcAccess}
@@ -276,7 +305,7 @@ class AddPersonel extends React.Component {
                                 <div className="form-group row">
                                     <div className="col-sm-12 text-center">
                                         <a href="#" onClick={() => this.savePersonel()} type="" className="d-inline m-2 btn btn-primary m">Add</a>
-                                        <a href="list-lab" className="d-inline m-2 btn btn-danger">Cancel</a>
+                                        <a href="list-personel" className="d-inline m-2 btn btn-danger">Cancel</a>
                                     </div>
                                 </div>
                             </form>
