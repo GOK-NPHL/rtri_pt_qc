@@ -21,8 +21,10 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('laboratory_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone_number');
             $table->boolean('has_qc_access');
             $table->boolean('has_pt_access');
+            $table->boolean('is_active');
             $table->rememberToken();
             $table->timestamps();
         });

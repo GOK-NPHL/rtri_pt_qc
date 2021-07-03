@@ -21,9 +21,10 @@ class UserSeed extends Seeder
                 'second_name' => 'Ndiithi',
                 'has_qc_access' => true,
                 'has_pt_access' => true,
-                'facility' => 1,
+                'phone_number'=> '0710238034',
                 'password' => '$2y$10$wCyQ7j2mwl.NGD3brp1RSuCo3nIv9b1pDO4Cb8v0xjmfBshm93bGm',
-                'laboratories_id' => 0,
+                'laboratory_id' => 0,
+                'is_active' => true,
                 'created_at' => new \dateTime,
                 'updated_at' => new \dateTime,
             )
