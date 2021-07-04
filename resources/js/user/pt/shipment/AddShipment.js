@@ -33,6 +33,7 @@ class AddShipement extends React.Component {
         this.handleFacilityChange = this.handleFacilityChange.bind(this);
         this.handleIsActiveChange = this.handleIsActiveChange.bind(this);
         this.addSampleRow = this.addSampleRow.bind(this);
+        this.deleteSampleRow = this.deleteSampleRow.bind(this);
 
     }
 
@@ -49,7 +50,6 @@ class AddShipement extends React.Component {
     }
 
     handleFacilityChange(facility) {
-        console.log(facility);
         this.setState({
             facility: facility
         });
@@ -110,7 +110,17 @@ class AddShipement extends React.Component {
 
     }
 
-    addSampleRow() {
+    deleteSampleRow(index) {
+        console.log(index);
+
+        let tableRows = this.state.tableRows;
+        delete tableRows[index]
+        this.setState({
+            tableRows: tableRows
+        })
+    }
+
+    addSampleRow(index) {
         let tableRows = this.state.tableRows;
         let tableRow = <tr key={uuidv4()}>
             <td className="px-lg-2" style={{ "maxWidth": "150px" }}>
@@ -150,7 +160,9 @@ class AddShipement extends React.Component {
             <td>
 
                 <ReactTooltip />
-                <span data-tip="Delete sample"> <i style={{ "color": "red" }} className="fa fa-minus-circle" aria-hidden="true"></i></span>
+                <a onClick={() => this.deleteSampleRow(index)} data-tip="Delete sample">
+                    <i style={{ "color": "red" }} className="fa fa-minus-circle" aria-hidden="true"></i>
+                </a>
 
             </td>
         </tr>;
@@ -243,15 +255,16 @@ class AddShipement extends React.Component {
                                     <tbody>
 
                                         {this.state.tableRows.map((row) => {
-                                            return row;
+                                            if (row != undefined)
+                                                return row;
                                         })}
                                         <tr>
                                             <td>
                                                 <a onClick={() => {
-                                                    this.addSampleRow()
+                                                    this.addSampleRow(this.state.tableRows.length)
                                                 }}>
-                                                    <ReactTooltip/>
-                                                    <i  data-tip="Add sample" style={{ "color": "blue" }} className="fas fa-plus-circle fa-2x"></i>
+                                                    <ReactTooltip />
+                                                    <i data-tip="Add sample" style={{ "color": "blue" }} className="fas fa-plus-circle fa-2x"></i>
                                                 </a>
                                             </td>
                                         </tr>
@@ -260,13 +273,11 @@ class AddShipement extends React.Component {
                                 </table>
                             </div>
 
-
-
                         </div>
 
                         <div className="form-group row mt-4">
                             <div className="col-sm-12 text-center">
-                                <a href="#" onClick={() => this.savePersonel()} type="" className="d-inline m-2 btn btn-primary m">Add</a>
+                                <a href="#" onClick={() => this.savePersonel()} type="" className="d-inline m-2 btn btn-primary m">Ship Round</a>
                                 <a href="#" className="d-inline m-2 btn btn-danger">Cancel</a>
                             </div>
                         </div>
