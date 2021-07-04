@@ -54,7 +54,7 @@ class AdminAuthController extends Controller
             return response()->json(['Message' => 'Created successfully'], 200);
         } catch (Exception $ex) {
 
-            return ['Error' => '500', 'Message' => 'Could not save user ' . $ex->getMessage()];
+            return ['Error' => '500', 'Message' => 'Could not save user ' . $ex->getMessage(), 500];
         }
     }
 
