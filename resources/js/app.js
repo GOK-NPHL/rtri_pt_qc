@@ -3,7 +3,7 @@
  * includes React and other helpers. It's a great starting point while
  * building robust, powerful web applications using React + Laravel.
  */
-
+ 
 require('./bootstrap');
 
 /**
@@ -21,7 +21,7 @@ require('./user/qc/admin/ListLab');
 require('./user/qc/admin/ListPersonel');
 require('./user/qc/admin/ListUser');
 
-
+require('./user/pt/shipment/PtShipment');
 
 
 //Intrface code
@@ -35,6 +35,7 @@ require("uuid/v4");
 require("react-datepicker");
 require("react-js-pagination");
 require('bootstrap-select');
+require('react-tooltip');
 require('../../node_modules/@fortawesome/fontawesome-free/js/fontawesome.js');
 
 require('../../node_modules/jquery.easing/jquery.easing.min.js');
