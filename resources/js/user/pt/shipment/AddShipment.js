@@ -185,6 +185,14 @@ class AddShipement extends React.Component {
                         <div className="form-row">
 
                             <div className="col-md-6 mb-3">
+                                <label htmlFor="u_round" >Round Name *</label>
+                                <input
+                                    value={this.state.round}
+                                    onChange={(event) => this.handleRoundChange(event.target.value)} type="text"
+                                    className="form-control" id="u_round" />
+                            </div>
+
+                            <div className="col-md-6 mb-3">
                                 <label htmlFor="u_shipment_code" >Shipment Code *</label>
                                 <input
                                     value={this.state.shipmentCode}
@@ -192,6 +200,11 @@ class AddShipement extends React.Component {
                                     className="form-control" id="u_shipment_code" />
                             </div>
 
+                        </div>
+
+
+                        <div className="form-row">
+                            {/* add */}
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="u_result_due_date" >Result Due Date  *</label>
                                 <input
@@ -199,12 +212,6 @@ class AddShipement extends React.Component {
                                     onChange={(event) => this.handleResultDueDateChange(event.target.value)}
                                     type="date" className="form-control" id="u_result_due_date" />
                             </div>
-
-                        </div>
-
-
-                        <div className="form-row">
-                            {/* add */}
 
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="u_pass_mark" >Pass mark (%)*</label>
@@ -246,8 +253,8 @@ class AddShipement extends React.Component {
                                 <table className="table unstrip table-bordered table-sm ">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Sample</th>
-                                            <th scope="col">Reference result</th>
+                                            <th scope="col">Sample *</th>
+                                            <th scope="col">Reference result *</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
