@@ -130,29 +130,29 @@ class AddShipement extends React.Component {
             <td style={{ "maxWidth": "150px" }}>
                 <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" value="lt"
-                        name="long-term-radio" id="result_lt" />
-                    <label className="form-check-label" htmlFor="result_lt">
+                        name={index + "long-term-radio"} id={index + "result_lt"} />
+                    <label className="form-check-label" htmlFor={index + "result_lt"} >
                         LT
                     </label>
                 </div>
                 <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" value="recent"
-                        name="long-term-radio" id="result_recent" />
-                    <label className="form-check-label" htmlFor="result_recent">
+                        name={index + "long-term-radio"} id={index + "result_recent"} />
+                    <label className="form-check-label" htmlFor={index + "result_recent"} >
                         recent
                     </label>
                 </div>
                 <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" value="neg"
-                        name="long-term-radio" id="result_neg" />
-                    <label className="form-check-label" htmlFor="result_neg">
+                        name={index + "long-term-radio"} id={index + "result_neg"} />
+                    <label className="form-check-label" htmlFor={index + "result_neg"} >
                         neg
                     </label>
                 </div>
                 <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" value="invalid"
-                        name="long-term-radio" id="result_invalid" />
-                    <label className="form-check-label" htmlFor="result_invalid">
+                        name={index + "long-term-radio"} id={index + "result_invalid"} />
+                    <label className="form-check-label" htmlFor={index + "result_invalid"} >
                         invalid
                     </label>
                 </div>
@@ -175,7 +175,6 @@ class AddShipement extends React.Component {
 
 
     render() {
-
 
         return (
             <React.Fragment>
