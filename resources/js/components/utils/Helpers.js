@@ -516,3 +516,20 @@ export async function SaveLabPersonel(personel) {
         return err.response
     }
 }
+
+export async function SaveReadiness(readiness) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/create_readiness`,
+            data: {
+                readiness: readiness,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err.response);
+        return err.response
+    }
+}
