@@ -92,7 +92,7 @@ use Illuminate\Support\Facades\Gate;
                                     Manage
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">PT Shipment</a>
+                                    <a class="dropdown-item" href="{{route('pt-shipment')}}">PT Shipment</a>
 
                                 </div>
                             </li>
