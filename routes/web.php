@@ -48,3 +48,6 @@ Route::get('add-personel', 'QC\QCAdminController@addPersonel')->name('add-person
 Route::get('list-personel', 'QC\QCAdminController@listPersonel')->name('list-personel');
 Route::get('add-lab', 'QC\QCAdminController@addLab')->name('add-lab');
 Route::get('list-lab', 'QC\QCAdminController@listLab')->name('list-lab');
+
+Route::get('pt-shipment', 'PT\PTAdminController@ptShipment')->name('pt-shipment');
+
