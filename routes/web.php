@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\CustomAuthController;
+use App\Http\Controllers\PT\PTAdminController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -50,4 +51,8 @@ Route::get('add-lab', 'QC\QCAdminController@addLab')->name('add-lab');
 Route::get('list-lab', 'QC\QCAdminController@listLab')->name('list-lab');
 
 Route::get('pt-shipment', 'PT\PTAdminController@ptShipment')->name('pt-shipment');
+Route::get('list-readiness',[PTAdminController::class, 'listReadiness'])->name('list-readiness');
+Route::get('add-readiness',[PTAdminController::class, 'addReadiness'])->name('add-readiness');
+
+
 
