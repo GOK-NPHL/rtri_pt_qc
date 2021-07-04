@@ -22,7 +22,8 @@ require('./user/qc/admin/ListPersonel');
 require('./user/qc/admin/ListUser');
 
 require('./user/pt/shipment/PtShipment');
-
+require('./user/pt/readiness/AddReadiness');
+require('./user/pt/readiness/ListReadiness');
 
 //Intrface code
 require('./components/system/org-unit/OrgUnits');
