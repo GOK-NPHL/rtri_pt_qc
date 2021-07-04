@@ -92,8 +92,8 @@ use Illuminate\Support\Facades\Gate;
                                     Manage
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{route('list-readiness')}}">Readiness Checklists</a>
                                     <a class="dropdown-item" href="{{route('pt-shipment')}}">PT Shipment</a>
-
                                 </div>
                             </li>
 
@@ -147,12 +147,12 @@ use Illuminate\Support\Facades\Gate;
         <!-- /.content-wrapper -->
         <style>
             .m-footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-}
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                text-align: center;
+            }
         </style>
         <footer class="m-footer pl-3 pr-3">
             <strong>Copyright &copy; 2014- <script>
