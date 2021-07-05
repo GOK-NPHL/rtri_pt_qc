@@ -60,7 +60,6 @@ class AddReadinessQuestion extends React.Component {
     }
 
     addReadinessQuestion() {
-        answerOptions
         if (
             (this.state.answerOptions == '' && this.state.answerType == 'list') ||
             (this.state.answerType == '' && this.state.qustionType == 'question') ||
@@ -80,8 +79,13 @@ class AddReadinessQuestion extends React.Component {
             readiness['qustionPosition'] = this.state.qustionPosition;
             readiness['qustionType'] = this.state.qustionType;
             this.setState({
+                answerOptions: '',
+                answerType: 'list',
+                qustionPosition: 1,
+                qustionType: 'question',
                 showErrorMessage: false,
-                errorMessage: ''
+                errorMessage: '',
+                question: ''
             });
             $('#addQuestionModal').modal('toggle');
             this.props.addReadinessQuestion(readiness);
@@ -90,7 +94,6 @@ class AddReadinessQuestion extends React.Component {
     }
 
     render() {
-        console.log(this.state.answerType , this.state.qustionType);
         return (
             <React.Fragment>
 

@@ -62,27 +62,20 @@ class AddReadiness extends React.Component {
     }
 
     addReadinessQuestion(readiness) {
-        console.log(readiness);
-        this.state.readinessQuestions;
+        console.log(readiness['qustionType'] == 'comment');
 
-        readiness['answerOptions'] = this.state.answerOptions;
-        readiness['answerType'] = this.state.answerType;
-        readiness['qustionPosition'] = this.state.qustionPosition;
-        readiness['qustionType'] = this.state.qustionType;
-
-
-        if (readiness['answerType'] == 'question') {
+        if (readiness['qustionType'] == 'question') {
 
             if (readiness['answerType'] == 'list') {
                 let id = uuidv4();
                 let qstOptins = readiness['answerOptions'].split(',');
                 let qstElement =
-                    <div className="form-group">
+                    <div key={id} className="form-group">
                         <label className="float-left" htmlFor={id + "qst_answer"}>{readiness['question']}</label>
                         <select
                             className="custom-select" id={id + "qst_answer"}>
                             {qstOptins.map((option) => {
-                                return <option value={option}>{option}</option>
+                                return <option key={uuidv4()} value={option}>{option}</option>
                             })}
                         </select>
                     </div>
@@ -94,7 +87,7 @@ class AddReadiness extends React.Component {
             } else if (readiness['answerType'] == 'number') {
                 let id = uuidv4();
                 let qstElement =
-                    <div className="form-group">
+                    <div key={id} className="form-group">
                         <label className="float-left" htmlFor={id + "qst_answer"}>{readiness['question']}</label>
                         <input type="number" className="form-control" id={id + "qst_answer"} aria-describedby="qst_answer" placeholder="Enter your answer" />
                     </div>
@@ -105,8 +98,8 @@ class AddReadiness extends React.Component {
                 })
             }
 
-        } else if (readiness['answerType'] == 'comment') {
-
+        } else if (readiness['qustionType'] == 'comment') {
+            console.log("doing commet")
             let id = uuidv4();
             let qstElement =
                 <div className="form-group">
@@ -168,7 +161,7 @@ class AddReadiness extends React.Component {
     }
 
     render() {
-        // console.log(this.state.dualListptions);
+        console.log(this.state.readinessQuestions);
         let dualListValues = [];
         if (this.state.dualListptions.length != 0) {
             dualListValues = this.state.dualListptions.map((participant) => {
@@ -241,7 +234,7 @@ class AddReadiness extends React.Component {
                                     <div className="card">
                                         <div className="card-body">
                                             {this.state.readinessQuestions.map((rdnsQuestion) => {
-                                                return rdnsQuestion;
+                                                return <span key={uuidv4()}>{rdnsQuestion}</span>
                                             })}
 
                                             <button onClick={() => {
