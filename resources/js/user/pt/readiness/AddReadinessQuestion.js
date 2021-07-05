@@ -7,12 +7,12 @@ class AddReadinessQuestion extends React.Component {
         this.state = {
 
             answerOptions: '',
-            answerType: '',
+            answerType: 'list',
             qustionPosition: 1,
-            qustionType: '',
+            qustionType: 'question',
             showErrorMessage: false,
             errorMessage: '',
-            qustion: ''
+            question: ''
         }
 
         this.qustionAnswerOptionsHandler = this.qustionAnswerOptionsHandler.bind(this);
@@ -37,22 +37,34 @@ class AddReadinessQuestion extends React.Component {
     }
 
     qustionTypeHandler(qustionType) {
-        this.setState({ qustionType: qustionType });
+        if (qustionType == 'question') {
+            this.setState({
+                qustionType: qustionType,
+                answerType: 'list'
+            });
+        } else {
+            this.setState({
+                qustionType: qustionType,
+                answerType: ''
+            });
+        }
+
     }
 
     qustionPositionHandler(qustionPosition) {
         this.setState({ qustionPosition: qustionPosition });
     }
 
-    questionHandler(qustion) {
-        this.setState({ qustion: qustion });
+    questionHandler(question) {
+        this.setState({ question: question });
     }
 
     addReadinessQuestion() {
-
-        if (this.state.answerOptions == '' ||
-            this.state.answerType == '' ||
-            this.state.qustion == '' ||
+        answerOptions
+        if (
+            (this.state.answerOptions == '' && this.state.answerType == 'list') ||
+            (this.state.answerType == '' && this.state.qustionType == 'question') ||
+            this.state.question == '' ||
             this.state.qustionPosition == '' ||
             this.state.qustionType == '') {
             this.setState({
@@ -61,6 +73,8 @@ class AddReadinessQuestion extends React.Component {
             })
         } else {
             let readiness = {};
+
+            readiness['question'] = this.state.question;
             readiness['answerOptions'] = this.state.answerOptions;
             readiness['answerType'] = this.state.answerType;
             readiness['qustionPosition'] = this.state.qustionPosition;
@@ -76,6 +90,7 @@ class AddReadinessQuestion extends React.Component {
     }
 
     render() {
+        console.log(this.state.answerType , this.state.qustionType);
         return (
             <React.Fragment>
 
@@ -115,30 +130,32 @@ class AddReadinessQuestion extends React.Component {
                             <label htmlFor="qst_type">Question type *</label>
                             <select onChange={(event) => this.qustionTypeHandler(event.target.value)}
                                 value={this.state.qustionType} className="custom-select" id="qst_type">
-                                <option selected>Choose...</option>
-                                <option value="1">Question</option>
-                                <option value="2">Comment</option>
+                                <option value="question">Question</option>
+                                <option value="comment">Comment</option>
                             </select>
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="qst_answer">Answer type *</label>
-                            <select onChange={(event) => this.qustionAnswerTypeHandler(event.target.value)}
-                                value={this.state.qustionAnswerType}
-                                className="custom-select" id="qst_answer">
-                                <option selected>Choose...</option>
-                                <option value="free">Free text</option>
-                                <option value="list">List (e.g. yes,no,invalid)</option>
-                                <option value="number">Number</option>
-                            </select>
-                        </div>
+                        {this.state.qustionType == 'question' ?
+                            <div className="form-group">
+                                <label htmlFor="qst_answer">Answer type *</label>
+                                <select onChange={(event) => this.qustionAnswerTypeHandler(event.target.value)}
+                                    value={this.state.answerType}
+                                    className="custom-select" id="qst_answer">
+                                    <option value="list">List of items</option>
+                                    <option value="number">Number</option>
+                                </select>
+                            </div> : ''
+                        }
 
-                        <div className="form-group">
-                            <label htmlFor="qst_answer_options">List answer options *</label>
-                            <input onChange={(event) => this.qustionAnswerOptionsHandler(event.target.value)}
-                                value={this.state.answerOptions}
-                                type="text" className="form-control" id="qst_answer_options" aria-describedby="emailHelp" placeholder="eg yes,no " />
-                        </div>
+                        {this.state.answerType == 'list' && this.state.qustionType == 'question' ?
+                            <div className="form-group">
+                                <label htmlFor="qst_answer_options">List the answer options *</label>
+                                <input onChange={(event) => this.qustionAnswerOptionsHandler(event.target.value)}
+                                    value={this.state.answerOptions}
+                                    type="text" className="form-control" id="qst_answer_options" aria-describedby="emailHelp" placeholder="eg yes,no " />
+                            </div> : ''
+                        }
+
 
                     </div>
                     <div className="modal-footer">

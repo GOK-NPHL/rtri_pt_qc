@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { SaveAdminUser, FetchParticipantList, SaveReadiness } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import DualListBox from 'react-dual-listbox';
+import AddReadinessQuestion from './AddReadinessQuestion';
 
 class AddReadiness extends React.Component {
 
@@ -16,12 +17,14 @@ class AddReadiness extends React.Component {
             endDate: '',
             selected: [],
             dualListptions: [],
+            readinessQuestions: []
         }
 
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleEndDateChange = this.handleEndDateChange.bind(this);
         this.handleStartDateChange = this.handleStartDateChange.bind(this);
         this.authoritiesOnChange = this.authoritiesOnChange.bind(this);
+        this.addReadinessQuestion = this.addReadinessQuestion.bind(this);
 
     }
 
@@ -56,6 +59,69 @@ class AddReadiness extends React.Component {
 
     authoritiesOnChange(selected) {
         this.setState({ selected: selected });
+    }
+
+    addReadinessQuestion(readiness) {
+        console.log(readiness);
+        this.state.readinessQuestions;
+
+        readiness['answerOptions'] = this.state.answerOptions;
+        readiness['answerType'] = this.state.answerType;
+        readiness['qustionPosition'] = this.state.qustionPosition;
+        readiness['qustionType'] = this.state.qustionType;
+
+
+        if (readiness['answerType'] == 'question') {
+
+            if (readiness['answerType'] == 'list') {
+                let id = uuidv4();
+                let qstOptins = readiness['answerOptions'].split(',');
+                let qstElement =
+                    <div className="form-group">
+                        <label className="float-left" htmlFor={id + "qst_answer"}>{readiness['question']}</label>
+                        <select
+                            className="custom-select" id={id + "qst_answer"}>
+                            {qstOptins.map((option) => {
+                                return <option value={option}>{option}</option>
+                            })}
+                        </select>
+                    </div>
+                let questions = this.state.readinessQuestions;
+                questions.push(qstElement);
+                this.setState({
+                    readinessQuestions: questions
+                })
+            } else if (readiness['answerType'] == 'number') {
+                let id = uuidv4();
+                let qstElement =
+                    <div className="form-group">
+                        <label className="float-left" htmlFor={id + "qst_answer"}>{readiness['question']}</label>
+                        <input type="number" className="form-control" id={id + "qst_answer"} aria-describedby="qst_answer" placeholder="Enter your answer" />
+                    </div>
+                let questions = this.state.readinessQuestions;
+                questions.push(qstElement);
+                this.setState({
+                    readinessQuestions: questions
+                })
+            }
+
+        } else if (readiness['answerType'] == 'comment') {
+
+            let id = uuidv4();
+            let qstElement =
+                <div className="form-group">
+                    <label className="float-left" htmlFor={id + "qst_answer"}>{readiness['question']}</label>
+                    <textarea className="form-control" id={id + "qst_answer"} aria-describedby="qst_answer" placeholder="Enter your comment" />
+                </div>
+            let questions = this.state.readinessQuestions;
+            questions.push(qstElement);
+            this.setState({
+                readinessQuestions: questions
+            })
+        }
+
+
+
     }
 
     saveReadiness() {
@@ -174,14 +240,9 @@ class AddReadiness extends React.Component {
 
                                     <div className="card">
                                         <div className="card-body">
-                                            <div className="form-group">
-                                                <label className="float-left" for="exampleInputEmail1">Email address</label>
-                                                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                                            </div>
-                                            <div className="form-group">
-                                                <label className="float-left" for="exampleInputPassword1">Password</label>
-                                                <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
-                                            </div>
+                                            {this.state.readinessQuestions.map((rdnsQuestion) => {
+                                                return rdnsQuestion;
+                                            })}
 
                                             <button onClick={() => {
                                                 $('#addQuestionModal').modal('toggle');
@@ -194,7 +255,6 @@ class AddReadiness extends React.Component {
                                 </div>
 
                             </div>
-
 
                             <div className="form-group row">
                                 <div className="col-sm-10 mt-3">
@@ -233,22 +293,7 @@ class AddReadiness extends React.Component {
                 {/* Add quetion modal */}
                 <div className="modal fade" id="addQuestionModal" tabIndex="-1" role="dialog" aria-labelledby="addQuestionModalTitle" aria-hidden="true" >
                     <div className="modal-dialog modal-dialog-centered" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="addQuestionModalTitle">New Checklist Question</h5>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-
-
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-info" data-dismiss="modal">Save</button>
-                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
+                        <AddReadinessQuestion addReadinessQuestion={this.addReadinessQuestion} />
                     </div>
                 </div >
                 {/* End add quetion modal */}
