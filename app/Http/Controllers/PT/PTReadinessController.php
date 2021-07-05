@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PT;
 use App\Http\Controllers\Controller;
 use App\Laboratory;
 use App\Readiness;
+use App\ReadinessQuestion;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -35,6 +36,22 @@ class PTReadinessController extends Controller
                 'end_date' => $request->readiness['end_date'],
             ]);
 
+            // Save questions
+            foreach ($request->readiness['readiness_questions'] as $questionItem) {
+                $readinessQuestion = new ReadinessQuestion();
+
+                $readinessQuestion->question = $questionItem['question'];
+                $readinessQuestion->answer_options = $questionItem['answer_options'];
+                $readinessQuestion->answer_type = $questionItem['answer_type'];
+                $readinessQuestion->qustion_position = $questionItem['qustion_position'];
+                $readinessQuestion->qustion_type = $questionItem['qustion_type'];
+
+                // $readiness->readinessQuestion()->associate($readinessQuestion);
+                $readinessQuestion->readiness()->associate($readiness);
+                $readinessQuestion->save();
+            }
+
+            // Save laboratiories
             $readiness->laboratories()->attach($request->readiness['participants']);
             return response()->json(['Message' => 'Created successfully'], 200);
         } catch (Exception $ex) {
