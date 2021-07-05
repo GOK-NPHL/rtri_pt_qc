@@ -17,4 +17,9 @@ class Readiness extends Model
     {
         return $this->belongsToMany('App\Laboratory');
     }
+
+    public function readinessQuestion()
+    {
+        return $this->hasMany('App\ReadinessQuestion');
+    }
 }
