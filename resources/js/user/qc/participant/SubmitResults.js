@@ -564,7 +564,7 @@ class SubmitResults extends React.Component {
                     </div>
                     <div className="d-flex w-100 justify-content-center">
 
-                        <button type="button " onClick={() => this.submitForm()} className="btn btn-primary float-left mx-2">Submit</button>
+                        <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
                         <button type="button" onClick={() => {
                             this.props.toggleView();
                         }} className="btn btn-danger float-left mx-2">Cancel</button>

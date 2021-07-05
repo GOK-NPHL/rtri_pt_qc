@@ -129,7 +129,7 @@ class RoleCreate extends React.Component {
                                     />
                                 </div>
                             </div>
-                            <button onClick={this.saveRole} className="btn btn-primary" type="submit">Save Role</button>
+                            <button onClick={this.saveRole} className="btn btn-info" type="submit">Save Role</button>
                         </form>
                     </div>
                 </div>

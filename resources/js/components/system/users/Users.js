@@ -109,7 +109,7 @@ class User extends React.Component {
                                                 }
                                             }
                                             style={{ 'marginRight': '5px' }}
-                                            className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                            className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                                             <i className="fas fa-user-edit"></i>
                                         </a> : ''
                                 }
@@ -193,7 +193,7 @@ class User extends React.Component {
                                     this.deleteUser();
                                     $('#deleteConfirmModal').modal('toggle');
                                 }}
-                                className="btn btn-primary">Delete</button>
+                                className="btn btn-info">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -232,7 +232,7 @@ class User extends React.Component {
                         });
                     }
                 }
-                className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                 <i className="fas fa-user fa-sm text-white-50"></i> Create Users</a>;
         } else if (this.state.userActionState != 'userList') {
             createUsers = <a href="#"
@@ -244,7 +244,7 @@ class User extends React.Component {
                         });
                     }
                 }
-                className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                 <i class="fas fa-arrow-left"></i> Back</a>;
         }
 

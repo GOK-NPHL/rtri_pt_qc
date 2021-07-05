@@ -70,7 +70,7 @@ class Dashboard extends React.Component {
                             this.setState({
                                 isSubmitResult: true
                             })
-                        }} type="button" className="btn btn-primary">Submit result</button>
+                        }} type="button" className="btn btn-info">Submit result</button>
                     </div>
                 </div>
                 <table id="tabella">
@@ -99,7 +99,7 @@ class Dashboard extends React.Component {
                                                 <a
                                                     href="#"
                                                     style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                                    className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                                    className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                                                     <i className="fas fa-user-edit"></i>
                                                 </a>
                                                 <a

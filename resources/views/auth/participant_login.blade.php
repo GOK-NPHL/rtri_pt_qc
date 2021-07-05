@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="box-footer">
-                        <input type="submit" class="btn col-md-12 btn-lg btn-primary" value="Sign in" />
+                        <input type="submit" class="btn col-md-12 btn-lg btn-info" value="Sign in" />
                     </div>
 
                     <div>

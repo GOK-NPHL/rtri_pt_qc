@@ -120,68 +120,95 @@ class AddReadiness extends React.Component {
                     <div className="card-body">
                         <h5 className="card-title">Add Readiness Checklist</h5><br />
                         <hr />
-                        <div style={{ "margin": "0 auto", "width": "60%" }} className="text-center">
-                            <form action="#" >
-                                <div className="form-group row">
-                                    <label htmlFor="u_name" className="col-sm-2 col-form-label">Name *</label>
-                                    <div className="col-sm-10">
-                                        <input
-                                            value={this.state.name}
-                                            onChange={(event) => this.handleNameChange(event.target.value)}
-                                            type="email" className="form-control" id="u_name" />
-                                    </div>
+                        <div style={{ "margin": "0 auto", "width": "80%" }} className="text-center">
+
+                            <div className="form-group row">
+                                <label htmlFor="u_name" className="col-sm-2 col-form-label">Name *</label>
+                                <div className="col-sm-10">
+                                    <input
+                                        value={this.state.name}
+                                        onChange={(event) => this.handleNameChange(event.target.value)}
+                                        type="email" className="form-control" id="u_name" />
                                 </div>
-                                <div className="form-group row">
-                                    <label htmlFor="u_start_date" className="col-sm-2 col-form-label">Start date *</label>
-                                    <div className="col-sm-10">
-                                        <input
-                                            value={this.state.startDate}
-                                            onChange={(event) => this.handleStartDateChange(event.target.value)} type="date"
-                                            className="form-control" id="u_start_date" />
+                            </div>
+                            <div className="form-group row">
+                                <label htmlFor="u_start_date" className="col-sm-2 col-form-label">Start date *</label>
+                                <div className="col-sm-10">
+                                    <input
+                                        value={this.state.startDate}
+                                        onChange={(event) => this.handleStartDateChange(event.target.value)} type="date"
+                                        className="form-control" id="u_start_date" />
+                                </div>
+                            </div>
+
+                            <div className="form-group row">
+                                <label htmlFor="u_end_date" className="col-sm-2 col-form-label">End Date *</label>
+                                <div className="col-sm-10">
+                                    <input
+                                        value={this.state.endDate}
+                                        onChange={(event) => this.handleEndDateChange(event.target.value)} type="date"
+                                        className="form-control" id="u_end_date" />
+                                </div>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="col-sm-2 mb-3">
+                                    <label className="float-left">Assign facilities *</label><br />
+                                </div>
+                                <div className="col-sm-10 mb-3">
+
+                                    <DualListBox
+                                        canFilter
+                                        options={dualListValues}
+                                        selected={this.state.selected}
+                                        onChange={this.authoritiesOnChange}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="col-sm-2 mb-3">
+                                    <label className="float-left">Checklist Question(s) *</label><br />
+                                </div>
+                                <div className="col-sm-10 mb-3">
+
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <div className="form-group">
+                                                <label className="float-left" for="exampleInputEmail1">Email address</label>
+                                                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+                                            </div>
+                                            <div className="form-group">
+                                                <label className="float-left" for="exampleInputPassword1">Password</label>
+                                                <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
+                                            </div>
+
+                                            <button onClick={() => {
+                                                $('#addQuestionModal').modal('toggle');
+                                            }} type="button"
+                                                className="btn btn-info float-left">Add question</button>
+
+                                        </div>
                                     </div>
+
                                 </div>
 
-                                <div className="form-group row">
-                                    <label htmlFor="u_end_date" className="col-sm-2 col-form-label">End Date *</label>
-                                    <div className="col-sm-10">
-                                        <input
-                                            value={this.state.endDate}
-                                            onChange={(event) => this.handleEndDateChange(event.target.value)} type="date"
-                                            className="form-control" id="u_end_date" />
-                                    </div>
-                                </div>
+                            </div>
 
-                                <div className="form-row">
-                                    <div className="col-sm-6 mb-3">
-                                        <label className="float-left">Assign facilities *</label><br />
-                                    </div>
-                                </div>
-                                <div className="form-row">
 
-                                    {/* <div className="col-sm-2 mb-3"></div> */}
-                                    <div className="col-sm-12 mb-3">
-
-                                        <DualListBox
-                                            canFilter
-                                            options={dualListValues}
-                                            selected={this.state.selected}
-                                            onChange={this.authoritiesOnChange}
-                                        />
-                                    </div>
+                            <div className="form-group row">
+                                <div className="col-sm-10 mt-3">
+                                    <a href="#" onClick={() => this.saveReadiness()} type="" className="d-inline m-2 btn btn-info m">Send Readiness</a>
+                                    <a href="list-readiness" className="d-inline m-2 btn btn-danger">Cancel</a>
                                 </div>
+                            </div>
 
-                                <div className="form-group row">
-                                    <div className="col-sm-10 mt-3">
-                                        <a href="#" onClick={() => this.saveReadiness()} type="" className="d-inline m-2 btn btn-primary m">Send Readiness</a>
-                                        <a href="list-readiness" className="d-inline m-2 btn btn-danger">Cancel</a>
-                                    </div>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
 
-                < div className="modal fade" id="addAdminUserModal" tabIndex="-1" role="dialog" aria-labelledby="addAdminUserModalTitle" aria-hidden="true" >
+                {/* Message modal */}
+                <div className="modal fade" id="addAdminUserModal" tabIndex="-1" role="dialog" aria-labelledby="addAdminUserModalTitle" aria-hidden="true" >
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -201,6 +228,30 @@ class AddReadiness extends React.Component {
                         </div>
                     </div>
                 </div >
+                {/* End Message modal */}
+
+                {/* Add quetion modal */}
+                <div className="modal fade" id="addQuestionModal" tabIndex="-1" role="dialog" aria-labelledby="addQuestionModalTitle" aria-hidden="true" >
+                    <div className="modal-dialog modal-dialog-centered" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="addQuestionModalTitle">New Checklist Question</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+
+
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-info" data-dismiss="modal">Save</button>
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div >
+                {/* End add quetion modal */}
             </React.Fragment>
         );
     }

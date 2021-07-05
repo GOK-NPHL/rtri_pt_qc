@@ -160,7 +160,7 @@ class AddUser extends React.Component {
 
                                 <div className="form-group row">
                                     <div className="col-sm-10">
-                                        <a href="#"  onClick={() => this.saveUser()} type="" className="d-inline m-2 btn btn-primary m">Add</a>
+                                        <a href="#"  onClick={() => this.saveUser()} type="" className="d-inline m-2 btn btn-info m">Add</a>
                                         <a href="list-admin-user" className="d-inline m-2 btn btn-danger">Cancel</a>
                                     </div>
                                 </div>

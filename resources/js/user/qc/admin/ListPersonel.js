@@ -92,7 +92,7 @@ class ListPersonel extends React.Component {
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                                 <i className="fas fa-user-edit"></i>
                             </a>
                             {/* <a
@@ -124,7 +124,7 @@ class ListPersonel extends React.Component {
         let pageContent = <div id='user_table' className='row'>
             <div className="col-sm-12 mb-3 mt-3">
                 <h3 className="float-left">Lab Personel List</h3>
-                <a style={{ "color": "white" }} type="button" href="add-personel" className="btn btn-primary float-right">Add Lab Personel</a>
+                <a style={{ "color": "white" }} type="button" href="add-personel" className="btn btn-info float-right">Add Lab Personel</a>
             </div>
             <div className='col-sm-12 col-md-12'>
                 <div className="form-group mb-2">

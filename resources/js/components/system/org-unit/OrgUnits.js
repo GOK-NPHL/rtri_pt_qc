@@ -100,7 +100,7 @@ class Orgunit extends React.Component {
                             <a onClick={() => this.editOrg(value)}
                                 href="#"
                                 style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                                 <i className="fas fa-user-edit"></i>
                             </a>
                             : undefined}
@@ -212,10 +212,10 @@ class Orgunit extends React.Component {
 
         if (this.state.allowedPermissions.includes('upload_new_orgunit_structure')) {
             if (this.state.httpOrgUnits == null || this.state.httpOrgUnits.payload[0].length == 0) {
-                createOrgsButton = <a href="#" onClick={() => this.setState({ showOrgunitLanding: false })} className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                createOrgsButton = <a href="#" onClick={() => this.setState({ showOrgunitLanding: false })} className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                     className="fas fa-sitemap fa-sm text-white-50"></i> Create Organisation Unit</a>;
             } else {
-                createOrgsButton = <a href="#" onClick={() => this.dropCurrentOrgunitStructure()} className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                createOrgsButton = <a href="#" onClick={() => this.dropCurrentOrgunitStructure()} className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                     className="fas fa-sitemap fa-sm text-white-50"></i> Drop current orgunit structure</a>;
             }
 
@@ -295,7 +295,7 @@ class Orgunit extends React.Component {
                                         this.updateOrg(this.state.orgToEdit.org_unit_id, this.state.newOrgToName);
                                         $('#editOrgModal').modal('toggle');
                                     }}
-                                    className="btn btn-primary">Save changes</button>
+                                    className="btn btn-info">Save changes</button>
                             </div>
                         </div>
                     </div>

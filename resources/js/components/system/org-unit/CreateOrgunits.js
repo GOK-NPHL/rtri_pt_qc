@@ -115,7 +115,7 @@ class OrgunitCreate extends React.Component {
         let orgunitStructureElement = <React.Fragment></React.Fragment>;
 
         let nextSaveButton = <div className="col-sm-4 .float-right" style={{ "textAlign": "right" }} onClick={() => this.incrementDecrementOrgUnitStep(true)}>
-            <button id="nextButton" type="button" className="btn btn-primary">Next <i className="fa fa-arrow-right" aria-hidden="true"></i>
+            <button id="nextButton" type="button" className="btn btn-info">Next <i className="fa fa-arrow-right" aria-hidden="true"></i>
             </button></div>;
 
         if (this.state.pageNo == 3) {
@@ -143,13 +143,13 @@ class OrgunitCreate extends React.Component {
                             $("#saveButton").prop('disabled', true);
                         }
                     }
-                    className="btn btn-primary"> Save & Exit <i className="fa fa-floppy-o" aria-hidden="true"></i>
+                    className="btn btn-info"> Save & Exit <i className="fa fa-floppy-o" aria-hidden="true"></i>
                 </button></div>;
         }
 
         let nextBar = <div className="row">
             <div className="col-sm-4 .float-left" style={{ "textAlign": "left" }}>
-                <button id="previousButton" type="button" className="btn btn-primary" onClick={() => this.incrementDecrementOrgUnitStep(false)}><i className="fa fa-arrow-left" aria-hidden="true">
+                <button id="previousButton" type="button" className="btn btn-info" onClick={() => this.incrementDecrementOrgUnitStep(false)}><i className="fa fa-arrow-left" aria-hidden="true">
                 </i> Prev</button>
             </div>
             <div className="col-sm-4" style={{ "textAlign": "center" }}>Step {this.state.pageNo} of 3</div>

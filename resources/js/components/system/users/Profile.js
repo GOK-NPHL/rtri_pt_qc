@@ -149,7 +149,7 @@ class Profile extends React.Component {
                                 </div>
 
                                 <div className="mt-5 text-center">
-                                    <button onClick={() => this.updateProfile()} className="btn btn-primary profile-button" type="button">Update Profile</button>
+                                    <button onClick={() => this.updateProfile()} className="btn btn-info profile-button" type="button">Update Profile</button>
                                 </div>
                             </div>
                         </div>

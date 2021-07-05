@@ -109,7 +109,7 @@ class ListUser extends React.Component {
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                                 <i className="fas fa-user-edit"></i>
                             </a>
                             {/* <a
@@ -141,7 +141,7 @@ class ListUser extends React.Component {
         let pageContent = <div id='user_table' className='row'>
             <div className="col-sm-12 mb-3 mt-3">
                 <h3 className="float-left">System Users</h3>
-                <a style={{ "color": "white" }} type="button" href="add-admin-user" className="btn btn-primary float-right">Add User</a>
+                <a style={{ "color": "white" }} type="button" href="add-admin-user" className="btn btn-info float-right">Add User</a>
             </div>
             <div className='col-sm-12 col-md-12'>
                 <div className="form-group mb-2">

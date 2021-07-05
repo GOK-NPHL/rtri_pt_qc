@@ -90,7 +90,7 @@ class OrgUnitButton extends React.Component {
                                         $("#spi_orgunits").toggle();
                                     }}
                                     type="button"
-                                    className="btn btn-primary">Close</button>
+                                    className="btn btn-info">Close</button>
                             </div>
                         </div>
                     </div>

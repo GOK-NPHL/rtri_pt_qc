@@ -91,7 +91,7 @@ class ListShipment extends React.Component {
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                                 <i className="fas fa-user-edit"></i>
                             </a>
                             {/* <a

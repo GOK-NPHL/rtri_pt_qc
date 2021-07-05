@@ -277,7 +277,7 @@ class AddLab extends React.Component {
 
                                 <div className="form-group row">
                                     <div className="col-sm-12 text-center">
-                                        <a href="#" onClick={() => this.saveLab()} type="" className="d-inline m-2 btn btn-primary m">Add</a>
+                                        <a href="#" onClick={() => this.saveLab()} type="" className="d-inline m-2 btn btn-info m">Add</a>
                                         <a href="list-lab" className="d-inline m-2 btn btn-danger">Cancel</a>
                                     </div>
                                 </div>

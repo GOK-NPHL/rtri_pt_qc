@@ -187,7 +187,7 @@ class Register extends React.Component {
                                     <button
                                         onClick={this.saveUser}
                                         style={{ "marginTop": "10px" }}
-                                        className="btn btn-primary"
+                                        className="btn btn-info"
                                         type="submit">Save User</button>
                                 </form>
                             </div>

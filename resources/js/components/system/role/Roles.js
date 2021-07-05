@@ -149,7 +149,7 @@ class Roles extends React.Component {
                             (this.state.allowedPermissions.includes('edit_role') || this.state.allowedPermissions.includes('delete_role')) ?
                             <td>
                                 {(this.state.allowedPermissions.length > 0) && this.state.allowedPermissions.includes('edit_role') ?
-                                    <a onClick={() => this.editRole(value)} href="#" style={{ 'marginRight': '5px' }} className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                                    <a onClick={() => this.editRole(value)} href="#" style={{ 'marginRight': '5px' }} className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                                         <i className="fas fa-user-edit"></i>
                                     </a> : undefined
                                 }
@@ -235,7 +235,7 @@ class Roles extends React.Component {
         let roleCreateButton = '';
         if (this.state.allowedPermissions.length > 0) {
             if (this.state.allowedPermissions.includes('add_role')) {
-                roleCreateButton = <a href="#" onClick={this.toggleDisplay} className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                roleCreateButton = <a href="#" onClick={this.toggleDisplay} className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm"><i
                     className="fas fa-users fa-sm text-white-50"></i> Create Roles</a>;
             }
         }

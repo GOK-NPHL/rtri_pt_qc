@@ -39,7 +39,7 @@ class PtShipment extends React.Component {
                                 })
                             }}
                             type="button" href="#"
-                            className="btn btn-primary 
+                            className="btn btn-info 
                 float-right">{this.state.isShowNewShipmentPage ? 'Close new shipment page' : 'Add new PT shipment'}</a>
                     </div>
                 </div>

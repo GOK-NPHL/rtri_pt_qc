@@ -108,7 +108,7 @@ class TreeModal extends React.Component {
                                         this.props.saveOrgUnitAction();
                                         $('#orgActionModal').modal('toggle');
                                     }}
-                                    className="btn btn-primary">Save changes</button>
+                                    className="btn btn-info">Save changes</button>
                             </div>
                         </div>
                     </div>
