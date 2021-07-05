@@ -17,7 +17,8 @@ class AddReadiness extends React.Component {
             endDate: '',
             selected: [],
             dualListptions: [],
-            readinessQuestions: []
+            readinessQuestions: [],
+            readinessItems: []
         }
 
         this.handleNameChange = this.handleNameChange.bind(this);
@@ -62,13 +63,15 @@ class AddReadiness extends React.Component {
     }
 
     addReadinessQuestion(readiness) {
-        console.log(readiness['qustionType'] == 'comment');
 
-        if (readiness['qustionType'] == 'question') {
+        let rdItems = this.state.readinessItems;
+        rdItems.push(readiness);
 
-            if (readiness['answerType'] == 'list') {
+        if (readiness['qustion_type'] == 'question') {
+
+            if (readiness['answer_type'] == 'list') {
                 let id = uuidv4();
-                let qstOptins = readiness['answerOptions'].split(',');
+                let qstOptins = readiness['answer_options'].split(',');
                 let qstElement =
                     <div key={id} className="form-group">
                         <label className="float-left" htmlFor={id + "qst_answer"}>{readiness['question']}</label>
@@ -82,9 +85,10 @@ class AddReadiness extends React.Component {
                 let questions = this.state.readinessQuestions;
                 questions.push(qstElement);
                 this.setState({
-                    readinessQuestions: questions
+                    readinessQuestions: questions,
+                    readinessItems: rdItems
                 })
-            } else if (readiness['answerType'] == 'number') {
+            } else if (readiness['answer_type'] == 'number') {
                 let id = uuidv4();
                 let qstElement =
                     <div key={id} className="form-group">
@@ -94,12 +98,12 @@ class AddReadiness extends React.Component {
                 let questions = this.state.readinessQuestions;
                 questions.push(qstElement);
                 this.setState({
-                    readinessQuestions: questions
+                    readinessQuestions: questions,
+                    readinessItems: rdItems
                 })
             }
 
-        } else if (readiness['qustionType'] == 'comment') {
-            console.log("doing commet")
+        } else if (readiness['qustion_type'] == 'comment') {
             let id = uuidv4();
             let qstElement =
                 <div className="form-group">
@@ -109,11 +113,10 @@ class AddReadiness extends React.Component {
             let questions = this.state.readinessQuestions;
             questions.push(qstElement);
             this.setState({
-                readinessQuestions: questions
+                readinessQuestions: questions,
+                readinessItems: rdItems
             })
         }
-
-
 
     }
 
@@ -138,15 +141,18 @@ class AddReadiness extends React.Component {
                 readiness['start_date'] = this.state.startDate;
                 readiness['end_date'] = this.state.endDate;
                 readiness['participants'] = this.state.selected;
+                readiness['readiness_questions'] = this.state.readinessItems;
+
                 let response = await SaveReadiness(readiness);
-                console.log(response);
                 if (response.status == 200) {
                     this.setState({
                         message: response.data.Message,
                         startDate: '',
                         endDate: '',
                         name: '',
-                        selected: []
+                        selected: [],
+                        readinessQuestions: [],
+                        readinessItems: []
                     });
                 } else {
                     this.setState({
@@ -162,7 +168,6 @@ class AddReadiness extends React.Component {
     }
 
     render() {
-        console.log(this.state.readinessQuestions);
         let dualListValues = [];
         if (this.state.dualListptions.length != 0) {
             dualListValues = this.state.dualListptions.map((participant) => {

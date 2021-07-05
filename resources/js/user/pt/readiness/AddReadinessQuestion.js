@@ -74,10 +74,10 @@ class AddReadinessQuestion extends React.Component {
             let readiness = {};
 
             readiness['question'] = this.state.question;
-            readiness['answerOptions'] = this.state.answerOptions;
-            readiness['answerType'] = this.state.answerType;
-            readiness['qustionPosition'] = this.state.qustionPosition;
-            readiness['qustionType'] = this.state.qustionType;
+            readiness['answer_options'] = this.state.answerOptions;
+            readiness['answer_type'] = this.state.answerType;
+            readiness['qustion_position'] = this.state.qustionPosition;
+            readiness['qustion_type'] = this.state.qustionType;
             this.setState({
                 answerOptions: '',
                 answerType: 'list',
