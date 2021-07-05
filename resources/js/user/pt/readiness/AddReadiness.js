@@ -123,9 +123,10 @@ class AddReadiness extends React.Component {
             this.state.name == '' ||
             this.state.start_date == '' ||
             this.state.end_date == '' ||
-            this.state.selected.length == 0
+            this.state.selected.length == 0 ||
+            this.state.readinessQuestions.length == 0
+
         ) {
-            console.log(this.state.name, this.state.start_date, this.state.end_date, this.state.selected.length)
             this.setState({
                 message: "Kindly fill all fileds marked * in the form"
             })
@@ -182,7 +183,7 @@ class AddReadiness extends React.Component {
                         <div style={{ "margin": "0 auto", "width": "80%" }} className="text-center">
 
                             <div className="form-group row">
-                                <label htmlFor="u_name" className="col-sm-2 col-form-label">Name *</label>
+                                <label htmlFor="u_name" className="col-sm-2 col-form-label">Name/Title *</label>
                                 <div className="col-sm-10">
                                     <input
                                         value={this.state.name}
