@@ -17,6 +17,7 @@ class CreateReadinessesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
+            $table->unsignedBigInteger('admin_id');
             $table->date('start_date');
             $table->date('end_date');
         });
