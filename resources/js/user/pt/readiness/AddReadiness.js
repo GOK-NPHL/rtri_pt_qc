@@ -218,7 +218,7 @@ class AddReadiness extends React.Component {
 
                             <div className="form-row">
                                 <div className="col-sm-2 mb-3">
-                                    <label className="float-left">Assign facilities *</label><br />
+                                    <label className="float-left">Assign laboratory *</label><br />
                                 </div>
                                 <div className="col-sm-10 mb-3">
 
