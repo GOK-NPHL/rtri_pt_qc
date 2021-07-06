@@ -10,7 +10,8 @@ class Readiness extends Model
     protected $fillable = [
         "start_date",
         "end_date",
-        "name"
+        "name",
+        "admin_id"
     ];
 
     public function laboratories()
