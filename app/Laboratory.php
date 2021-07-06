@@ -29,6 +29,11 @@ class Laboratory extends Model
         return $this->hasMany('\App\User');
     }
 
+    public function ptshipement()
+    {
+        return $this->belongsToMany('\App\PtShipement');
+    }
+
     public function readiness()
     {
         return $this->belongsToMany('App\Readiness');
