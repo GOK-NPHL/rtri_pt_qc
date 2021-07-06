@@ -67,6 +67,7 @@ class PTReadinessController extends Controller
         try {
 
             $readinesses = Readiness::select(
+                "readinesses.id",
                 "readinesses.name",
                 "readinesses.updated_at as last_update",
                 "admins.name as created_by",
