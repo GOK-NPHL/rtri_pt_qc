@@ -545,3 +545,21 @@ export async function FetchReadiness() {
         return err.response
     }
 }
+
+
+export async function SaveShipment(shipement) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/create_shipment`,
+            data: {
+                shipement: shipement,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err.response);
+        return err.response
+    }
+}
