@@ -533,3 +533,15 @@ export async function SaveReadiness(readiness) {
         return err.response
     }
 }
+
+export async function FetchReadiness() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_readiness`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}

@@ -37,5 +37,6 @@ Route::post('/create_participant',[ParticipantController::class, 'createParticip
 Route::get('/get_lab_personel',[ParticipantController::class, 'getLabPersonel'])->name('get_lab_personel')->middleware('auth:admin');
 Route::post('/create_lab_personel',[ParticipantController::class, 'createLabPersonel'])->name('create_lab_personel')->middleware('auth:admin');
 
+Route::get('/get_readiness',[PTReadinessController::class, 'getReadiness'])->name('get_readiness')->middleware('auth:admin');
 Route::post('/create_readiness',[PTReadinessController::class, 'saveReadiness'])->name('create_readiness')->middleware('auth:admin');
 

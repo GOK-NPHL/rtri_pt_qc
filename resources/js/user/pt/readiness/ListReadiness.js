@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
-import { FetchLabPersonel } from '../../../components/utils/Helpers';
+import { FetchReadiness } from '../../../components/utils/Helpers';
 
 
 class ListReadiness extends React.Component {
@@ -26,11 +26,10 @@ class ListReadiness extends React.Component {
     componentDidMount() {
 
         (async () => {
-            let response = await FetchLabPersonel();
+            let response = await FetchReadiness();
             this.setState({
                 data: response
             });
-            console.log(response);
         })();
 
     }
@@ -68,15 +67,12 @@ class ListReadiness extends React.Component {
         if (this.state.data.length > 0) {
 
             this.state.data.map((element, index) => {
-                console.log(element);
                 tableElem.push(<tr key={index}>
                     <th scope="row">{index + 1}</th>
-                    <td>{element.lab_name}</td>
-                    <td>{element.name} {element.second_name}</td>
-                    <td>{element.phone_number}</td>
-                    <td>{element.email}</td>
-                    <td>{element.is_active ? 'Active' : 'Inactive'}</td>
-
+                    <td>{element.name}</td>
+                    <td>{element.participant_count}</td>
+                    <td>{element.last_update}</td>
+                    <td>{element.created_by}</td>
                     {
 
                         <td>
@@ -145,11 +141,10 @@ class ListReadiness extends React.Component {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Facility Name</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Cell/Mobile</th>
-                            <th scope="col">Primary Email</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Name/Title</th>
+                            <th scope="col">No. of participant(s)</th>
+                            <th scope="col">Date Updated</th>
+                            <th scope="col">Created by</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>

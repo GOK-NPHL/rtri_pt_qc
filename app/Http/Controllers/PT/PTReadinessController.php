@@ -8,6 +8,8 @@ use App\Readiness;
 use App\ReadinessQuestion;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PTReadinessController extends Controller
 {
@@ -24,7 +26,7 @@ class PTReadinessController extends Controller
     public function saveReadiness(Request $request)
     {
         try {
-
+            $user = Auth::user();
             $checklist = Readiness::where('name', $request->readiness['name'])->get();
             if (count($checklist) > 0) {
                 return response()->json(['Message' => 'Error during creating Checklist. Checklist name already exist '], 500);
@@ -34,6 +36,7 @@ class PTReadinessController extends Controller
                 'name' => $request->readiness['name'],
                 'start_date' => $request->readiness['start_date'],
                 'end_date' => $request->readiness['end_date'],
+                'admin_id' => $user->id
             ]);
 
             // Save questions
@@ -56,6 +59,27 @@ class PTReadinessController extends Controller
             return response()->json(['Message' => 'Created successfully'], 200);
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Could not save the checklist ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function getReadiness(Request $request)
+    {
+        try {
+
+            $readinesses = Readiness::select(
+                "readinesses.name",
+                "readinesses.updated_at as last_update",
+                "admins.name as created_by",
+                DB::raw('count(*) as participant_count')
+            )->join('admins', 'admins.id', '=', 'readinesses.admin_id')
+                ->join('laboratory_readiness', 'laboratory_readiness.readiness_id', '=', 'readinesses.id')
+                ->groupBy('laboratory_readiness.readiness_id')
+                ->orderBy('last_update', 'DESC')
+                ->get();
+
+            return $readinesses;
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could fetch readiness list: ' . $ex->getMessage()], 500);
         }
     }
 }
