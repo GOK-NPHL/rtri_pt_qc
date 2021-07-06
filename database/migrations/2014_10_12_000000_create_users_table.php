@@ -29,11 +29,11 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('users', function ($table) {
-            $table->foreign('laboratory_id')
-                ->references('id')->on('laboratories')
-                ->onDelete('cascade');
-        });
+        // Schema::table('users', function ($table) {
+        //     $table->foreign('laboratory_id')
+        //         ->references('id')->on('laboratories')
+        //         ->onDelete('cascade');
+        // });
     }
 
     /**

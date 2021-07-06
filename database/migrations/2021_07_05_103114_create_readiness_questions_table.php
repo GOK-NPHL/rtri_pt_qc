@@ -24,11 +24,11 @@ class CreateReadinessQuestionsTable extends Migration
             $table->string('qustion_type');
         });
 
-        Schema::table('readiness_questions', function ($table) {
-            $table->foreign('readiness_id')
-                ->references('id')->on('readinesses')
-                ->onDelete('cascade');
-        });
+        // Schema::table('readiness_questions', function ($table) {
+        //     $table->foreign('readiness_id')
+        //         ->references('id')->on('readinesses')
+        //         ->onDelete('cascade');
+        // });
     }
 
     /**
