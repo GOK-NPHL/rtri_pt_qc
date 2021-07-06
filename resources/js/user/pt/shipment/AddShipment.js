@@ -1,11 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import LineGraph from '../../../components/utils/charts/LineGraph';
-import RTCard from '../../../components/utils/RTCard';
-import StackedHorizontal from '../../../components/utils/charts/StackedHorizontal'
-import { SaveLabPersonel, FetchParticipantList } from '../../../components/utils/Helpers';
+import { FetchParticipantList, SaveShipment, FetchReadiness } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
+import DualListBox from 'react-dual-listbox';
 import './PtShipment.css';
+
 import ReactTooltip from 'react-tooltip';
 
 class AddShipement extends React.Component {
@@ -17,87 +15,173 @@ class AddShipement extends React.Component {
             isSubmitResult: false,
             dtObject: null,
             message: '',
-            email: '',
-            facility: '',
-            firstName: '',
-            secondName: '',
-            phoneNumber: '',
-            password: '',
-            hasQcAccess: true,
-            hasPtAccess: true,
-            isActive: 'true',
-            participantList: [],
-            tableRows: []
+            round: '',
+            shipmentCode: '',
+            resultDueDate: '',
+            passMark: 80,
+            testInstructions: '',
+            samples: [],
+            readinessId: '',
+            samplesNumber: 0,
+            tableRows: [], //samples elements,
+            participantSource: 'checklist',
+            dualListptions: [],
+            readinessChecklists: [],
+            selected: [],
         }
 
-        this.handleFacilityChange = this.handleFacilityChange.bind(this);
-        this.handleIsActiveChange = this.handleIsActiveChange.bind(this);
+        this.handleRoundChange = this.handleRoundChange.bind(this);
+        this.handleShipmentCodeChange = this.handleShipmentCodeChange.bind(this);
+        this.handleResultDueDateChange = this.handleResultDueDateChange.bind(this);
+        this.handlePassMarkChange = this.handlePassMarkChange.bind(this);
+        this.handleTestInstructionsChange = this.handleTestInstructionsChange.bind(this);
         this.addSampleRow = this.addSampleRow.bind(this);
         this.deleteSampleRow = this.deleteSampleRow.bind(this);
+        this.sampleReferenceResultChange = this.sampleReferenceResultChange.bind(this);
+        this.sampleNameChange = this.sampleNameChange.bind(this);
+        this.handleParticipantSourceChange = this.handleParticipantSourceChange.bind(this);
+        this.dualListOnChange = this.dualListOnChange.bind(this);
 
     }
 
     componentDidMount() {
-
+        (async () => {
+            let partsList = await FetchParticipantList();
+            let readinessChecklists = await FetchReadiness();
+            this.setState({
+                dualListptions: partsList,
+                readinessChecklists: readinessChecklists
+            });
+        })();
     }
 
+    dualListOnChange(selected) {
+        this.setState({ selected: selected });
+    }
 
-    handleIsActiveChange(isActive) {
+    handleChecklistChange(readinessId) {
+        this.setState({ readinessId: readinessId });
+    }
+
+    handleParticipantSourceChange(participantSource) {
+
+        if (participantSource == 'participants') {
+            this.setState({
+                participantSource: participantSource,
+                readinessId: ''
+            });
+        } else if (participantSource == 'checklist') {
+            this.setState({
+                participantSource: participantSource,
+                selected: []
+            });
+        }
+
+    }
+    handleRoundChange(round) {
 
         this.setState({
-            isActive: isActive
+            round: round
         });
     }
 
-    handleFacilityChange(facility) {
+    handleShipmentCodeChange(shipmentCode) {
+
         this.setState({
-            facility: facility
+            shipmentCode: shipmentCode
+        });
+    }
+
+    handleResultDueDateChange(resultDueDate) {
+
+        this.setState({
+            resultDueDate: resultDueDate
+        });
+    }
+
+    handlePassMarkChange(passMark) {
+
+        this.setState({
+            passMark: passMark
+        });
+    }
+
+    handleTestInstructionsChange(testInstructions) {
+
+        this.setState({
+            testInstructions: testInstructions
         });
     }
 
 
-
-    savePersonel() {
-
+    saveShipment() {
+        let isSamplesDataFilled = true;
+        this.state.samples.map((samples) => {
+            if (
+                samples['reference_result'] == null ||
+                samples['name'] == null ||
+                samples['reference_result'] == '' ||
+                samples['name'] == ''
+            ) {
+                isSamplesDataFilled = false
+            }
+        });
         if (
-            this.state.facility == '' ||
-            this.state.email == '' ||
-            this.state.phoneNumber == '' ||
-            this.state.firstName == '' ||
-            this.state.password == ''
+            this.state.passMark == '' ||
+            this.state.resultDueDate == '' ||
+            this.state.shipmentCode == '' ||
+            this.state.round == '' ||
+            this.state.samplesNumber == 0 ||
+            !isSamplesDataFilled ||
+            (this.state.selected.length == 0 && this.state.readinessId == '')
 
         ) {
+            console.log(!this.state.isSamplesDataFilled)
+            let msg = [<p>Errors in:</p>,
+            <p>{this.state.passMark == '' ? <strong>Pass mark field</strong> : ''}</p>,
+            <p>{this.state.resultDueDate == '' ? <strong>Result Due Date field</strong> : ''}</p>,
+            <p>{this.state.shipmentCode == '' ? <strong>Shipement code field</strong> : ''}</p>,
+            <p>{this.state.round == '' ? <strong>Round Name field</strong> : ''}</p>,
+            <p>{this.state.samplesNumber == '' ? <strong>No samples attached</strong> : ''}</p>,
+            <p>{!this.state.isSamplesDataFilled ? <strong>Not all samples have a name and reference result</strong> : '11'}</p>,
+            <p>{(this.state.selected.length == 0 && this.state.readinessId == '') ? <strong>No readiness of participants selected</strong> : ''}</p>]
+
             this.setState({
-                message: "Kindly fill the required fileds marked in *"
+                message:
+                    [
+                        <p>Kindly fill the required fileds marked in *</p>,
+                        <p>{msg}</p>
+                    ]
             });
             $('#addShipmentModal').modal('toggle');
         } else {
 
             (async () => {
-                let personel = {};
-                personel['email'] = this.state.email;
-                personel['facility'] = this.state.facility;
-                personel['first_name'] = this.state.firstName;
-                personel['second_name'] = this.state.secondName ? this.state.secondName : null;
-                personel['phone_number'] = this.state.phoneNumber;
-                personel['password'] = this.state.password;
-                personel['has_qc_access'] = this.state.hasQcAccess ? 1 : 0;
-                personel['has_pt_access'] = this.state.hasPtAccess ? 1 : 0;
-                personel['is_active'] = this.state.isActive == 'true' ? 1 : 0;
+                let shipement = {};
+                shipement['pass_mark'] = this.state.passMark;
+                shipement['result_due_date'] = this.state.resultDueDate;
+                shipement['shipment_code'] = this.state.shipmentCode;
+                shipement['round'] = this.state.round;
+                shipement['samples'] = this.state.samples;
+                shipement['test_instructions'] = this.state.testInstructions;
+                shipement['selected'] = this.state.selected;
+                shipement['readiness_id'] = this.state.readinessId;
 
-                let response = await SaveLabPersonel(personel);
+                let response = await SaveShipment(shipement);
 
                 if (response.status == 200) {
                     this.setState({
                         message: response.data.Message,
-                        email: '',
-                        facility: '',
-                        firstName: '',
-                        secondName: '',
-                        phoneNumber: '',
-                        password: '',
-                        hasQcAccess: true,
-                        hasPtAccess: true,
+                        passMark: 80,
+                        resultDueDate: '',
+                        shipmentCode: '',
+                        round: '',
+                        samples: [],
+                        tableRows: [],
+                        samplesNumber: 0,
+                        selected: [],
+                        readinessId: '',
+                        testInstructions: ''
                     });
                 } else {
                     this.setState({
@@ -107,50 +191,79 @@ class AddShipement extends React.Component {
                 $('#addShipmentModal').modal('toggle');
             })();
         }
+    }
 
+    sampleReferenceResultChange(index, refResult) {
+        console.log(index, refResult);
+        let samples = this.state.samples;
+        let sample = samples[index];
+        sample['reference_result'] = refResult;
+        samples[index] = sample;
+        this.setState({
+            samples: samples
+        })
+    }
+
+    sampleNameChange(index, name) {
+        let samples = this.state.samples;
+        let sample = samples[index];
+        sample['name'] = name;
+        samples[index] = sample;
+        this.setState({
+            samples: samples
+        })
     }
 
     deleteSampleRow(index) {
-        console.log(index);
 
         let tableRows = this.state.tableRows;
-        delete tableRows[index]
+        let samples = this.state.samples;
+        delete samples[index];
+        delete tableRows[index];
         this.setState({
-            tableRows: tableRows
+            tableRows: tableRows,
+            samples: samples,
+            samplesNumber: this.state.samplesNumber - 1
         })
     }
 
     addSampleRow(index) {
         let tableRows = this.state.tableRows;
+
+
         let tableRow = <tr key={uuidv4()}>
             <td className="px-lg-2" style={{ "maxWidth": "150px" }}>
-                <input className="form-control" placeholder="please enter sample name" />
+                <input onChange={(event) => this.sampleNameChange(index, event.target.value)} className="form-control" placeholder="please enter sample name" />
             </td>
             {/* <td onChange={this.qcInterpretationLongterm.bind(this)}> */}
             <td style={{ "maxWidth": "150px" }}>
                 <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" value="lt"
+                    <input className="form-check-input"
+                        type="radio" value="lt" onChange={() => this.sampleReferenceResultChange(index, 'lt')}
                         name={index + "long-term-radio"} id={index + "result_lt"} />
                     <label className="form-check-label" htmlFor={index + "result_lt"} >
                         LT
                     </label>
                 </div>
                 <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" value="recent"
+                    <input className="form-check-input" type="radio"
+                        value="recent" onChange={() => this.sampleReferenceResultChange(index, 'recent')}
                         name={index + "long-term-radio"} id={index + "result_recent"} />
                     <label className="form-check-label" htmlFor={index + "result_recent"} >
                         recent
                     </label>
                 </div>
                 <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" value="neg"
+                    <input className="form-check-input" type="radio"
+                        value="neg" onChange={() => this.sampleReferenceResultChange(index, 'neg')}
                         name={index + "long-term-radio"} id={index + "result_neg"} />
                     <label className="form-check-label" htmlFor={index + "result_neg"} >
                         neg
                     </label>
                 </div>
                 <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" value="invalid"
+                    <input className="form-check-input" type="radio"
+                        value="invalid" onChange={() => this.sampleReferenceResultChange(index, 'invalid')}
                         name={index + "long-term-radio"} id={index + "result_invalid"} />
                     <label className="form-check-label" htmlFor={index + "result_invalid"} >
                         invalid
@@ -166,15 +279,57 @@ class AddShipement extends React.Component {
 
             </td>
         </tr>;
+
+        let samples = this.state.samples;
+        let newSample = {};
+        newSample['name'] = '';
+        newSample['reference_result'] = '';
+
         tableRows.push(tableRow);
+        samples.push(newSample);
+
         this.setState({
-            tableRows: tableRows
+            tableRows: tableRows,
+            samples: samples,
+            samplesNumber: this.state.samplesNumber + 1
         });
 
     }
 
 
     render() {
+
+        let dualListValues = [];
+        if (this.state.dualListptions.length != 0) {
+            dualListValues = this.state.dualListptions.map((participant) => {
+                let pat = {};
+                pat['value'] = participant.id;
+                pat['label'] = participant.lab_name;
+                return pat;
+            })
+        }
+
+        let checklists = [];
+        this.state.readinessChecklists.map((checklist) => {
+            checklists.push(<option key={checklist.id} value={checklist.id}>{checklist.name}</option>);
+        });
+
+        let labSelect = <div>No checklist defined</div>;
+        if (this.state.readinessChecklists.length != 0) {
+            labSelect = <select
+                id="u_readinessId"
+                value={this.state.readinessId}
+                onChange={(event) => this.handleChecklistChange(event.target.value)} type="text"
+                data-dropup-auto="false"
+                data-live-search="true"
+                // className="selectpicker form-control dropup">
+                className="form-control"
+            >
+                <option >Select checklist...</option>
+                {checklists}
+            </select>;
+        }
+
 
         return (
             <React.Fragment>
@@ -220,7 +375,7 @@ class AddShipement extends React.Component {
                                     value={this.state.passMark}
                                     min={0}
                                     max={100}
-                                    value={80}
+                                    value={this.state.passMark}
                                     onChange={(event) => this.handlePassMarkChange(event.target.value)}
                                     type="number" className="form-control" id="u_pass_mark" />
                             </div>
@@ -231,7 +386,7 @@ class AddShipement extends React.Component {
                         <div className="form-row">
 
                             <div className="col-sm-12 mb-3">
-                                <label htmlFor="test_instructions" >Testing Instructions *</label>
+                                <label htmlFor="test_instructions" >Testing Instructions</label>
                                 <textarea
                                     value={this.state.testInstructions}
                                     onChange={(event) => this.handleTestInstructionsChange(event.target.value)}
@@ -239,12 +394,65 @@ class AddShipement extends React.Component {
                             </div>
                         </div>
 
-                        <div className="form-row mt-2 bg-white">
-                            <div className="col-sm-12">
+                        <div className="form-row bg-white mb-3 pt-2 rounded">
+                            {/* choose participant source */}
+                            <div className="col-sm-12 mb-3  ml-2">
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input"
+                                        checked={this.state.participantSource == 'checklist'}
+                                        type="radio" value="checklist" onChange={() => this.handleParticipantSourceChange('checklist')}
+                                        name="attach_participants" id="checklist" />
+                                    <label className="form-check-label" htmlFor="checklist" >
+                                        Attach Checklist With participants
+                                    </label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio"
+                                        checked={this.state.participantSource == 'participants'}
+                                        value="participants" onChange={() => this.handleParticipantSourceChange('participants')}
+                                        name="attach_participants" id="participants" />
+                                    <label className="form-check-label" htmlFor="participants" >
+                                        Attach participants
+                                    </label>
+                                </div>
 
-                                <h5>Panel log</h5>
+                                <div className="mt-3"
+                                    style={{
+                                        "display": this.state.participantSource == 'participants' ? '' : "none",
+                                        "width": "80%"
+                                    }} >
+                                    <p style={{ "fontWeight": "700" }}>Choose participants:</p>
+                                    <DualListBox
+                                        canFilter
+                                        options={dualListValues}
+                                        selected={this.state.selected}
+                                        onChange={this.dualListOnChange}
+                                    />
+                                </div>
+
+                                <div className="mt-3"
+                                    style={{
+                                        "display": this.state.participantSource == 'checklist' ? '' : "none",
+                                        "width": "50%"
+                                    }}>
+                                    <label htmlFor="u_readinessId" >Select Checklist *</label>
+                                    {labSelect}
+                                </div>
+
+                            </div>
+                            {/* End choose participant source */}
+
+
+                        </div>
+
+
+                        <div className="form-row mt-2 bg-white rounded">
+                            <div className="col-sm-12  ml-2">
+
+                                <h5>Sample log</h5>
                                 <hr />
                             </div>
+
                         </div>
 
                         <div className="form-row bg-white">
@@ -283,7 +491,7 @@ class AddShipement extends React.Component {
 
                         <div className="form-group row mt-4">
                             <div className="col-sm-12 text-center">
-                                <a href="#" onClick={() => this.savePersonel()} type="" className="d-inline m-2 btn btn-info m">Ship Round</a>
+                                <a href="#" onClick={() => this.saveShipment()} type="" className="d-inline m-2 btn btn-info m">Ship Round</a>
                                 <a href="#" className="d-inline m-2 btn btn-danger">Cancel</a>
                             </div>
                         </div>
