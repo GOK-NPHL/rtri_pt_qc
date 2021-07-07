@@ -41,5 +41,5 @@ Route::post('/create_lab_personel', [ParticipantController::class, 'createLabPer
 Route::get('/get_readiness', [PTReadinessController::class, 'getReadiness'])->name('get_readiness')->middleware('auth:admin');
 Route::post('/create_readiness', [PTReadinessController::class, 'saveReadiness'])->name('create_readiness')->middleware('auth:admin');
 
-Route::get('/get_shipment', [PTShipmentController::class, 'getShipment'])->name('get_shipment')->middleware('auth:admin');
+Route::get('/get_shipments', [PTShipmentController::class, 'getShipments'])->name('get_shipment')->middleware('auth:admin');
 Route::post('/create_shipment', [PTShipmentController::class, 'saveShipment'])->name('create_shipment')->middleware('auth:admin');

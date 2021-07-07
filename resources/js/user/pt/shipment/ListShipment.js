@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
-import { FetchLabPersonel } from '../../../components/utils/Helpers';
+import { FetchShipments } from '../../../components/utils/Helpers';
 
 
 class ListShipment extends React.Component {
@@ -26,7 +26,7 @@ class ListShipment extends React.Component {
     componentDidMount() {
 
         (async () => {
-            let response = await FetchLabPersonel();
+            let response = await FetchShipments();
             this.setState({
                 data: response
             });
@@ -70,12 +70,11 @@ class ListShipment extends React.Component {
             this.state.data.map((element, index) => {
                 tableElem.push(<tr key={index}>
                     <th scope="row">{index + 1}</th>
-                    <td>{element.lab_name}</td>
-                    <td>{element.name} {element.second_name}</td>
-                    <td>{element.phone_number}</td>
-                    <td>{element.email}</td>
-                    <td>{element.is_active ? 'Active' : 'Inactive'}</td>
-
+                    <td>{element.round_name}</td>
+                    <td>{element.shipment_code}</td>
+                    <td>{element.pass_mark}</td>
+                    <td>{element.participant_count}</td>
+                    <td>{element.last_update}</td>
                     {
 
                         <td>
@@ -141,11 +140,11 @@ class ListShipment extends React.Component {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Facility Name</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Cell/Mobile</th>
-                            <th scope="col">Primary Email</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Round Name</th>
+                            <th scope="col">Shipement Code</th>
+                            <th scope="col">Pass Mark</th>
+                            <th scope="col">Participant Count</th>
+                            <th scope="col">Last Update</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>

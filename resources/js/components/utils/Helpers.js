@@ -563,3 +563,15 @@ export async function SaveShipment(shipement) {
         return err.response
     }
 }
+
+export async function FetchShipments() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_shipments`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}

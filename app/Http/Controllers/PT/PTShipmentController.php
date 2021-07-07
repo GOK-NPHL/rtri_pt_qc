@@ -17,25 +17,25 @@ use Illuminate\Support\Facades\Log;
 class PTShipmentController extends Controller
 {
 
-    public function getShipment(Request $request)
+    public function getShipments(Request $request)
     {
 
         try {
 
-            $readinesses = Readiness::select(
-                "readinesses.name",
-                "readinesses.updated_at as last_update",
-                "admins.name as created_by",
+            $readinessesWithNullLabId = PtShipement::select(
+                "pt_shipements.round_name",
+                "pt_shipements.code as shipment_code",
+                "pt_shipements.updated_at as last_update",
+                "pt_shipements.pass_mark",
                 DB::raw('count(*) as participant_count')
-            )->join('admins', 'admins.id', '=', 'readinesses.admin_id')
-                ->join('laboratory_readiness', 'laboratory_readiness.readiness_id', '=', 'readinesses.id')
-                ->groupBy('laboratory_readiness.readiness_id')
+            )->join('laboratory_pt_shipement', 'laboratory_pt_shipement.pt_shipement_id', '=', 'pt_shipements.id')
+                ->groupBy('laboratory_pt_shipement.pt_shipement_id')
                 ->orderBy('last_update', 'DESC')
                 ->get();
 
-            return $readinesses;
+            return $readinessesWithNullLabId;
         } catch (Exception $ex) {
-            return response()->json(['Message' => 'Could fetch shipment list: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Could fetch readiness list: ' . $ex->getMessage()], 500);
         }
     }
 
@@ -49,20 +49,24 @@ class PTShipmentController extends Controller
                 return response()->json(['Message' => 'Error during creating shipment. Round name already exist '], 500);
             }
 
-            if (empty($request->shipement['readiness_id']) && count($request->shipement['selected'])==0 ) {
+            if (empty($request->shipement['readiness_id']) && count($request->shipement['selected']) == 0) {
                 return response()->json(['Message' => 'Please select checklist of participants for this shipment '], 500);
             }
 
             $participantsList = [];
 
-            if (empty($request->shipement['readiness_id'] != true)) {
-                $readiness = Readiness::find($request->shipement['readiness_id']);
-                foreach ($readiness->laboratories as $lab) {
-                    $participantsList[] = $lab->pivot->laboratory_id;
-                }
-            } else {
+            if (empty($request->shipement['readiness_id'] == true)) {
+
                 $participantsList = $request->shipement['selected'];
             }
+            // if (empty($request->shipement['readiness_id'] != true)) {
+            //     $readiness = Readiness::find($request->shipement['readiness_id']);
+            //     foreach ($readiness->laboratories as $lab) {
+            //         $participantsList[] = $lab->pivot->laboratory_id;
+            //     }
+            // } else {
+            //     $participantsList = $request->shipement['selected'];
+            // }
             // $table->unsignedBigInteger('readiness_id')->nullable();
 
             $shipment = PtShipement::create([
