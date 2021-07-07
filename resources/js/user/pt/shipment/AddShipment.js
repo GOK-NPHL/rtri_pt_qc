@@ -492,7 +492,7 @@ class AddShipement extends React.Component {
                         <div className="form-group row mt-4">
                             <div className="col-sm-12 text-center">
                                 <a href="#" onClick={() => this.saveShipment()} type="" className="d-inline m-2 btn btn-info m">Ship Round</a>
-                                <a href="#" className="d-inline m-2 btn btn-danger">Cancel</a>
+                                <a onClick={()=>this.props.toggleView()} className="d-inline m-2 btn btn-danger">Cancel</a>
                             </div>
                         </div>
 
