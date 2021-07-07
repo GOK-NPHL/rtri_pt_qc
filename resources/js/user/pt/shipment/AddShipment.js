@@ -403,7 +403,7 @@ class AddShipement extends React.Component {
                                         type="radio" value="checklist" onChange={() => this.handleParticipantSourceChange('checklist')}
                                         name="attach_participants" id="checklist" />
                                     <label className="form-check-label" htmlFor="checklist" >
-                                        Attach Checklist With participants
+                                        Attach Checklist Sent to Laboratories 
                                     </label>
                                 </div>
                                 <div className="form-check form-check-inline">
@@ -412,7 +412,7 @@ class AddShipement extends React.Component {
                                         value="participants" onChange={() => this.handleParticipantSourceChange('participants')}
                                         name="attach_participants" id="participants" />
                                     <label className="form-check-label" htmlFor="participants" >
-                                        Attach participants
+                                        Select Laboratories
                                     </label>
                                 </div>
 

@@ -145,8 +145,8 @@ class ListPersonel extends React.Component {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Facility Name</th>
-                            <th scope="col">Name</th>
+                            <th scope="col">Laboratory Name</th>
+                            <th scope="col">Personel Name</th>
                             <th scope="col">Cell/Mobile</th>
                             <th scope="col">Primary Email</th>
                             <th scope="col">Status</th>
