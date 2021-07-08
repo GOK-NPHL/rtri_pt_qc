@@ -127,13 +127,20 @@ class UserForm extends React.Component {
                     });
                 } else if (this.state.pageState == 'add') {
                     response = await SaveAdminUser(user);
-                    this.setState({
-                        message: response.data.Message,
-                        name: '',
-                        phoneNumber: '',
-                        password: '',
-                        email: ''
-                    });
+                    if (response.status == 200) {
+                        this.setState({
+                            message: response.data.Message,
+                            name: '',
+                            phoneNumber: '',
+                            password: '',
+                            email: ''
+                        });
+                    }else{
+                        this.setState({
+                            message: response.data.Message,
+                        });
+                    }
+
                 }
 
                 $('#addAdminUserModal').modal('toggle');
