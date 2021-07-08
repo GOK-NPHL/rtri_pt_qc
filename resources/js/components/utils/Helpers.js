@@ -440,12 +440,41 @@ export async function FetchAdminUsers() {
 
 }
 
+export async function FetchAdminUser(userId) {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_admin_user/`+userId);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
 
 export async function SaveAdminUser(user) {
     try {
         const response = await axios({
             method: 'post',
             url: `${settings.serverBaseApi}/create_admin`,
+            data: {
+                user: user,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+}
+
+export async function UpdateAdminUser(user) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/edit_admin`,
             data: {
                 user: user,
             }

@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\PT\PTReadinessController;
 use App\Http\Controllers\PT\PTShipmentController;
+use App\Http\Controllers\QC\QCAdminUsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,9 +30,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/save_submission', 'Service\Submission@createSubmission');
 Route::get('/get_submissions', 'Service\Submission@getSubmissions');
 
-Route::get('/get_admin_users', 'QC\QCAdminUsersController@getAdminUsers');
-Route::post('create_admin', 'AdminAuthController@create');
-
+Route::get('/get_admin_users',[QCAdminUsersController::class, 'getAdminUsers']);
+Route::get('/get_admin_user/{id}',[AdminAuthController::class, 'getAdminUser']);
+Route::post('create_admin', [AdminAuthController::class, 'create']);
+Route::post('edit_admin', [AdminAuthController::class, 'edit']);
 
 Route::get('/get_participants', [ParticipantController::class, 'getParticipants'])->name('get_participants')->middleware('auth:admin');
 Route::post('/create_participant', [ParticipantController::class, 'createParticipant'])->name('create_participant')->middleware('auth:admin');

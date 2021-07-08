@@ -15,7 +15,7 @@ class AdminAuthController extends Controller
     public function __construct()
     {
         // $this->middleware('guest:admin', ['except' => ['signOut']]);
-        $this->middleware('auth:admin', ['except' => ['signOut','adminLogin','doLogin']]);
+        $this->middleware('auth:admin', ['except' => ['signOut', 'adminLogin', 'doLogin']]);
     }
 
     public function adminLogin()
@@ -55,6 +55,35 @@ class AdminAuthController extends Controller
         } catch (Exception $ex) {
 
             return ['Error' => '500', 'Message' => 'Could not save user ' . $ex->getMessage(), 500];
+        }
+    }
+
+    public function edit(Request $request)
+    {
+        try {
+            $admin = Admin::find($request->user['id']);
+            $admin->name = $request->user['name'];
+            $admin->email = $request->user['email'];
+            $admin->phone_number = $request->user['phone_number'];
+            $admin->is_admin = 1;
+
+            if (!empty($request->user['password'])) {
+                $admin->password = Hash::make($request->user['password']);
+            }
+            $admin->save();
+            return response()->json(['Message' => 'Saved successfully'], 200);
+        } catch (Exception $ex) {
+
+            return ['Error' => '500', 'Message' => 'Could not save user ' . $ex->getMessage(), 500];
+        }
+    }
+
+    public function getAdminUser(Request $request)
+    {
+        try {
+            return Admin::find($request->id);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could fetch user: ' . $ex->getMessage()], 500);
         }
     }
 

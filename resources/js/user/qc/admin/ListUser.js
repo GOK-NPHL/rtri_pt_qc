@@ -99,13 +99,10 @@ class ListUser extends React.Component {
                         <td>
 
                             <a
+
                                 onClick={
                                     () => {
-                                        this.toggleDisplay();
-                                        this.setState({
-                                            userActionState: 'edit',
-                                            selectedElement: element
-                                        });
+                                        window.location.assign('edit-admin-user/' + element.id)
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}

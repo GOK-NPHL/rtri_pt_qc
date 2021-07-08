@@ -43,8 +43,11 @@ Route::post('admin-login', [AdminAuthController::class, 'doLogin'])->name('admin
 Route::get('admin-login', [AdminAuthController::class, 'adminLogin'])->name('admin-login');
 
 Route::get('admin-home', 'QC\QCAdminController@adminHome')->name('admin-home');
-Route::get('add-admin-user', 'QC\QCAdminController@addUser')->name('add-admin-user');
+
+Route::get('add-admin-user', 'QC\QCAdminController@addUser')->name('add-admin-user'); 
+Route::get('edit-admin-user/{userId}', 'QC\QCAdminController@editUser')->name('edit-admin-user'); 
 Route::get('list-admin-user', 'QC\QCAdminController@listUser')->name('list-admin-user');
+
 Route::get('add-personel', 'QC\QCAdminController@addPersonel')->name('add-personel');
 Route::get('list-personel', 'QC\QCAdminController@listPersonel')->name('list-personel');
 Route::get('add-lab', 'QC\QCAdminController@addLab')->name('add-lab');

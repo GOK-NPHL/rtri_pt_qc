@@ -34,6 +34,11 @@ class QCAdminController extends Controller
         return view('user.qc.admin.add_user');
     }
 
+    public function editUser()
+    {
+        return view('user.qc.admin.edit_user');
+    }
+
     public function addLab()
     {
         return view('user.qc.admin.add_lab');
