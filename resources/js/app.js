@@ -17,6 +17,7 @@ require('./user/qc/admin/Dashboard');
 require('./user/qc/admin/AddLab');
 require('./user/qc/admin/EditLab');
 require('./user/qc/admin/AddPersonel');
+require('./user/qc/admin/EditPersonel');
 require('./user/qc/admin/AddUser');
 require('./user/qc/admin/EditUser');
 require('./user/qc/admin/ListLab');

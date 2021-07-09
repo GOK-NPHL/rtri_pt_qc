@@ -98,6 +98,7 @@ class ParticipantController extends Controller
         try {
 
             $users = User::select(
+                'users.id',
                 'users.name',
                 'users.email',
                 'laboratories.lab_name',

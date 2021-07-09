@@ -51,6 +51,7 @@ Route::get('list-admin-user', 'QC\QCAdminController@listUser')->name('list-admin
 
 Route::get('add-personel', 'QC\QCAdminController@addPersonel')->name('add-personel');
 Route::get('list-personel', 'QC\QCAdminController@listPersonel')->name('list-personel');
+Route::get('edit-personel/{personelId}', [QCAdminController::class, 'editPersonel'])->name('edit-personel');
 
 Route::get('add-lab', 'QC\QCAdminController@addLab')->name('add-lab');
 Route::get('edit-lab/{labId}', [QCAdminController::class, 'editLab'])->name('edit-lab');
