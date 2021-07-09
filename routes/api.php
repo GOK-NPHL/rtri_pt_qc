@@ -30,13 +30,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/save_submission', 'Service\Submission@createSubmission');
 Route::get('/get_submissions', 'Service\Submission@getSubmissions');
 
-Route::get('/get_admin_users',[QCAdminUsersController::class, 'getAdminUsers']);
-Route::get('/get_admin_user/{id}',[AdminAuthController::class, 'getAdminUser']);
+Route::get('/get_admin_users', [QCAdminUsersController::class, 'getAdminUsers']);
+Route::get('/get_admin_user/{id}', [AdminAuthController::class, 'getAdminUser']);
 Route::post('create_admin', [AdminAuthController::class, 'create']);
 Route::post('edit_admin', [AdminAuthController::class, 'edit']);
 
 Route::get('/get_participants', [ParticipantController::class, 'getParticipants'])->name('get_participants')->middleware('auth:admin');
+Route::get('/get_participant/{id}', [ParticipantController::class, 'getParticipant'])->name('get_participant')->middleware('auth:admin');
 Route::post('/create_participant', [ParticipantController::class, 'createParticipant'])->name('create_participant')->middleware('auth:admin');
+Route::post('edit_participant', [ParticipantController::class, 'editParticipant'])->name('edit_participant')->middleware('auth:admin');
+
 
 Route::get('/get_lab_personel', [ParticipantController::class, 'getLabPersonel'])->name('get_lab_personel')->middleware('auth:admin');
 Route::post('/create_lab_personel', [ParticipantController::class, 'createLabPersonel'])->name('create_lab_personel')->middleware('auth:admin');

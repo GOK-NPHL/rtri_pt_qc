@@ -20,6 +20,14 @@ class ParticipantController extends Controller
         }
     }
 
+    public function getParticipant(Request $request)
+    {
+        try {
+            return Laboratory::find($request->id);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could fetch participants: ' . $ex->getMessage()], 500);
+        }
+    }
 
     public function createParticipant(Request $request)
     {
@@ -38,6 +46,28 @@ class ParticipantController extends Controller
             return response()->json(['Message' => 'Created successfully'], 200);
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Could not save participant: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function editParticipant(Request $request)
+    {
+
+        try {
+            $lab = Laboratory::find($request->lab['id']);
+
+            $lab->institute_name = $request->lab['institute_name'];
+            $lab->email = $request->lab['email'];
+            $lab->phone_number = $request->lab['phone_number'];
+            $lab->is_active = $request->lab['is_active'];
+            $lab->mfl_code = $request->lab['mfl_code'];
+            $lab->facility_level = $request->lab['facility_level'];
+            $lab->county = $request->lab['county'];
+            $lab->lab_name = $request->lab['lab_name'];
+            $lab->save();
+
+            return response()->json(['Message' => 'Saved successfully'], 200);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could not update participant: ' . $ex->getMessage()], 500);
         }
     }
 

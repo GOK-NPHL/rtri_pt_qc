@@ -83,11 +83,7 @@ class ListLab extends React.Component {
                             <a
                                 onClick={
                                     () => {
-                                        this.toggleDisplay();
-                                        this.setState({
-                                            userActionState: 'edit',
-                                            selectedElement: element
-                                        });
+                                        window.location.assign('edit-lab/' + element.id)
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}

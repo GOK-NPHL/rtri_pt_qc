@@ -443,7 +443,7 @@ export async function FetchAdminUsers() {
 export async function FetchAdminUser(userId) {
 
     try {
-        const response = await axios.get(`${settings.serverBaseApi}/get_admin_user/`+userId);
+        const response = await axios.get(`${settings.serverBaseApi}/get_admin_user/` + userId);
         const responseData = response.data;
         return responseData;
     } catch (err) {
@@ -499,6 +499,18 @@ export async function FetchParticipantList() {
     }
 }
 
+export async function FetchParticipant(labId) {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_participant/` + labId);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
 export async function SaveParticipant(lab) {
     try {
         const response = await axios({
@@ -516,6 +528,22 @@ export async function SaveParticipant(lab) {
     }
 }
 
+export async function EditParticipant(lab) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/edit_participant`,
+            data: {
+                lab: lab,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+}
 
 export async function FetchLabPersonel() {
 

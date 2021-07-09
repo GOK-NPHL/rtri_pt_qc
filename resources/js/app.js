@@ -15,6 +15,7 @@ require('./bootstrap');
 require('./user/qc/participant/Dashboard');
 require('./user/qc/admin/Dashboard');
 require('./user/qc/admin/AddLab');
+require('./user/qc/admin/EditLab');
 require('./user/qc/admin/AddPersonel');
 require('./user/qc/admin/AddUser');
 require('./user/qc/admin/EditUser');
