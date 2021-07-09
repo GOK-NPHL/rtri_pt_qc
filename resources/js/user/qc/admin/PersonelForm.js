@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import LineGraph from '../../../components/utils/charts/LineGraph';
 import RTCard from '../../../components/utils/RTCard';
 import StackedHorizontal from '../../../components/utils/charts/StackedHorizontal'
-import { SaveLabPersonel, FetchParticipantList } from '../../../components/utils/Helpers';
+import { SaveLabPersonel, FetchParticipantList, FetchLabPersonelById, UpdateLabPersonel } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
-
+import { matchPath } from "react-router";
 
 class PersonelForm extends React.Component {
 
@@ -16,6 +16,7 @@ class PersonelForm extends React.Component {
             isSubmitResult: false,
             dtObject: null,
             message: '',
+            id: '',
             email: '',
             facility: '',
             firstName: '',
@@ -25,7 +26,8 @@ class PersonelForm extends React.Component {
             hasQcAccess: true,
             hasPtAccess: true,
             isActive: 'true',
-            participantList: []
+            participantList: [],
+            pageState: 'add'
         }
 
         this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -42,26 +44,56 @@ class PersonelForm extends React.Component {
 
     componentDidMount() {
 
-        (async () => {
-            let participantList = await FetchParticipantList();
-            this.setState({
-                participantList: participantList
-            })
-        })();
+        let pathname = window.location.pathname;
+        let pathObject = matchPath(pathname, {
+            path: `/edit-personel/:personelId`,
+        });
+
+        if (pathObject) {
+
+            (async () => {
+                let editData = await FetchLabPersonelById(pathObject.params.personelId);
+                if (editData) {
+                    editData = editData[0];
+                }
+                let participantList = await FetchParticipantList();
+
+                if (editData.status == 500) {
+                    this.setState({
+                        message: editData.data.Message,
+                        pageState: 'edit'
+                    })
+                    $('#addPersonelModal').modal('toggle');
+                } else {
+
+                    this.setState({
+                        participantList: participantList,
+                        id: editData.id,
+                        email: editData.email,
+                        facility: editData.laboratory_id,
+                        firstName: editData.name,
+                        secondName: editData.second_name,
+                        phoneNumber: editData.phone_number,
+                        hasQcAccess: editData.has_qc_access == 1 ? true : false,
+                        hasPtAccess: editData.has_pt_access == 1 ? true : false,
+                        isActive: editData.is_active == 1 ? true : false,
+                        pageState: 'edit',
+
+                    });
+                }
+            })();
+        }
 
     }
 
-
-
     handleIsActiveChange(isActive) {
-        
+
         this.setState({
             isActive: isActive
         });
     }
 
     handleFacilityChange(facility) {
-        console.log(facility);
         this.setState({
             facility: facility
         });
@@ -72,7 +104,6 @@ class PersonelForm extends React.Component {
             email: email
         });
     }
-
 
     handleIsQcActiveChange(hasQcAccess) {
         this.setState({
@@ -117,18 +148,20 @@ class PersonelForm extends React.Component {
             this.state.email == '' ||
             this.state.phoneNumber == '' ||
             this.state.firstName == '' ||
-            this.state.password == ''
+            (this.state.pageState == 'add' && this.state.password == '')
 
         ) {
             console.log(this.state.facility, " ", this.state.email, " ", this.state.phoneNumber, " ", this.state.firstName, " ", this.state.password)
             this.setState({
                 message: "Kindly fill the required fileds marked in *"
             });
-            $('#addLabModal').modal('toggle');
+            $('#addPersonelModal').modal('toggle');
         } else {
-            
+
             (async () => {
+
                 let personel = {};
+                { this.state.pageState == 'edit' ? personel['id'] = this.state.id : '' }
                 personel['email'] = this.state.email;
                 personel['facility'] = this.state.facility;
                 personel['first_name'] = this.state.firstName;
@@ -137,38 +170,49 @@ class PersonelForm extends React.Component {
                 personel['password'] = this.state.password;
                 personel['has_qc_access'] = this.state.hasQcAccess ? 1 : 0;
                 personel['has_pt_access'] = this.state.hasPtAccess ? 1 : 0;
-                personel['is_active'] = this.state.isActive=='true' ? 1 : 0;
+                personel['is_active'] = this.state.isActive ? 1 : 0;
 
-                let response = await SaveLabPersonel(personel);
+                let response;
 
-                if (response.status == 200) {
-                    this.setState({
-                        message: response.data.Message,
-                        email: '',
-                        facility: '',
-                        firstName: '',
-                        secondName: '',
-                        phoneNumber: '',
-                        password: '',
-                        hasQcAccess: true,
-                        hasPtAccess: true,
-                    });
-                } else {
+                if (this.state.pageState == 'edit') {
+                    response = await UpdateLabPersonel(personel);
                     this.setState({
                         message: response.data.Message,
                     });
+                } else if (this.state.pageState == 'add') {
+                    response = await SaveLabPersonel(personel);
+                    if (response.status == 200) {
+                        this.setState({
+                            message: response.data.Message,
+                            email: '',
+                            facility: '',
+                            firstName: '',
+                            secondName: '',
+                            phoneNumber: '',
+                            password: '',
+                            hasQcAccess: true,
+                            hasPtAccess: true,
+                        });
+                    } else {
+                        this.setState({
+                            message: response.data.Message,
+                        });
+                    }
+
                 }
-                $('#addLabModal').modal('toggle');
+
+                $('#addPersonelModal').modal('toggle');
             })();
         }
-
     }
+
     componentDidUpdate() {
         $('#u_facility').selectpicker();
     }
 
     render() {
-        let labLists = [];
+        console.log(this.state.isActive);
+        let labLists = [];  
         this.state.participantList.map((participant) => {
             labLists.push(<option key={participant.id} value={participant.id}>{participant.lab_name}</option>);
         });
@@ -210,7 +254,7 @@ class PersonelForm extends React.Component {
 
                                     {/* add */}
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="u_facility" >Facility  *</label>
+                                        <label htmlFor="u_facility" >Laboratory  *</label>
 
                                         {labSelect}
                                     </div>
@@ -284,8 +328,8 @@ class PersonelForm extends React.Component {
                                     <div className="col-md-6 mb-3">
 
                                         <input
-                                            value={this.state.hasQcAccess}
-                                            onChange={(event) => this.handleIsQcActiveChange(event.target.value)}
+                                            checked={this.state.hasQcAccess}
+                                            onChange={(event) => this.handleIsQcActiveChange(event.target.checked)}
                                             type="checkbox"
                                             id="u_qc_access" />
                                         <label className="ml-3" htmlFor="u_qc_access" >Has QC Access</label>
@@ -294,8 +338,8 @@ class PersonelForm extends React.Component {
 
                                     <div className="col-md-6 mb-3">
                                         <input
-                                            value={this.state.hasPtAccess}
-                                            onChange={(event) => this.handleIsPtActiveChange(event.target.value)}
+                                            checked={this.state.hasPtAccess}
+                                            onChange={(event) => this.handleIsPtActiveChange(event.target.checked)}
                                             type="checkbox"
                                             id="u_pt_access" />
                                         <label className="ml-3" htmlFor="u_pt_access" > Has PT Access</label>
@@ -304,8 +348,14 @@ class PersonelForm extends React.Component {
 
                                 <div className="form-group row">
                                     <div className="col-sm-12 text-center">
-                                        <a href="#" onClick={() => this.savePersonel()} type="" className="d-inline m-2 btn btn-info m">Add</a>
-                                        <a href="list-personel" className="d-inline m-2 btn btn-danger">Cancel</a>
+                                        <a href="#" onClick={() => this.savePersonel()} type="" className="d-inline m-2 btn btn-info m">Save</a>
+                                        <a
+                                            onClick={
+                                                () => {
+                                                    window.location.assign('/list-personel')
+                                                }
+                                            }
+                                            className="d-inline m-2 btn btn-danger">exit</a>
                                     </div>
                                 </div>
                             </form>
@@ -313,11 +363,11 @@ class PersonelForm extends React.Component {
                     </div>
                 </div>
 
-                < div className="modal fade" id="addLabModal" tabIndex="-1" role="dialog" aria-labelledby="addLabModalTitle" aria-hidden="true" >
+                < div className="modal fade" id="addPersonelModal" tabIndex="-1" role="dialog" aria-labelledby="addPersonelModalTitle" aria-hidden="true" >
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="addLabModalTitle">Notice!</h5>
+                                <h5 className="modal-title" id="addPersonelModalTitle">Notice!</h5>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>

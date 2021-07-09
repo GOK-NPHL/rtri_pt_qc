@@ -557,6 +557,18 @@ export async function FetchLabPersonel() {
     }
 }
 
+export async function FetchLabPersonelById(id) {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_lab_personel/` + id);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
 export async function SaveLabPersonel(personel) {
     try {
         const response = await axios({
@@ -573,6 +585,24 @@ export async function SaveLabPersonel(personel) {
         return err.response
     }
 }
+
+export async function UpdateLabPersonel(personel) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/edit_lab_personel`,
+            data: {
+                personel: personel,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+}
+
 
 export async function SaveReadiness(readiness) {
     try {

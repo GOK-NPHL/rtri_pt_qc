@@ -50,9 +50,7 @@ class ParticipantForm extends React.Component {
 
         if (pathObject) {
 
-            console.log("Available 1");
             (async () => {
-                console.log("Available 2");
                 let editData = await FetchParticipant(pathObject.params.labId);
 
                 if (editData.status == 500) {
@@ -137,15 +135,7 @@ class ParticipantForm extends React.Component {
             this.state.labName == ''
 
         ) {
-            console.log(
-                this.state.instituteName ,
-            this.state.email  ,
-            this.state.phoneNumber  ,
-            this.state.mflCode  ,
-            this.state.facilityLevel ,
-            this.state.county ,
-            this.state.labName
-            );
+            
             this.setState({
                 message: "Kindly fill all fileds in the form"
             });

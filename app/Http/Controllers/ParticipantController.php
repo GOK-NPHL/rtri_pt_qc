@@ -7,7 +7,6 @@ use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class ParticipantController extends Controller
 {
@@ -93,6 +92,33 @@ class ParticipantController extends Controller
         }
     }
 
+    public function editPersonel(Request $request)
+    {
+        try {
+
+            $user = User::find($request->personel['id']);
+
+            $user->name = $request->personel['first_name'];
+            $user->second_name = $request->personel['second_name'];
+            $user->email = $request->personel['email'];
+            $user->phone_number = $request->personel['phone_number'];
+            $user->is_active = $request->personel['is_active'];
+            if (!empty($request->user['password'])) {
+                $user->password = Hash::make($request->personel['password']);
+            }
+
+            $user->has_qc_access = $request->personel['has_qc_access'];
+            $user->has_pt_access = $request->personel['has_pt_access'];
+
+            $lab = Laboratory::find($request->personel['facility']);
+            $lab->personel()->save($user);
+
+            return response()->json(['Message' => 'Updated successfully'], 200);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could not update lab personel: ' . $ex->getMessage()], 500);
+        }
+    }
+
     public function getLabPersonel(Request $request)
     {
         try {
@@ -108,6 +134,31 @@ class ParticipantController extends Controller
                 'users.is_active',
                 'users.second_name'
             )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
+                ->get();
+
+            return $users;
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could fetch lab personel: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function getLabPersonelById(Request $request)
+    {
+        try {
+
+            $users = User::select(
+                'users.id',
+                'users.name',
+                'users.email',
+                'laboratories.lab_name',
+                'users.laboratory_id',
+                'users.has_qc_access',
+                'users.phone_number',
+                'users.has_pt_access',
+                'users.is_active',
+                'users.second_name'
+            )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
+                ->where('users.id', '=', $request->id)
                 ->get();
 
             return $users;
