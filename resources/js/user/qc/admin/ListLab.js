@@ -118,7 +118,7 @@ class ListLab extends React.Component {
 
         let pageContent = <div id='user_table' className='row'>
             <div className="col-sm-12 mb-3 mt-3">
-                <h3 className="float-left">Participants List</h3>
+                <h3 className="float-left">Laboratory List</h3>
                 <a style={{ "color": "white" }} type="button" href="add-lab" className="btn btn-info float-right">Add Participant</a>
             </div>
             <div className='col-sm-12 col-md-12'>

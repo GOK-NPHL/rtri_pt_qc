@@ -70,7 +70,7 @@ class ParticipantForm extends React.Component {
                         labName: editData.lab_name,
                         email: editData.email,
                         pageState: 'edit',
-                        isActive: editData.is_active == 1 ? true : false
+                        isActive: editData.is_active
                     });
                 }
             })();
@@ -147,10 +147,10 @@ class ParticipantForm extends React.Component {
                 lab['institute_name'] = this.state.instituteName;
                 lab['email'] = this.state.email;
                 lab['phone_number'] = this.state.phoneNumber;
-                lab['is_active'] = this.state.isActive ? 1 : 0;
+                lab['is_active'] = this.state.isActive;
                 lab['mfl_code'] = this.state.mflCode;
                 lab['facility_level'] = this.state.phoneNumber;
-                lab['county'] = this.state.isActive;
+                lab['county'] = this.state.county;
                 lab['lab_name'] = this.state.labName;
 
                 let response;
@@ -288,8 +288,8 @@ class ParticipantForm extends React.Component {
                                             value={this.state.isActive} className="custom-select"
                                             onChange={(event) => this.handleIsActiveChange(event.target.value)}
                                         >
-                                            <option value={true}>True</option>
-                                            <option value={false}>False</option>
+                                            <option value={1}>True</option>
+                                            <option value={0}>False</option>
                                         </select>
                                     </div>
                                 </div>
