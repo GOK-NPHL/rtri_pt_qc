@@ -7,6 +7,7 @@ use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class ParticipantController extends Controller
 {
@@ -97,7 +98,6 @@ class ParticipantController extends Controller
         try {
 
             $user = User::find($request->personel['id']);
-
             $user->name = $request->personel['first_name'];
             $user->second_name = $request->personel['second_name'];
             $user->email = $request->personel['email'];

@@ -25,7 +25,7 @@ class PersonelForm extends React.Component {
             password: '',
             hasQcAccess: true,
             hasPtAccess: true,
-            isActive: 'true',
+            isActive: 1,
             participantList: [],
             pageState: 'add'
         }
@@ -76,7 +76,7 @@ class PersonelForm extends React.Component {
                         phoneNumber: editData.phone_number,
                         hasQcAccess: editData.has_qc_access == 1 ? true : false,
                         hasPtAccess: editData.has_pt_access == 1 ? true : false,
-                        isActive: editData.is_active == 1 ? true : false,
+                        isActive: editData.is_active,
                         pageState: 'edit',
 
                     });
@@ -87,7 +87,7 @@ class PersonelForm extends React.Component {
     }
 
     handleIsActiveChange(isActive) {
-
+        console.log(isActive);
         this.setState({
             isActive: isActive
         });
@@ -170,7 +170,7 @@ class PersonelForm extends React.Component {
                 personel['password'] = this.state.password;
                 personel['has_qc_access'] = this.state.hasQcAccess ? 1 : 0;
                 personel['has_pt_access'] = this.state.hasPtAccess ? 1 : 0;
-                personel['is_active'] = this.state.isActive ? 1 : 0;
+                personel['is_active'] = this.state.isActive;
 
                 let response;
 
@@ -211,7 +211,6 @@ class PersonelForm extends React.Component {
     }
 
     render() {
-        console.log(this.state.isActive);
         let labLists = [];  
         this.state.participantList.map((participant) => {
             labLists.push(<option key={participant.id} value={participant.id}>{participant.lab_name}</option>);
@@ -314,8 +313,8 @@ class PersonelForm extends React.Component {
                                             value={this.state.isActive} className="custom-select"
                                             onChange={(event) => this.handleIsActiveChange(event.target.value)}
                                         >
-                                            <option value={true}>True</option>
-                                            <option value={false}>False</option>
+                                            <option value={1}>True</option>
+                                            <option value={0}>False</option>
                                         </select>
                                     </div>
 
