@@ -151,7 +151,6 @@ class PersonelForm extends React.Component {
             (this.state.pageState == 'add' && this.state.password == '')
 
         ) {
-            console.log(this.state.facility, " ", this.state.email, " ", this.state.phoneNumber, " ", this.state.firstName, " ", this.state.password)
             this.setState({
                 message: "Kindly fill the required fileds marked in *"
             });
@@ -211,7 +210,7 @@ class PersonelForm extends React.Component {
     }
 
     render() {
-        
+
         let labLists = [];  
         this.state.participantList.map((participant) => {
             labLists.push(<option key={participant.id} value={participant.id}>{participant.lab_name}</option>);

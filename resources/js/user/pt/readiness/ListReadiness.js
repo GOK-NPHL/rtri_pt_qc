@@ -140,7 +140,7 @@ class ListReadiness extends React.Component {
                             <th scope="col">Name/Title</th>
                             <th scope="col">No. of participant(s)</th>
                             <th scope="col">Date Updated</th>
-                            <th scope="col">Created by</th>
+                            <th scope="col">Edited by</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>

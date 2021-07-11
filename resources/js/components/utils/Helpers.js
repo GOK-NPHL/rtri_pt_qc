@@ -603,7 +603,6 @@ export async function UpdateLabPersonel(personel) {
     }
 }
 
-
 export async function SaveReadiness(readiness) {
     try {
         const response = await axios({
@@ -621,6 +620,22 @@ export async function SaveReadiness(readiness) {
     }
 }
 
+export async function UpdateReadiness(readiness) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/edit_readiness`,
+            data: {
+                readiness: readiness,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err.response);
+        return err.response
+    }
+}
 
 export async function FetchReadinessById(id) {
 

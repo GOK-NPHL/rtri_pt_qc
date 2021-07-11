@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FetchReadinessById, FetchParticipantList, SaveReadiness } from '../../../components/utils/Helpers';
+import { FetchReadinessById, FetchParticipantList, SaveReadiness, UpdateReadiness } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import DualListBox from 'react-dual-listbox';
 import AddReadinessQuestion from './AddReadinessQuestion';
@@ -57,8 +57,8 @@ class ReadinessForm extends React.Component {
                     editData.payload.questions.map((questionItem) => {
                         this.addReadinessQuestion(questionItem);
                     });
-
                     this.setState({
+                        id: editData.payload.readiness[0].id,
                         dualListptions: partsList,
                         name: editData.payload.readiness[0].name,
                         startDate: editData.payload.readiness[0].start_date,
@@ -169,27 +169,38 @@ class ReadinessForm extends React.Component {
         } else {
             (async () => {
                 let readiness = {};
+
+                { this.state.pageState == 'edit' ? readiness['id'] = this.state.id : '' }
                 readiness['name'] = this.state.name;
                 readiness['start_date'] = this.state.startDate;
                 readiness['end_date'] = this.state.endDate;
                 readiness['participants'] = this.state.selected;
                 readiness['readiness_questions'] = this.state.readinessItems;
 
-                let response = await SaveReadiness(readiness);
-                if (response.status == 200) {
+                let response;
+                if (this.state.pageState == 'edit') {
+                    response = await UpdateReadiness(readiness);
                     this.setState({
                         message: response.data.Message,
-                        startDate: '',
-                        endDate: '',
-                        name: '',
-                        selected: [],
-                        readinessQuestions: [],
-                        readinessItems: []
                     });
                 } else {
-                    this.setState({
-                        message: response.data.Message,
-                    });
+                    response = await SaveReadiness(readiness);
+                    if (response.status == 200) {
+                        this.setState({
+                            message: response.data.Message,
+                            startDate: '',
+                            endDate: '',
+                            name: '',
+                            selected: [],
+                            readinessQuestions: [],
+                            readinessItems: []
+                        });
+                    } else {
+                        this.setState({
+                            message: response.data.Message,
+                        });
+                    }
+
                 }
 
                 $('#addAdminUserModal').modal('toggle');
@@ -291,7 +302,7 @@ class ReadinessForm extends React.Component {
 
                             <div className="form-group row">
                                 <div className="col-sm-10 mt-3">
-                                    <a href="#" onClick={() => this.saveReadiness()} type="" className="d-inline m-2 btn btn-info m">
+                                    <a  onClick={() => this.saveReadiness()} type="" className="d-inline m-2 btn btn-info m">
                                         {this.state.pageState == 'edit' ? 'Update Readiness' : 'Send Readiness'}
                                     </a>
                                     <a

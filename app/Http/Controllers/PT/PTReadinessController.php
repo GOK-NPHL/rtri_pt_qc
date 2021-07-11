@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PTReadinessController extends Controller
 {
@@ -63,6 +64,49 @@ class PTReadinessController extends Controller
         }
     }
 
+
+    public function editReadiness(Request $request)
+    {
+        try {
+
+            $user = Auth::user();
+            $checklist = Readiness::find($request->readiness['id']);
+
+            $checklist->name = $request->readiness['name'];
+            $checklist->start_date = $request->readiness['start_date'];
+            $checklist->end_date = $request->readiness['end_date'];
+            $checklist->admin_id = $user->id;
+            $checklist->save();
+
+            // Save questions
+            foreach ($request->readiness['readiness_questions'] as $questionItem) {
+                $readinessQuestion = null;
+                if (empty($questionItem['id'])) {
+                    $readinessQuestion = new ReadinessQuestion();
+                } else {
+                    $readinessQuestion = ReadinessQuestion::find($questionItem['id']);
+                }
+
+                $readinessQuestion->question = $questionItem['question'];
+                $readinessQuestion->answer_options = $questionItem['answer_options'];
+                $readinessQuestion->answer_type = $questionItem['answer_type'];
+                $readinessQuestion->qustion_position = $questionItem['qustion_position'];
+                $readinessQuestion->qustion_type = $questionItem['qustion_type'];
+
+                $readinessQuestion->readiness()->associate($checklist);
+
+                $readinessQuestion->save();
+            }
+
+            // Save laboratiories
+            DB::table('laboratory_readiness')->where('readiness_id', $request->readiness['id'])->delete();
+            $checklist->laboratories()->attach($request->readiness['participants']);
+            return response()->json(['Message' => 'Updated successfully'], 200);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could not save the checklist ' . $ex->getMessage()], 500);
+        }
+    }
+
     public function getReadiness(Request $request)
     {
         try {
@@ -90,7 +134,7 @@ class PTReadinessController extends Controller
         try {
 
             $readinessQuestions = DB::table('readiness_questions')
-                ->select('question', 'answer_options', 'answer_type', 'qustion_position', 'qustion_type')
+                ->select('readiness_questions.id', 'question', 'answer_options', 'answer_type', 'qustion_position', 'qustion_type')
                 ->join('readinesses', 'readiness_questions.readiness_id', '=', 'readinesses.id')
                 ->where('readinesses.id', $request->id)
                 ->get();
@@ -107,7 +151,6 @@ class PTReadinessController extends Controller
             foreach ($labs as $lab) {
                 $labIds[] = $lab->id;
             }
-
 
             $readiness = Readiness::select(
                 "readinesses.id",
