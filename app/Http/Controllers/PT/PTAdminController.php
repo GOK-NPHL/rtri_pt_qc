@@ -32,4 +32,9 @@ class PTAdminController extends Controller
     {
         return view('user.pt.readiness.add_readiness');
     }
+
+    public function editReadiness()
+    {
+        return view('user.pt.readiness.edit_readiness');
+    }
 }

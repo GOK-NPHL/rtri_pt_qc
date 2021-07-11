@@ -26,6 +26,7 @@ require('./user/qc/admin/ListUser');
 
 require('./user/pt/shipment/PtShipment');
 require('./user/pt/readiness/AddReadiness');
+require('./user/pt/readiness/EditReadiness');
 require('./user/pt/readiness/ListReadiness');
 
 //Intrface code

@@ -211,6 +211,7 @@ class PersonelForm extends React.Component {
     }
 
     render() {
+        
         let labLists = [];  
         this.state.participantList.map((participant) => {
             labLists.push(<option key={participant.id} value={participant.id}>{participant.lab_name}</option>);

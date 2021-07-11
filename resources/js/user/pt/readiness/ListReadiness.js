@@ -80,11 +80,7 @@ class ListReadiness extends React.Component {
                             <a
                                 onClick={
                                     () => {
-                                        this.toggleDisplay();
-                                        this.setState({
-                                            userActionState: 'edit',
-                                            selectedElement: element
-                                        });
+                                        window.location.assign('edit-readiness/' + element.id)
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}

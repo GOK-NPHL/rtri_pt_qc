@@ -26,6 +26,7 @@ class PTReadinessController extends Controller
     public function saveReadiness(Request $request)
     {
         try {
+
             $user = Auth::user();
             $checklist = Readiness::where('name', $request->readiness['name'])->get();
             if (count($checklist) > 0) {
@@ -81,6 +82,53 @@ class PTReadinessController extends Controller
             return $readinesses;
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Could fetch readiness list: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function getReadinessById(Request $request)
+    {
+        try {
+
+            $readinessQuestions = DB::table('readiness_questions')
+                ->select('question', 'answer_options', 'answer_type', 'qustion_position', 'qustion_type')
+                ->join('readinesses', 'readiness_questions.readiness_id', '=', 'readinesses.id')
+                ->where('readinesses.id', $request->id)
+                ->get();
+
+            $labs = Laboratory::select(
+                "laboratories.id",
+                //  "laboratories.lab_name",
+            )
+                ->join('laboratory_readiness', 'laboratory_readiness.laboratory_id', '=', 'laboratories.id')
+                ->where('laboratory_readiness.readiness_id', $request->id)
+                ->get();
+
+            $labIds = [];
+            foreach ($labs as $lab) {
+                $labIds[] = $lab->id;
+            }
+
+
+            $readiness = Readiness::select(
+                "readinesses.id",
+                "readinesses.name",
+                "readinesses.start_date",
+                "readinesses.end_date",
+            )
+                ->where('readinesses.id', $request->id)
+                ->get();
+
+            $response = [];
+            $response['readiness'] = $readiness;
+            $response['labs'] = $labIds;
+            $response['questions'] = $readinessQuestions;
+
+            $envelop = [];
+            $envelop['payload'] = $response;
+
+            return $envelop;
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could fetch readiness: ' . $ex->getMessage()], 500);
         }
     }
 }

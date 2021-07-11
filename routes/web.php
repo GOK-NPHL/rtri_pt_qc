@@ -59,6 +59,7 @@ Route::get('list-lab', 'QC\QCAdminController@listLab')->name('list-lab');
 
 Route::get('pt-shipment', 'PT\PTAdminController@ptShipment')->name('pt-shipment');
 Route::get('list-readiness',[PTAdminController::class, 'listReadiness'])->name('list-readiness');
+Route::get('edit-readiness/{readinessId}',[PTAdminController::class, 'editReadiness'])->name('edit-readiness');
 Route::get('add-readiness',[PTAdminController::class, 'addReadiness'])->name('add-readiness');
 
 
