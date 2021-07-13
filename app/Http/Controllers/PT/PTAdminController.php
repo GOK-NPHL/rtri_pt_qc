@@ -23,6 +23,11 @@ class PTAdminController extends Controller
         return view('user.pt.shipment.pt_shipment');
     }
 
+    public function editShipment()
+    {
+        return view('user.pt.shipment.edit_shipment');
+    }
+
     public function listReadiness()
     {
         return view('user.pt.readiness.list_readiness');
