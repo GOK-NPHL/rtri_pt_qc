@@ -302,7 +302,7 @@ class ReadinessForm extends React.Component {
 
                             <div className="form-group row">
                                 <div className="col-sm-10 mt-3">
-                                    <a  onClick={() => this.saveReadiness()} type="" className="d-inline m-2 btn btn-info m">
+                                    <a onClick={() => this.saveReadiness()} type="" className="d-inline m-2 btn btn-info m">
                                         {this.state.pageState == 'edit' ? 'Update Readiness' : 'Send Readiness'}
                                     </a>
                                     <a

@@ -661,12 +661,40 @@ export async function FetchReadiness() {
     }
 }
 
+export async function FetchShipmentById(id) {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_shipment_by_id/` + id);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
 
 export async function SaveShipment(shipement) {
     try {
         const response = await axios({
             method: 'post',
             url: `${settings.serverBaseApi}/create_shipment`,
+            data: {
+                shipement: shipement,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err.response);
+        return err.response
+    }
+}
+
+export async function UpdateShipment(shipement) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/update_shipment`,
             data: {
                 shipement: shipement,
             }

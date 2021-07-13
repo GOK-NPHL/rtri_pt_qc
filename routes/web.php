@@ -35,8 +35,6 @@ Route::get('registration', [CustomAuthController::class, 'registration'])->name(
 Route::post('custom-registration', [CustomAuthController::class, 'customRegistration'])->name('register.custom');
 Route::get('logout', [CustomAuthController::class, 'signOut'])->name('logout');
 
-
-
 Route::get('participant-home', 'QC\QCParticipantController@participantHome')->name('participant-home');
 
 Route::get('admin-logout', [AdminAuthController::class, 'signOut'])->name('admin-logout');
@@ -58,9 +56,9 @@ Route::get('edit-lab/{labId}', [QCAdminController::class, 'editLab'])->name('edi
 Route::get('list-lab', 'QC\QCAdminController@listLab')->name('list-lab');
 
 Route::get('pt-shipment', 'PT\PTAdminController@ptShipment')->name('pt-shipment');
+Route::get('edit-shipment/{shipmentId}', [PTAdminController::class, 'editShipment'])->name('edit-shipment');
+
+
 Route::get('list-readiness',[PTAdminController::class, 'listReadiness'])->name('list-readiness');
 Route::get('edit-readiness/{readinessId}',[PTAdminController::class, 'editReadiness'])->name('edit-readiness');
 Route::get('add-readiness',[PTAdminController::class, 'addReadiness'])->name('add-readiness');
-
-
-

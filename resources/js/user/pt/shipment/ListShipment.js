@@ -82,11 +82,8 @@ class ListShipment extends React.Component {
                             <a
                                 onClick={
                                     () => {
-                                        this.toggleDisplay();
-                                        this.setState({
-                                            userActionState: 'edit',
-                                            selectedElement: element
-                                        });
+                                        console.log(element);
+                                        this.props.toggleView('edit', element.id);
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}
