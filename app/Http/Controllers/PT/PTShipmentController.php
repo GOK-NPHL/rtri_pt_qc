@@ -163,13 +163,11 @@ class PTShipmentController extends Controller
 
     public function updateShipment(Request $request)
     {
-        Log::info($request->shipement);
-        try {
 
-            $shipments = PtShipement::where('round_name', $request->shipement['round'])->get();
-            if (count($shipments) > 0) {
-                return response()->json(['Message' => 'Error during creating shipment. Round name already exist '], 500);
-            }
+        try {
+            // Log::info("======================================");
+            // Log::info($request->shipement);
+            $shipments = PtShipement::find($request->shipement['id']);
 
             if (empty($request->shipement['readiness_id']) && count($request->shipement['selected']) == 0) {
                 return response()->json(['Message' => 'Please select checklist of participants for this shipment '], 500);
@@ -182,31 +180,43 @@ class PTShipmentController extends Controller
                 $participantsList = $request->shipement['selected'];
             }
 
-            $shipment = PtShipement::create([
-                'pass_mark' => $request->shipement['pass_mark'],
-                'round_name' => $request->shipement['round'],
-                'code' => $request->shipement['shipment_code'],
-                'end_date' => $request->shipement['result_due_date'],
-                'test_instructions' => $request->shipement['test_instructions'],
-                'readiness_id' => (empty($request->shipement['readiness_id']) ? null : $request->shipement['readiness_id'])
-            ]);
+            $shipments->pass_mark = $request->shipement['pass_mark'];
+            $shipments->round_name = $request->shipement['round'];
+            $shipments->code = $request->shipement['shipment_code'];
+            $shipments->end_date = $request->shipement['result_due_date'];
+            $shipments->test_instructions = $request->shipement['test_instructions'];
+            $shipments->readiness_id = (empty($request->shipement['readiness_id']) ? null : $request->shipement['readiness_id']);
 
-            //save participants
-            $shipment->laboratories()->attach($participantsList);
+            $shipments->save();
 
-            // Save questions
+            // save participants
+            $shipments->laboratories()->attach($participantsList);
+
+            // Save samples
+            $existingSampls = PtSample::select("id")->where('ptshipment_id', $request->shipement['id'])
+                ->pluck('id')->toArray();
+            Log::info($existingSampls);
+            //          $
+            $updatedIds = [];
             foreach ($request->shipement['samples'] as $sample) {
-                $ptSample = new PtSample();
-
-                $ptSample->name = $sample['name'];
-                $ptSample->reference_result = $sample['reference_result'];
-                $ptSample->ptshipment()->associate($shipment);
-                $ptSample->save();
+                try {
+                    $ptSample =  PtSample::find($sample['id']);
+                    $ptSample->name = $sample['name'];
+                    $ptSample->reference_result = $sample['reference_result'];
+                    $ptSample->ptshipment()->associate($shipments);
+                    $ptSample->save();
+                    $updatedIds[] = $sample['id'];
+                } catch (Exception $ex) {
+                }
+            }
+            //delete samples not in the new list
+            for ($x = 0; $x < count($existingSampls); $x++) {
+                if (!in_array($existingSampls[$x], $updatedIds)) {
+                    PtSample::find($sample['id'])->delete();
+                }
             }
 
-            // Save laboratiories
-            // $readiness->laboratories()->attach($request->shipement['participants']);
-            return response()->json(['Message' => 'Created successfully'], 200);
+            return response()->json(['Message' => 'Updated successfully'], 200);
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Could not save the checklist ' . $ex->getMessage()], 500);
         }

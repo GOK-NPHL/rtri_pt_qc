@@ -1,5 +1,5 @@
 import React from 'react';
-import { FetchParticipantList, SaveShipment, FetchReadiness, FetchShipmentById } from '../../../components/utils/Helpers';
+import { FetchParticipantList, SaveShipment, FetchReadiness, FetchShipmentById, UpdateShipment } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import DualListBox from 'react-dual-listbox';
 import './PtShipment.css';
@@ -246,7 +246,7 @@ class ShipmentForm extends React.Component {
                 shipement['readiness_id'] = this.state.readinessId;
 
                 if (this.state.pageState == 'edit') {
-                    response = await UpdateShipment(shipement);
+                    let response = await UpdateShipment(shipement);
                     this.setState({
                         message: response.data.Message,
                     });
