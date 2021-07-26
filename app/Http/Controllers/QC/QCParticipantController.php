@@ -29,6 +29,8 @@ class QCParticipantController extends Controller
             return view('user.qc.participant.dashboard');
         } else if (Gate::allows('view_pt_component')) {
             return view('user.pt.participant.dashboard');
+        } else {
+            return view('user.general.dashboard');
         }
     }
     public function participantPTHome()
@@ -37,6 +39,8 @@ class QCParticipantController extends Controller
             return view('user.pt.participant.dashboard');
         } else if (Gate::allows('view_qc_component')) {
             return view('user.qc.participant.dashboard');
+        } else {
+            return view('user.general.dashboard');
         }
     }
 }

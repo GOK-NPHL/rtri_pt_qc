@@ -54,3 +54,5 @@ Route::get('/get_shipments', [PTShipmentController::class, 'getShipments'])->nam
 Route::post('/create_shipment', [PTShipmentController::class, 'saveShipment'])->name('create_shipment')->middleware('auth:admin');
 Route::post('/update_shipment', [PTShipmentController::class, 'updateShipment'])->name('update_shipment')->middleware('auth:admin');
 Route::get('/get_shipment_by_id/{id}', [PTShipmentController::class, 'getShipmentById'])->middleware('auth:admin');
+
+Route::get('/get_user_samples', [PTShipmentController::class, 'getUserSamples'])->middleware('auth:admin')->middleware('auth');

@@ -30,6 +30,7 @@ require('./user/pt/readiness/EditReadiness');
 require('./user/pt/readiness/ListReadiness');
 require('./user/pt/participant/Dashboard');
 
+require('./user/general/Dashboard');
 //Intrface code
 require('./components/system/org-unit/OrgUnits');
 require('./components/system/role/Roles');

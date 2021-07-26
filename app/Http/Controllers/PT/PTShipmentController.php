@@ -221,4 +221,44 @@ class PTShipmentController extends Controller
             return response()->json(['Message' => 'Could not save the checklist ' . $ex->getMessage()], 500);
         }
     }
+
+    public function getUserSamples()
+    {
+        try {
+            $labIds = [];
+            $shipment = PtShipement::find($request->id);
+
+            //get participants
+            if (empty($shipment->readiness_id)) {
+
+                $labs = PtShipement::select(
+                    "laboratory_pt_shipement.laboratory_id"
+                )->join('laboratory_pt_shipement', 'laboratory_pt_shipement.pt_shipement_id', '=', 'pt_shipements.id')
+                    ->where('id', $request->id)
+                    ->get();
+                $labIds = [];
+                foreach ($labs as $lab) {
+                    $labIds[] = $lab->laboratory_id;
+                }
+            }
+
+            //get samples
+            $ptSamples = PtSample::select(
+                "pt_samples.id",
+                "name",
+                "reference_result"
+            )->join('pt_shipements', 'pt_shipements.id', '=', 'pt_samples.ptshipment_id')
+                ->where('pt_shipements.id', $request->id)
+                ->get();
+
+            $payload = [];
+            $payload['shipment'] = $shipment;
+            $payload['labs'] = $labIds;
+            $payload['samples'] = $ptSamples;
+
+            return $payload;
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could fetch shipment: ' . $ex->getMessage()], 500);
+        }
+    }
 }
