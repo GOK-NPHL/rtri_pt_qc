@@ -195,29 +195,36 @@ class PTShipmentController extends Controller
             // Save samples
             $existingSampls = PtSample::select("id")->where('ptshipment_id', $request->shipement['id'])
                 ->pluck('id')->toArray();
-            Log::info($existingSampls);
+            Log::info($request->shipement['samples']);
             //          $
             $updatedIds = [];
             foreach ($request->shipement['samples'] as $sample) {
                 try {
-                    $ptSample =  PtSample::find($sample['id']);
+
+                    $ptSample = null;
+                    try {
+                        $ptSample =  PtSample::find($sample['id']);
+                    } catch (Exception $ex) {
+                        $ptSample = new PtSample();
+                    }
+
                     $ptSample->name = $sample['name'];
                     $ptSample->reference_result = $sample['reference_result'];
                     $ptSample->ptshipment()->associate($shipments);
                     $ptSample->save();
-                    $updatedIds[] = $sample['id'];
                 } catch (Exception $ex) {
                 }
             }
             //delete samples not in the new list
             for ($x = 0; $x < count($existingSampls); $x++) {
                 if (!in_array($existingSampls[$x], $updatedIds)) {
-                    PtSample::find($sample['id'])->delete();
+                    //PtSample::find($sample['id'])->delete();
                 }
             }
 
             return response()->json(['Message' => 'Updated successfully'], 200);
         } catch (Exception $ex) {
+            Log::error($ex);
             return response()->json(['Message' => 'Could not save the checklist ' . $ex->getMessage()], 500);
         }
     }
