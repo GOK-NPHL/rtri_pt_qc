@@ -4,6 +4,7 @@ namespace App\Http\Controllers\QC;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class QCParticipantController extends Controller
 {
@@ -24,11 +25,18 @@ class QCParticipantController extends Controller
      */
     public function participantHome()
     {
-        return view('user.qc.participant.dashboard');
+        if (Gate::allows('view_qc_component')) {
+            return view('user.qc.participant.dashboard');
+        } else if (Gate::allows('view_pt_component')) {
+            return view('user.pt.participant.dashboard');
+        }
     }
     public function participantPTHome()
     {
-        return view('user.pt.participant.dashboard');
+        if (Gate::allows('view_pt_component')) {
+            return view('user.pt.participant.dashboard');
+        } else if (Gate::allows('view_qc_component')) {
+            return view('user.qc.participant.dashboard');
+        }
     }
-    
 }
