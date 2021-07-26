@@ -2,6 +2,7 @@ import React from 'react';
 import StatsLabel from '../../../components/utils/stats/StatsLabel';
 import { SaveSubmission, FetchUserSamples } from '../../../components/utils/Helpers';
 import './Results.css';
+import { v4 as uuidv4 } from 'uuid';
 
 class SubmitResults extends React.Component {
 
@@ -85,7 +86,7 @@ class SubmitResults extends React.Component {
                 });
                 $('#messageModal').modal('toggle');
                 if (response.status == 200) {
-                    this.props.toggleView();
+                    this.props.toggleView('list');
                 }
             })();
         }
@@ -184,6 +185,7 @@ class SubmitResults extends React.Component {
         let today = new Date().toLocaleDateString();
 
         return (
+
             <>
                 <div className="row">
                     <div className="col-sm-12 float-left">
@@ -393,9 +395,9 @@ class SubmitResults extends React.Component {
                                 <label htmlFor="exampleFormControlTextarea1">Your comments</label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div> */}
-                            <div class="form-group">
+                            <div className="form-group">
                                 <label htmlFor="exampleFormControlTextarea1">Reason(s)</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
                         </form>
                         {/* End why test not done */}
@@ -427,45 +429,53 @@ class SubmitResults extends React.Component {
                                     </thead>
                                     <tbody>
                                         {/*  PT - Long Term*/}
-                                        <tr >
-                                            <td>PT - Long Term</td>
-                                            <td ><input onClick={this.resultLongterm.bind(this)} value="c" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultLongterm.bind(this)} value="v" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultLongterm.bind(this)} value="lt" type="checkbox" /></td>
-                                            <td onChange={this.qcInterpretationLongterm.bind(this)}>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="lt"
-                                                        name="long-term-radio" id="result_lt" />
-                                                    <label className="form-check-label" htmlFor="result_lt">
-                                                        LT
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="recent"
-                                                        name="long-term-radio" id="result_recent" />
-                                                    <label className="form-check-label" htmlFor="result_recent">
-                                                        recent
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="neg"
-                                                        name="long-term-radio" id="result_neg" />
-                                                    <label className="form-check-label" htmlFor="result_neg">
-                                                        neg
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="invalid"
-                                                        name="long-term-radio" id="result_invalid" />
-                                                    <label className="form-check-label" htmlFor="result_invalid">
-                                                        invalid
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        </tr>
+
+                                        {this.props.shipment.samples.map((sample) => {
+
+                                            return <tr key={uuidv4()}>
+                                                <td>{sample.sample_name}</td>
+                                                <td ><input onClick={this.resultLongterm.bind(this)} value="c" type="checkbox" /></td>
+                                                <td ><input onClick={this.resultLongterm.bind(this)} value="v" type="checkbox" /></td>
+                                                <td ><input onClick={this.resultLongterm.bind(this)} value="lt" type="checkbox" /></td>
+                                                <td onChange={this.qcInterpretationLongterm.bind(this)}>
+                                                    <div className="form-check form-check-inline">
+                                                        <input className="form-check-input" type="radio" value="lt"
+                                                            name="long-term-radio" id="result_lt" />
+                                                        <label className="form-check-label" htmlFor="result_lt">
+                                                            LT
+                                                        </label>
+                                                    </div>
+                                                    <div className="form-check form-check-inline">
+                                                        <input className="form-check-input" type="radio" value="recent"
+                                                            name="long-term-radio" id="result_recent" />
+                                                        <label className="form-check-label" htmlFor="result_recent">
+                                                            recent
+                                                        </label>
+                                                    </div>
+                                                    <div className="form-check form-check-inline">
+                                                        <input className="form-check-input" type="radio" value="neg"
+                                                            name="long-term-radio" id="result_neg" />
+                                                        <label className="form-check-label" htmlFor="result_neg">
+                                                            neg
+                                                        </label>
+                                                    </div>
+                                                    <div className="form-check form-check-inline">
+                                                        <input className="form-check-input" type="radio" value="invalid"
+                                                            name="long-term-radio" id="result_invalid" />
+                                                        <label className="form-check-label" htmlFor="result_invalid">
+                                                            invalid
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        })
+                                        }
+
                                         {/*  End PT - Long Term */}
 
                                     </tbody>
+
+
                                 </table>
                             </div>
 
@@ -479,7 +489,7 @@ class SubmitResults extends React.Component {
 
                         <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
                         <button type="button" onClick={() => {
-                            this.props.toggleView();
+                            this.props.toggleView('list');
                         }} className="btn btn-danger float-left mx-2">Cancel</button>
                     </div>
                 </div>
