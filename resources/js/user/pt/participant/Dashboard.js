@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 import { FetchUserSamples } from '../../../components/utils/Helpers';
+import SubmitResults from './SubmitResults';
 
 
 class Dashboard extends React.Component {
@@ -10,7 +10,7 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
+            data: {},
             currElementsTableEl: [],
             allTableElements: [],
             selectedElement: null,
@@ -19,8 +19,11 @@ class Dashboard extends React.Component {
             startTableData: 0,
             endeTableData: 10,
             activePage: 1,
+            page: 'list'
         }
-        this.handlePageChange = this.handlePageChange.bind(this)
+        this.handlePageChange = this.handlePageChange.bind(this);
+        this.toggleView = this.toggleView.bind(this);
+
     }
 
     componentDidMount() {
@@ -54,6 +57,12 @@ class Dashboard extends React.Component {
         })
     }
 
+    toggleView(page) {
+        this.setState({
+            page: page
+        });
+    }
+
     render() {
         const imgStyle = {
             width: "100%"
@@ -65,9 +74,13 @@ class Dashboard extends React.Component {
 
         let tableElem = [];
 
-        if (this.state.data.length > 0) {
+        console.log("trying");
+            console.log(this.state.data);
+        if (Object.keys(this.state.data).length != 0 && this.state.page == 'list') {
+            let index = 1;
+            
+            for (const [key, element] of Object.entries(this.state.data)) {
 
-            this.state.data.map((element, index) => {
                 tableElem.push(<tr key={index}>
                     <th scope="row">{index + 1}</th>
                     <td>{element.round_name}</td>
@@ -79,7 +92,15 @@ class Dashboard extends React.Component {
 
                         <td>
 
-                            <button type="button" className="btn btn-success">
+                            <button
+                                onClick={() => {
+                                    this.setState({
+                                        selectedElement: element,
+                                        page: 'edit'
+                                    });
+                                }}
+                                type="button"
+                                className="btn btn-success">
                                 <i className="far fa-edit"></i> View/Edit
                             </button>
                             {/* <a
@@ -97,7 +118,8 @@ class Dashboard extends React.Component {
 
                 </tr>
                 );
-            });
+                index += 1;
+            }
             if (this.state.allTableElements.length == 0) {
                 this.setState({
                     allTableElements: tableElem,
@@ -118,7 +140,6 @@ class Dashboard extends React.Component {
                 <div className="form-group mb-2">
                     <input type="text"
                         onChange={(event) => {
-                            console.log(this.state.allTableElements);
                             let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
                                 elemnt['props']['children'][1]['props']['children'].toString().toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
                                 elemnt['props']['children'][2]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
@@ -157,6 +178,10 @@ class Dashboard extends React.Component {
                 />
             </div>
         </div>;
+
+        if (this.state.page == 'edit') {
+            pageContent = <SubmitResults shipment={this.state.selectedElement} toggleView={this.toggleView} />
+        }
 
         return (
             <React.Fragment>
