@@ -248,7 +248,21 @@ class PTShipmentController extends Controller
 
             foreach ($labs as $lab) {
                 Log::info($lab);
-                $payload[] = $lab;
+
+                if (array_key_exists($lab->id, $payload)) {
+                    $payload[$lab->id]['samples'][] = ['sample_name' => $lab->sample_name, 'sample_id' => $lab->sample_id];
+                } else {
+                    $payload[$lab->id] = [];
+                    $payload[$lab->id]['samples'] = [];
+                    $payload[$lab->id]['samples'][] = ['sample_name' => $lab->sample_name, 'sample_id' => $lab->sample_id];
+
+                    $payload[$lab->id]['test_instructions'] = $lab->test_instructions;
+                    $payload[$lab->id]['id'] = $lab->id;
+                    $payload[$lab->id]['start_date'] = $lab->start_date;
+                    $payload[$lab->id]['code'] = $lab->code;
+                    $payload[$lab->id]['end_date'] = $lab->end_date;
+                    $payload[$lab->id]['round_name'] = $lab->round_name;
+                }
             }
 
             return $payload;
