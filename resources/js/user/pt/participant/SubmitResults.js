@@ -348,28 +348,10 @@ class SubmitResults extends React.Component {
                         {/* end  kit info  */}
 
                     </div>
-                    <div className="col-sm-12  pl-4 pr-4">
-                        {/* Test justification */}
-                        <div className="row">
-                            <div style={boxLine} className="col-sm-3">
-                                <p><strong>Jutification for PT testing: *</strong></p>
-                            </div>
-                            <div style={boxLine} className="col-sm-3">
-                                <select className="custom-select" aria-label="Default select example">
-                                    <option selected>Biweekly testing as per the protocol</option>
-                                    <option value="1">New kit lot/batch</option>
-                                    <option value="2">Change in environmental conditions</option>
-                                </select>
-                            </div>
-
-                        </div>
-                        {/* End Test justification */}
-
-                        <hr />
-                    </div>
 
                     <div className="col-sm-12 mb-4  pl-4 pr-4">
                         {/* Test justification */}
+                        <br/>
                         <div className="form-check text-center">
                             <input
                                 className="form-check-input"
@@ -381,7 +363,7 @@ class SubmitResults extends React.Component {
                                 type="checkbox"
                                 value="" id="qcTestDone" />
                             <label className="form-check-label" htmlFor="qcTestDone">
-                                <strong>Unable to analyze?</strong>
+                                <strong>Unable to analyze ?</strong>
                             </label>
                         </div>
                         {/* End Test justification */}
