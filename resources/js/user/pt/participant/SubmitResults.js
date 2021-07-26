@@ -1,6 +1,6 @@
 import React from 'react';
 import StatsLabel from '../../../components/utils/stats/StatsLabel';
-import { SaveSubmission } from '../../../components/utils/Helpers';
+import { SaveSubmission, FetchUserSamples } from '../../../components/utils/Helpers';
 import './Results.css';
 
 class SubmitResults extends React.Component {
@@ -33,6 +33,14 @@ class SubmitResults extends React.Component {
     }
 
     componentDidMount() {
+
+        (async () => {
+            let response = await FetchUserSamples();
+            console.log(response);
+            this.setState({
+                payLoad: response
+            })
+        })();
 
     }
 
@@ -351,7 +359,7 @@ class SubmitResults extends React.Component {
 
                     <div className="col-sm-12 mb-4  pl-4 pr-4">
                         {/* Test justification */}
-                        <br/>
+                        <br />
                         <div className="form-check text-center">
                             <input
                                 className="form-check-input"

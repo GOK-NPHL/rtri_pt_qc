@@ -224,41 +224,37 @@ class PTShipmentController extends Controller
 
     public function getUserSamples()
     {
+        $user = Auth::user();
+
         try {
-            $labIds = [];
-            $shipment = PtShipement::find($request->id);
 
-            //get participants
-            if (empty($shipment->readiness_id)) {
-
-                $labs = PtShipement::select(
-                    "laboratory_pt_shipement.laboratory_id"
-                )->join('laboratory_pt_shipement', 'laboratory_pt_shipement.pt_shipement_id', '=', 'pt_shipements.id')
-                    ->where('id', $request->id)
-                    ->get();
-                $labIds = [];
-                foreach ($labs as $lab) {
-                    $labIds[] = $lab->laboratory_id;
-                }
-            }
-
-            //get samples
-            $ptSamples = PtSample::select(
-                "pt_samples.id",
-                "name",
-                "reference_result"
-            )->join('pt_shipements', 'pt_shipements.id', '=', 'pt_samples.ptshipment_id')
-                ->where('pt_shipements.id', $request->id)
+            $labs = PtShipement::select(
+                "pt_shipements.id",
+                "pt_shipements.round_name",
+                "pt_shipements.code",
+                "pt_shipements.start_date",
+                "pt_shipements.end_date",
+                "pt_shipements.test_instructions",
+                "pt_samples.id as sample_id",
+                "pt_samples.name as sample_name"
+            )->join('laboratory_pt_shipement', 'laboratory_pt_shipement.pt_shipement_id', '=', 'pt_shipements.id')
+                ->join('pt_samples', 'pt_samples.ptshipment_id', '=', 'pt_shipements.id')
+                ->join('laboratories', 'laboratory_pt_shipement.laboratory_id', '=', 'laboratories.id')
+                ->join('users', 'users.laboratory_id', '=', 'laboratories.id')
+                ->where('users.id', $user->id)
                 ->get();
 
             $payload = [];
-            $payload['shipment'] = $shipment;
-            $payload['labs'] = $labIds;
-            $payload['samples'] = $ptSamples;
+
+            foreach ($labs as $lab) {
+                Log::info($lab);
+                $payload[] = $lab;
+            }
 
             return $payload;
         } catch (Exception $ex) {
-            return response()->json(['Message' => 'Could fetch shipment: ' . $ex->getMessage()], 500);
+            Log::error($ex);
+            return response()->json(['Message' => 'Could fetch samples: ' . $ex->getMessage()], 500);
         }
     }
 }
