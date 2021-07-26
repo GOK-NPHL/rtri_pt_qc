@@ -26,4 +26,9 @@ class QCParticipantController extends Controller
     {
         return view('user.qc.participant.dashboard');
     }
+    public function participantPTHome()
+    {
+        return view('user.pt.participant.dashboard');
+    }
+    
 }

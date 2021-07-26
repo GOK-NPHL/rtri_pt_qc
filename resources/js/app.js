@@ -28,6 +28,7 @@ require('./user/pt/shipment/PtShipment');
 require('./user/pt/readiness/AddReadiness');
 require('./user/pt/readiness/EditReadiness');
 require('./user/pt/readiness/ListReadiness');
+require('./user/pt/participant/Dashboard');
 
 //Intrface code
 require('./components/system/org-unit/OrgUnits');

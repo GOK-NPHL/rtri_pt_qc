@@ -77,10 +77,19 @@ use Illuminate\Support\Facades\Gate;
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item has-treeview menu-open">
-                            <a href="{{ route('home') }}" class="nav-link active">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <a href="{{ route('participant-home') }}" class="nav-link active">
+                                <i class="nav-icon fas fa-balance-scale"></i>
                                 <p>
-                                    Home
+                                    RTRI QC
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item has-treeview menu-open">
+                            <a href="{{ route('participant-pt-home') }}" class="nav-link">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>
+                                    RTRI PT
                                 </p>
                             </a>
                         </li>

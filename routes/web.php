@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\PT\PTAdminController;
 use App\Http\Controllers\QC\QCAdminController;
+use App\Http\Controllers\QC\QCParticipantController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -35,7 +36,8 @@ Route::get('registration', [CustomAuthController::class, 'registration'])->name(
 Route::post('custom-registration', [CustomAuthController::class, 'customRegistration'])->name('register.custom');
 Route::get('logout', [CustomAuthController::class, 'signOut'])->name('logout');
 
-Route::get('participant-home', 'QC\QCParticipantController@participantHome')->name('participant-home');
+Route::get('participant-home',[QCParticipantController::class, 'participantHome'])->name('participant-home');
+Route::get('participant-pt-home',[QCParticipantController::class, 'participantPTHome'])->name('participant-pt-home');
 
 Route::get('admin-logout', [AdminAuthController::class, 'signOut'])->name('admin-logout');
 Route::post('admin-login', [AdminAuthController::class, 'doLogin'])->name('admin-login');
