@@ -76,23 +76,29 @@ use Illuminate\Support\Facades\Gate;
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                        <li class="nav-item has-treeview menu-open">
-                            <a href="{{ route('participant-home') }}" class="nav-link active">
-                                <i class="nav-icon fas fa-balance-scale"></i>
-                                <p>
-                                    RTRI QC
-                                </p>
-                            </a>
-                        </li>
 
-                        <li class="nav-item has-treeview menu-open">
-                            <a href="{{ route('participant-pt-home') }}" class="nav-link">
-                                <i class="nav-icon fas fa-book"></i>
-                                <p>
-                                    RTRI PT
-                                </p>
-                            </a>
-                        </li>
+                        <?php if (Gate::allows('view_qc_component')) { ?>
+                            <li class="nav-item has-treeview menu-open">
+                                <a href="{{ route('participant-home') }}" class="nav-link active">
+                                    <i class="nav-icon fas fa-balance-scale"></i>
+                                    <p>
+                                        RTRI QC
+                                    </p>
+                                </a>
+                            </li>
+                        <?php } ?>
+
+                        <?php
+                        if (Gate::allows('view_pt_component')) { ?>
+                            <li class="nav-item has-treeview menu-open">
+                                <a href="{{ route('participant-pt-home') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-book"></i>
+                                    <p>
+                                        RTRI PT
+                                    </p>
+                                </a>
+                            </li>
+                        <?php } ?>
 
                         <!-- system actions -->
                         <li class="nav-item has-treeview">

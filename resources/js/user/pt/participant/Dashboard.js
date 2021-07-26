@@ -48,7 +48,7 @@ class Dashboard extends React.Component {
     render() {
         let dashboardHeader = <div key={1} className="row mb-5">
             <div className="col-sm-6">
-                <h1 className="m-0 text-dark">Home</h1>
+                <h1 className="m-0 text-dark">RTRI PT</h1>
             </div>
             <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right">

@@ -29,12 +29,24 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define(SystemAuthorities::$authorities['view_orgunit'], function ($user) {
-            return $this->runAthurizationQuery(SystemAuthorities::$authorities['view_orgunit']);
+        Gate::define(SystemAuthorities::$authorities['view_pt_component'], function ($user) {
+            $curUser = Auth::user();
+            if ($curUser->has_pt_access == 1) {
+                return true;
+            } else {
+                return false;
+            }
         });
-        Gate::define(SystemAuthorities::$authorities['view_pt_report'], function ($user) {
-            return $this->runAthurizationQuery(SystemAuthorities::$authorities['view_pt_report']);
+        
+        Gate::define(SystemAuthorities::$authorities['view_qc_component'], function ($user) {
+            $curUser = Auth::user();
+            if ($curUser->has_qc_access == 1) {
+                return true;
+            } else {
+                return false;
+            }
         });
+
         Gate::define(SystemAuthorities::$authorities['view_log_book_report'], function ($user) {
             return $this->runAthurizationQuery(SystemAuthorities::$authorities['view_log_book_report']);
         });

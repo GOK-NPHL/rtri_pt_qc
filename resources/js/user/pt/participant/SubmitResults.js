@@ -179,7 +179,7 @@ class SubmitResults extends React.Component {
             <>
                 <div className="row">
                     <div className="col-sm-12 float-left">
-                        <h1>RTRI QC Submission form</h1>
+                        <h1>RTRI PT Submission form</h1>
                         <hr />
                     </div>
 
@@ -187,33 +187,37 @@ class SubmitResults extends React.Component {
                         {/* lab basic info */}
                         <div style={labInfo} className="row">
                             <div style={boxLineLeft} className="col-sm-3">
-                                <p>Lab code</p>
-                                14563
+                                <p>County</p>
+                                county name
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <p>Lab Name</p>
+                                <p>Sub county</p>
                                 EDARP
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <p>Phone No.</p>
-                                +254-710236335
+                                <p>Facility Name</p>
+                                facility
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <p>Email</p>
-
+                                <p>Mfl Code</p>
+                                code_101
                             </div>
                         </div>
                         {/* row two */}
                         <div style={labInfo} className="row mt-1">
                             <div style={boxLineLeft} className="col-sm-3">
                                 <p>Tester Name</p>
-                                Duncan
+                                Duncan Ndiithi
                             </div>
 
+                            <div style={boxLineLeft} className="col-sm-3">
+                                <p>Tester Name</p>
+                                +254 710-238-034
+                            </div>
                         </div>
                         {/* row two */}
                         {/* End lab basic info */}
-                        <hr />
+
                     </div>
 
                     <div className="col-sm-12 mt-4 pl-4 pr-4">
@@ -233,26 +237,46 @@ class SubmitResults extends React.Component {
                                 <p>N/A</p>
                             </div>
                         </div>
+                        <hr />
                         {/* end submission form  header */}
                     </div>
+
+                    <div className="col-sm-12  pl-4 pr-4 mt-2">
+                        {/* Test Kit Information */}
+                        PT sample Information
+                        {/* end Test Kit Information */}
+                    </div>
+
                     <div className="col-sm-12  pl-4 pr-4">
-                        {/* testing dates */}
+                        {/* PT Lot info */}
                         <div className="row">
-                            <div style={boxLineLeft} className="col-sm-3">
-                                <p><strong>Testing Date *</strong></p>
-                            </div>
                             <div style={boxLine} className="col-sm-3">
-                                <input onChange={() => this.onTestingDateHandler(event)} className="form-control" type="date" />
-                            </div>
-                            <div style={boxLine} className="col-sm-3">
-                                <p><strong></strong></p>
+                                <p><strong>PT Lot Number: *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
+                                <input className="form-control" type="text" />
+                            </div>
+
+                            <div style={boxLineLeft} className="col-sm-3">
+                                <p><strong>PT Lot Date Received *</strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+                                <input onChange={() => this.onQcLotReceiceDateHandler(event)} className="form-control" type="date" />
                             </div>
 
                         </div>
-                        {/* end testing dates */}
+
+                        <div className="row">
+                            <div style={boxLine} className="col-sm-3">
+                                <p><strong>Date PT Samples Reconstituted:</strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+                                <input className="form-control" type="date" />
+                            </div>
+                        </div>
+                        {/* end  PT Lot info  */}
+                        <hr />
                     </div>
 
                     <div className="col-sm-12  pl-4 pr-4 mt-2">
@@ -282,6 +306,26 @@ class SubmitResults extends React.Component {
                         {/* end testing dates */}
                     </div>
 
+                    <div className="col-sm-12  pl-4 pr-4">
+                        {/* testing dates */}
+                        <div className="row">
+                            <div style={boxLineLeft} className="col-sm-3">
+                                <p><strong>Testing Date *</strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+                                <input onChange={() => this.onTestingDateHandler(event)} className="form-control" type="date" />
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+                                <p><strong></strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+
+                            </div>
+
+                        </div>
+                        {/* end testing dates */}
+                    </div>
+
                     <div style={labInfo} className="col-sm-12  pl-4 pr-4">
                         {/* kit info */}
                         <div className="row">
@@ -304,51 +348,11 @@ class SubmitResults extends React.Component {
                         {/* end  kit info  */}
 
                     </div>
-
-                    <div className="col-sm-12  pl-4 pr-4 mt-2">
-                        {/* Test Kit Information */}
-                        QC sample Information
-                        {/* end Test Kit Information */}
-                    </div>
-
-                    <div className="col-sm-12  pl-4 pr-4">
-                        {/* QC Lot info */}
-                        <div className="row">
-                            <div style={boxLine} className="col-sm-3">
-                                <p><strong>QC Lot Number: *</strong></p>
-                            </div>
-                            <div style={boxLine} className="col-sm-3">
-
-                                <input className="form-control" type="text" />
-                            </div>
-
-                            <div style={boxLineLeft} className="col-sm-3">
-                                <p><strong>QC Lot Date Received *</strong></p>
-                            </div>
-                            <div style={boxLine} className="col-sm-3">
-                                <input onChange={() => this.onQcLotReceiceDateHandler(event)} className="form-control" type="date" />
-                            </div>
-
-                        </div>
-
-                        <div className="row">
-                            <div style={boxLine} className="col-sm-3">
-                                <p><strong>Date QC Samples Reconstituted:</strong></p>
-                            </div>
-                            <div style={boxLine} className="col-sm-3">
-                                <input className="form-control" type="date" />
-                            </div>
-                        </div>
-                        {/* end  QC Lot info  */}
-                        <hr />
-                    </div>
-
-
                     <div className="col-sm-12  pl-4 pr-4">
                         {/* Test justification */}
                         <div className="row">
                             <div style={boxLine} className="col-sm-3">
-                                <p><strong>Jutification for QC testing: *</strong></p>
+                                <p><strong>Jutification for PT testing: *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
                                 <select className="custom-select" aria-label="Default select example">
@@ -370,14 +374,14 @@ class SubmitResults extends React.Component {
                             <input
                                 className="form-check-input"
                                 onClick={() => {
-                                    $("#qc-test-results").toggle();
+                                    $("#PT-test-results").toggle();
                                     $("#test-not-done-section").toggle();
 
                                 }}
                                 type="checkbox"
                                 value="" id="qcTestDone" />
                             <label className="form-check-label" htmlFor="qcTestDone">
-                                <strong>Was the QC test done?</strong>
+                                <strong>Unable to analyze?</strong>
                             </label>
                         </div>
                         {/* End Test justification */}
@@ -387,7 +391,7 @@ class SubmitResults extends React.Component {
                     <div id="test-not-done-section" style={{ "display": "none" }} className="col-sm-12 mb-4 ">
                         {/* why test not done */}
                         <form style={{ "paddingRight": "20%", "paddingLeft": "20%" }}>
-                            <div class="form-group" >
+                            {/* <div class="form-group" >
                                 <label htmlFor="exampleFormControlSelect1">Pick a reason</label>
                                 <select class="form-control" id="exampleFormControlSelect1">
                                     <option>Issue with sample</option>
@@ -398,29 +402,28 @@ class SubmitResults extends React.Component {
                             <div class="form-group">
                                 <label htmlFor="exampleFormControlTextarea1">Your comments</label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                            </div>
+                            </div> */}
                             <div class="form-group">
-                                <label htmlFor="exampleFormControlTextarea1">Do you need any support from the PT Provider ?</label>
+                                <label htmlFor="exampleFormControlTextarea1">Reason(s)</label>
                                 <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
                         </form>
                         {/* End why test not done */}
-
                     </div>
 
-                    <div id='qc-test-results' className="col-sm-12 ">
+                    <div id='PT-test-results' className="col-sm-12 ">
 
-                        {/* QC Test results fields */}
+                        {/* PT Test results fields */}
                         <div className="row ml-5 mr-5">
                             <div className="col-sm-12">
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>QC Sample ID</th>
+                                            <th>PT Sample ID</th>
                                             <th colSpan={3}>
                                                 <table>
                                                     <tbody>
-                                                        <tr><td>Visual Results</td></tr>
+                                                        <tr><td>Tick When Line is Present</td></tr>
                                                         <tr style={{ "display": "block ruby" }}>
                                                             <td>Control(C) Line</td>
                                                             <td>Verification(V) Line</td>
@@ -429,13 +432,13 @@ class SubmitResults extends React.Component {
                                                     </tbody>
                                                 </table>
                                             </th>
-                                            <th>RTRI Interpretation  *</th>
+                                            <th>Comments</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {/*  QC - Long Term*/}
+                                        {/*  PT - Long Term*/}
                                         <tr >
-                                            <td>QC - Long Term</td>
+                                            <td>PT - Long Term</td>
                                             <td ><input onClick={this.resultLongterm.bind(this)} value="c" type="checkbox" /></td>
                                             <td ><input onClick={this.resultLongterm.bind(this)} value="v" type="checkbox" /></td>
                                             <td ><input onClick={this.resultLongterm.bind(this)} value="lt" type="checkbox" /></td>
@@ -470,87 +473,7 @@ class SubmitResults extends React.Component {
                                                 </div>
                                             </td>
                                         </tr>
-                                        {/*  End QC - Long Term */}
-
-
-                                        {/*  QC - Recent */}
-                                        <tr>
-                                            <td>QC - Recent</td>
-                                            <td><input onClick={this.resultRecent.bind(this)} value="c" type="checkbox" /></td>
-                                            <td><input onClick={this.resultRecent.bind(this)} value="v" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultRecent.bind(this)} value="lt" type="checkbox" /></td>
-                                            <td onChange={this.qcInterpretationRecent.bind(this)}>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="lt"
-                                                        name="recent-radio" id="result_lt" />
-                                                    <label className="form-check-label" htmlFor="result_lt">
-                                                        LT
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="recent"
-                                                        name="recent-radio" id="result_recent" />
-                                                    <label className="form-check-label" htmlFor="result_recent">
-                                                        recent
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="neg"
-                                                        name="recent-radio" id="result_neg" />
-                                                    <label className="form-check-label" htmlFor="result_neg">
-                                                        neg
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="invalid"
-                                                        name="recent-radio" id="result_invalid" />
-                                                    <label className="form-check-label" htmlFor="result_invalid">
-                                                        invalid
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        {/*  End QC - Long Recent */}
-
-
-                                        {/*  QC - Negative */}
-                                        <tr>
-                                            <td>QC -Negative</td>
-                                            <td ><input onClick={this.resultNegative.bind(this)} value="c" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultNegative.bind(this)} value="v" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultNegative.bind(this)} value="lt" type="checkbox" /></td>
-                                            <td onChange={this.qcInterpretationNegative.bind(this)}>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="lt"
-                                                        name="negative-radio" id="result_lt" />
-                                                    <label className="form-check-label" htmlFor="result_lt">
-                                                        LT
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="recent"
-                                                        name="negative-radio" id="result_recent" />
-                                                    <label className="form-check-label" htmlFor="result_recent">
-                                                        recent
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="neg"
-                                                        name="negative-radio" id="result_neg" />
-                                                    <label className="form-check-label" htmlFor="result_neg">
-                                                        neg
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" value="invalid"
-                                                        type="radio" name="negative-radio" id="result_invalid" />
-                                                    <label className="form-check-label" htmlFor="result_invalid">
-                                                        invalid
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        {/*  End QC - Negative */}
+                                        {/*  End PT - Long Term */}
 
                                     </tbody>
                                 </table>
@@ -558,7 +481,7 @@ class SubmitResults extends React.Component {
 
                         </div>
 
-                        {/* End QC Test results fields */}
+                        {/* End PT Test results fields */}
                         <hr />
 
                     </div>

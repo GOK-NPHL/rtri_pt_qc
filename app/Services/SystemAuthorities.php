@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Log;
 class SystemAuthorities
 {
     public static $authorities = [
-        'view_pt_report' => 'view_pt_report',
-        'view_orgunit' => 'view_orgunit',
+        'view_qc_component' => 'view_qc_component',
+        'view_pt_component' => 'view_pt_component',
         'view_log_book_report' => 'view_log_book_report',
         'edit_user' => 'edit_user',
         'view_user'=>'view_user',
