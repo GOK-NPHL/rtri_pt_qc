@@ -48,6 +48,14 @@ class PersonelForm extends React.Component {
         let pathObject = matchPath(pathname, {
             path: `/edit-personel/:personelId`,
         });
+        let participantList = [];
+        (async () => {
+            participantList = await FetchParticipantList();
+            this.setState({
+                participantList: participantList
+            });
+
+        })();
 
         if (pathObject) {
 
@@ -56,7 +64,7 @@ class PersonelForm extends React.Component {
                 if (editData) {
                     editData = editData[0];
                 }
-                let participantList = await FetchParticipantList();
+
 
                 if (editData.status == 500) {
                     this.setState({
@@ -206,12 +214,19 @@ class PersonelForm extends React.Component {
     }
 
     componentDidUpdate() {
-        $('#u_facility').selectpicker();
+        console.log(this.state.participantList);
+        try {
+            $('#u_facility').selectpicker();
+        } catch (err) {
+
+        }
+
+
     }
 
     render() {
 
-        let labLists = [];  
+        let labLists = [];
         this.state.participantList.map((participant) => {
             labLists.push(<option key={participant.id} value={participant.id}>{participant.lab_name}</option>);
         });
@@ -335,14 +350,14 @@ class PersonelForm extends React.Component {
 
                                     </div>
 
-                                    <div className="col-md-6 mb-3">
+                                    {/* <div className="col-md-6 mb-3">
                                         <input
                                             checked={this.state.hasPtAccess}
                                             onChange={(event) => this.handleIsPtActiveChange(event.target.checked)}
                                             type="checkbox"
                                             id="u_pt_access" />
                                         <label className="ml-3" htmlFor="u_pt_access" > Has PT Access</label>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <div className="form-group row">
