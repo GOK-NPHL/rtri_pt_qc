@@ -224,32 +224,19 @@ class SubmitResults extends React.Component {
                             </div>
                             <div style={boxLine} className="col-sm-3">
                                 {today}
-
                             </div>
-                           
-                        </div>
-                        {/* end submission form  header */}
-                    </div>
-                    <div className="col-sm-12  pl-4 pr-4">
-                        {/* testing dates */}
-                        <div className="row">
+
                             <div style={boxLineLeft} className="col-sm-3">
                                 <p><strong>Testing Date *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
                                 <input onChange={() => this.onTestingDateHandler(event)} className="form-control" type="date" />
                             </div>
-                            <div style={boxLine} className="col-sm-3">
-                                <p><strong></strong></p>
-                            </div>
-                            <div style={boxLine} className="col-sm-3">
-
-                            </div>
-
+                           
                         </div>
-                        {/* end testing dates */}
+                        {/* end submission form  header */}
                     </div>
-
+                   
                     <div className="col-sm-12  pl-4 pr-4 mt-2">
                         {/* Test Kit Information */}
                         Test Kit Information
