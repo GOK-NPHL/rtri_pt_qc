@@ -21,7 +21,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-The RTRI PT/QC
+The RTRI QC
 .
 
 <!-- GETTING STARTED -->
