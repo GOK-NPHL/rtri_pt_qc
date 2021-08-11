@@ -11,6 +11,7 @@ class SubmitResults extends React.Component {
         this.state = {
             message: '',
             qcLotReceivedDate: '',
+            qcReconstituionDate: '',
             kitExpiryDate: '',
             kitReceivedDate: '',
             kitLotNo: '',
@@ -28,6 +29,10 @@ class SubmitResults extends React.Component {
         this.onKitReceivedDateHandler = this.onKitReceivedDateHandler.bind(this);
         this.onKitLotHandler = this.onKitLotHandler.bind(this);
         this.onTestingDateHandler = this.onTestingDateHandler.bind(this);
+        this.validateTestingAndRecivedDate = this.validateTestingAndRecivedDate.bind(this);
+        this.onReconstitutionDateHandler = this.onReconstitutionDateHandler.bind(this);
+        this.validateTestingAndReconstituionDate = this.validateTestingAndReconstituionDate.bind(this);
+        this.validateTestingAndQCLotRecivedDate = this.validateTestingAndQCLotRecivedDate.bind(this);
         this.submitForm = this.submitForm.bind(this);
 
     }
@@ -135,6 +140,7 @@ class SubmitResults extends React.Component {
         this.setState({
             qcLotReceivedDate: event.target.value
         });
+        this.validateTestingAndQCLotRecivedDate(this.state.testingDate, event.target.value);
     }
     onKitExpiryDateHandler(event) {
         this.setState({
@@ -145,6 +151,7 @@ class SubmitResults extends React.Component {
         this.setState({
             kitReceivedDate: event.target.value
         });
+        this.validateTestingAndRecivedDate(this.state.testingDate, event.target.value);
     }
     onKitLotHandler(event) {
         this.setState({
@@ -155,6 +162,53 @@ class SubmitResults extends React.Component {
         this.setState({
             testingDate: event.target.value
         });
+        this.validateTestingAndRecivedDate(event.target.value, this.state.kitReceivedDate);
+    }
+
+    onReconstitutionDateHandler(event) {
+        this.setState({
+            qcReconstituionDate: event.target.value
+        });
+        this.validateTestingAndReconstituionDate(event.target.value, this.state.testingDate);
+    }
+
+    validateTestingAndRecivedDate(testingDate, receiveData) {
+        if (testingDate < receiveData) {
+            this.setState({
+                message: "QC lot Date received cannot be greater than testing date"
+            })
+            $('#messageModal').modal('toggle');
+            this.setState({
+                testingDate: '',
+                kitReceivedDate: ''
+            });
+        }
+    }
+
+    validateTestingAndReconstituionDate(reconstituionDate, testingDate) {
+        if (testingDate < reconstituionDate) {
+            this.setState({
+                message: "Kit testing Date cannot be greater than reconstitution date"
+            })
+            $('#messageModal').modal('toggle');
+            this.setState({
+                testingDate: '', 
+                qcReconstituionDate: ''
+            });
+        }
+    }
+
+    validateTestingAndQCLotRecivedDate(testingDate,receiveDate) {
+        if (testingDate < receiveDate) {
+            this.setState({
+                message: "QC lot Date received cannot be greater than testing date"
+            })
+            $('#messageModal').modal('toggle');
+            this.setState({
+                testingDate: '',
+                qcLotReceivedDate: ''
+            });
+        }
     }
 
     render() {
@@ -230,13 +284,13 @@ class SubmitResults extends React.Component {
                                 <p><strong>Testing Date *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <input onChange={() => this.onTestingDateHandler(event)} className="form-control" type="date" />
+                                <input value={this.state.testingDate} onChange={() => this.onTestingDateHandler(event)} className="form-control" type="date" />
                             </div>
-                           
+
                         </div>
                         {/* end submission form  header */}
                     </div>
-                   
+
                     <div className="col-sm-12  pl-4 pr-4 mt-2">
                         {/* Test Kit Information */}
                         Test Kit Information
@@ -272,7 +326,7 @@ class SubmitResults extends React.Component {
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
-                                <input onChange={() => this.onKitReceivedDateHandler(event)} className="form-control" type="date" />
+                                <input value={this.state.kitReceivedDate} onChange={() => this.onKitReceivedDateHandler(event)} className="form-control" type="date" />
 
                             </div>
                             <div style={boxLine} className="col-sm-3">
@@ -308,7 +362,7 @@ class SubmitResults extends React.Component {
                                 <p><strong>QC Lot Date Received *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <input onChange={() => this.onQcLotReceiceDateHandler(event)} className="form-control" type="date" />
+                                <input value={this.state.qcLotReceivedDate} onChange={() => this.onQcLotReceiceDateHandler(event)} className="form-control" type="date" />
                             </div>
 
                         </div>
@@ -318,7 +372,7 @@ class SubmitResults extends React.Component {
                                 <p><strong>Date QC Samples Reconstituted:</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <input className="form-control" type="date" />
+                                <input value={this.state.qcReconstituionDate} onChange={() => this.onReconstitutionDateHandler(event)} className="form-control" type="date" />
                             </div>
                         </div>
                         {/* end  QC Lot info  */}
@@ -369,21 +423,21 @@ class SubmitResults extends React.Component {
                     <div id="test-not-done-section" style={{ "display": "none" }} className="col-sm-12 mb-4 ">
                         {/* why test not done */}
                         <form style={{ "paddingRight": "20%", "paddingLeft": "20%" }}>
-                            <div class="form-group" >
+                            <div className="form-group" >
                                 <label htmlFor="exampleFormControlSelect1">Pick a reason</label>
-                                <select class="form-control" id="exampleFormControlSelect1">
+                                <select className="form-control" id="exampleFormControlSelect1">
                                     <option>Issue with sample</option>
                                     <option>Issue with RTRI kit lot</option>
                                     <option>Other</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div className="form-group">
                                 <label htmlFor="exampleFormControlTextarea1">Your comments</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
-                            <div class="form-group">
+                            <div className="form-group">
                                 <label htmlFor="exampleFormControlTextarea1">Do you need any support from the PT Provider ?</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                             </div>
                         </form>
                         {/* End why test not done */}
