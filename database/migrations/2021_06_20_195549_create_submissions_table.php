@@ -32,8 +32,8 @@ class CreateSubmissionsTable extends Migration
             $table->string("test_justification");
 
             $table->integer("qc_tested");
-            $table->string("not_test_reason");
-            $table->string("other_not_tested_reason");
+            $table->string("not_test_reason")->nullable();;
+            $table->string("other_not_tested_reason")->nullable();;
 
             $table->integer("result_lt_control_line")->nullable();
             $table->integer("result_lt_verification_line")->nullable();
