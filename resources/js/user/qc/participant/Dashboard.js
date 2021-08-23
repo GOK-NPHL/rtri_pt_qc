@@ -80,7 +80,7 @@ class Dashboard extends React.Component {
 
                     <tr key={uuidv4()}>
                         <td>RIRI QC</td>
-                        <td>{element['kit_date_received']}</td>
+                        <td>{element['lab_name']}</td>
                         <td>{element['kit_date_received']}</td>
                         <td>{element['kit_lot_no']}</td>
                         <td>{element['testing_date']}</td>

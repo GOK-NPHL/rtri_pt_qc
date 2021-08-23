@@ -75,7 +75,17 @@ class Submission extends Controller
     {
 
         try {
-            return SubmissionModel::all();
+            $submissions = SubmissionModel::select(
+                'qcsubmissions.id',
+                'qcsubmissions.kit_date_received',
+                'qcsubmissions.kit_lot_no',
+                'qcsubmissions.testing_date',
+                'laboratories.lab_name',
+                'laboratories.mfl_code',
+            )->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
+                ->get();
+            return $submissions;
+            // return SubmissionModel::all();
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
         }
