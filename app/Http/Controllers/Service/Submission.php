@@ -96,9 +96,9 @@ class Submission extends Controller
 
     public function deleteSubmission(Request $request)
     {
-
+        $user = Auth::user();
         try {
-            DB::table('qcsubmissions')->where('id', $request->id)->delete();
+            DB::table('qcsubmissions')->where('id', $request->id)->where('user_id', $user->id)->delete();
             return response()->json(['Message' => 'Deleted Successfully'], 200);
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error deleting submission: ' . $ex->getMessage()], 500);
