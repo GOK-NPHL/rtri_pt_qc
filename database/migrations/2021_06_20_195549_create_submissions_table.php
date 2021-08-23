@@ -18,10 +18,20 @@ class CreateSubmissionsTable extends Migration
             $table->timestamps();
 
             $table->date("testing_date");
+            $table->string("name_of_test");
+            $table->string("kit_lot_no");
             $table->date("kit_date_received");
-            $table->date("lot_date_received");
             $table->date("kit_expiry_date");
-            $table->integer("kit_lot_no");
+           
+            $table->string("qc_lot_no");
+            $table->date("lot_date_received");
+            $table->date("sample_reconstituion_date");
+
+            $table->string("test_justification");
+
+            $table->integer("qc_tested");
+            $table->string("not_test_reason");
+            $table->string("other_not_tested_reason");
 
             $table->integer("result_lt_control_line");
             $table->integer("result_lt_verification_line");
