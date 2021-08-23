@@ -4,7 +4,7 @@ import LineGraph from '../../../components/utils/charts/LineGraph';
 import RTCard from '../../../components/utils/RTCard';
 import StackedHorizontal from '../../../components/utils/charts/StackedHorizontal'
 import SubmitResults from './SubmitResults'
-import { FetchSubmissions } from '../../../components/utils/Helpers';
+import { FetchSubmissions, DeleteSubmissions } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -16,7 +16,7 @@ class Dashboard extends React.Component {
             submissions: [],
             isSubmitResult: false,
             dtObject: null,
-
+            message: "ff",
             data: [],
             currElementsTableEl: [],
             allTableElements: [],
@@ -26,8 +26,9 @@ class Dashboard extends React.Component {
             activePage: 1,
         }
         this.toggleView = this.toggleView.bind(this);
-        this.handlePageChange = this.handlePageChange.bind(this)
-
+        this.handlePageChange = this.handlePageChange.bind(this);
+        this.deleteSubmissionHandler = this.deleteSubmissionHandler.bind(this);
+        this.fetchSubmissions = this.fetchSubmissions.bind(this);
     }
 
     componentDidMount() {
@@ -35,7 +36,7 @@ class Dashboard extends React.Component {
         (async () => {
             let response = await FetchSubmissions();
             this.setState({
-                data: response
+                data: response,
             })
         })();
 
@@ -46,13 +47,7 @@ class Dashboard extends React.Component {
             ((prevState.isSubmitResult != this.state.isSubmitResult))
         ) {
 
-            (async () => {
-                let response = await FetchSubmissions();
-                this.setState({
-                    data: response,
-                    allTableElements: []
-                })
-            })();
+            this.fetchSubmissions();
         }
     }
 
@@ -75,6 +70,31 @@ class Dashboard extends React.Component {
         })
     }
 
+    deleteSubmissionHandler(id) {
+
+        (async () => {
+            let response =  await DeleteSubmissions(id);
+            console.log(response)
+            this.setState({
+                message: response.data.Message,
+            });
+            $('#messageModal').modal('toggle');
+
+        })();
+
+        this.fetchSubmissions();
+    }
+
+    fetchSubmissions() {
+        (async () => {
+            let response = await FetchSubmissions();
+            this.setState({
+                data: response,
+                allTableElements: [],
+                currElementsTableEl: []
+            })
+        })();
+    }
 
     toggleView() {
         this.setState({
@@ -105,6 +125,7 @@ class Dashboard extends React.Component {
                                 <i className="fas fa-user-edit"></i>
                             </a>
                             <a
+                                onClick={() => this.deleteSubmissionHandler(element['id'])}
                                 style={{ "display": "inlineBlock" }}
                                 className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">
                                 <i className="fas fa-user-times"></i>
@@ -224,6 +245,26 @@ class Dashboard extends React.Component {
         return (
             <React.Fragment>
                 {dashboardContent}
+
+                {/*message box */}
+                <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog" aria-labelledby="messageModalTitle" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLongTitle">Notice!</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <p id="returnedMessage">{this.state.message}</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </React.Fragment>
         );
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\qcsubmission as SubmissionModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class Submission extends Controller
@@ -88,6 +89,17 @@ class Submission extends Controller
             // return SubmissionModel::all();
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function deleteSubmission(Request $request)
+    {
+
+        try {
+            DB::table('qcsubmissions')->where('id', $request->id)->delete();
+            return response()->json(['Message' => 'Deleted Successfully'], 200);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error deleting submission: ' . $ex->getMessage()], 500);
         }
     }
 }
