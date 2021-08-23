@@ -141,19 +141,34 @@ class Dashboard extends React.Component {
                     <div id='user_table' className='row'>
                         {this.props.isShowNewShipmentPage ? <div className="col-sm-12 mb-3 mt-3"><h3 className="float-left">All Shipments</h3> </div> : ''}
                         <div className='col-sm-12 col-md-12'>
-                            <div className="form-group mb-2">
-                                <input type="text"
-                                style={{"width": "30%", "float": "right","marginBottom": "5px"}}
-                                    onChange={(event) => {
-                                        console.log(this.state.allTableElements);
-                                        let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
-                                            elemnt['props']['children'][0]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
-                                            elemnt['props']['children'][1]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
-                                            (elemnt['props']['children'][3]['props']['children']+"").toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
-                                        );
-                                        this.updatedSearchItem(currElementsTableEl);
-                                    }}
-                                    className="form-control" placeholder="search submission"></input>
+
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <Pagination
+                                        itemClass="page-item"
+                                        linkClass="page-link"
+                                        activePage={this.state.activePage}
+                                        itemsCountPerPage={10}
+                                        totalItemsCount={this.state.currElementsTableEl.length}
+                                        pageRangeDisplayed={5}
+                                        onChange={this.handlePageChange.bind(this)}
+                                    />
+                                </div>
+                                <div className="col-sm-6">
+                                    <input type="text"
+                                        style={{ "width": "70%", "float": "right", "marginBottom": "5px" }}
+                                        onChange={(event) => {
+                                            console.log(this.state.allTableElements);
+                                            let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
+                                                elemnt['props']['children'][0]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
+                                                elemnt['props']['children'][1]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
+                                                (elemnt['props']['children'][3]['props']['children'] + "").toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
+                                            );
+                                            this.updatedSearchItem(currElementsTableEl);
+                                        }}
+                                        className="form-control" placeholder="search submission"></input>
+                                </div>
+
                             </div>
 
                             <table className="table table-striped table-sm  table-hover">
