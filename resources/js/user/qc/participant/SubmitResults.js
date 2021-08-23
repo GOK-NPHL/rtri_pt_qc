@@ -13,8 +13,11 @@ class SubmitResults extends React.Component {
             qcLotReceivedDate: '',
             qcReconstituionDate: '',
             kitExpiryDate: '',
+            testJustification: 'Biweekly testing as per the protocol',
             kitReceivedDate: '',
             kitLotNo: '',
+            nameOfTest: '',
+            qcLotNumber: '',
             testingDate: '',
             qcNegativeIntepreation: '',
             qcRecentIntepreation: '',
@@ -28,7 +31,7 @@ class SubmitResults extends React.Component {
             notTestedReason: 'Issue with sample',
 
         }
-
+        this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
         this.onQcLotReceiceDateHandler = this.onQcLotReceiceDateHandler.bind(this);
         this.onKitExpiryDateHandler = this.onKitExpiryDateHandler.bind(this);
         this.onKitReceivedDateHandler = this.onKitReceivedDateHandler.bind(this);
@@ -38,8 +41,13 @@ class SubmitResults extends React.Component {
         this.onReconstitutionDateHandler = this.onReconstitutionDateHandler.bind(this);
         this.validateTestingAndReconstituionDate = this.validateTestingAndReconstituionDate.bind(this);
         this.validateTestingAndQCLotRecivedDate = this.validateTestingAndQCLotRecivedDate.bind(this);
+        this.onQcLotNumberHandler = this.onQcLotNumberHandler.bind(this);
+        this.onTestJustificationHandler = this.onTestJustificationHandler.bind(this);
+
+
         this.submitForm = this.submitForm.bind(this);
 
+        this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
         this.otherCommentsHandler = this.otherCommentsHandler.bind(this);
         this.notTestedReasonHandler = this.notTestedReasonHandler.bind(this);
 
@@ -65,6 +73,9 @@ class SubmitResults extends React.Component {
             this.state.kitExpiryDate.length == 0 ||
             this.state.kitReceivedDate.length == 0 ||
             this.state.kitLotNo.length == 0 ||
+            this.state.nameOfTest.length == 0 ||
+            this.state.qcLotNumber.length == 0 ||
+            this.state.qcReconstituionDate.length == 0 ||
             this.state.testingDate.length == 0 ||
             (this.state.qcNegativeIntepreation.length == 0 && this.state.isQcDone) ||
             (this.state.qcRecentIntepreation.length == 0 && this.state.isQcDone) ||
@@ -80,18 +91,20 @@ class SubmitResults extends React.Component {
             submission["kitExpiryDate"] = this.state.kitExpiryDate;
             submission["kitReceivedDate"] = this.state.kitReceivedDate;
             submission["kitLotNo"] = this.state.kitLotNo;
+            submission["qcReconstituionDate"] = this.state.qcReconstituionDate;
             submission["testingDate"] = this.state.testingDate;
+            submission["qcLotNumber"] = this.state.qcLotNumber;
             submission["qcNegativeIntepreation"] = this.state.qcNegativeIntepreation;
             submission["qcRecentIntepreation"] = this.state.qcRecentIntepreation;
             submission["qcLongtermIntepreation"] = this.state.qcLongtermIntepreation;
             submission["resultNegative"] = this.state.resultNegative;
-            submission["qcLotReceivedDate"] = this.state.qcLotReceivedDate;
             submission["resultRecent"] = this.state.resultRecent;
             submission["resultLongterm"] = this.state.resultLongterm;
+            submission["nameOfTest"] = this.state.nameOfTest;
             submission["isQCTested"] = this.state.isQcDone;
+            submission["testJustification"] = this.state.testJustification;
             !this.state.isQcDone ? submission["qcNotTestedReason"] = this.state.notTestedReason : '';
             !this.state.isQcDone ? submission["qcNotTestedOtherReason"] = this.state.otherComments : '';
-
             (async () => {
                 let response = await SaveSubmission(submission);
                 console.log(response);
@@ -163,6 +176,19 @@ class SubmitResults extends React.Component {
             });
         }
     }
+
+    onQcLotNumberHandler(event) {
+        this.setState({
+            qcLotNumber: event.target.value
+        });
+    }
+
+    onTestJustificationHandler(event) {
+        this.setState({
+            testJustification: event.target.value
+        });
+    }
+
     onKitExpiryDateHandler(event) {
         this.setState({
             kitExpiryDate: event.target.value
@@ -189,6 +215,12 @@ class SubmitResults extends React.Component {
         this.validateTestingAndRecivedDate(event.target.value, this.state.kitReceivedDate);
         this.validateTestingAndQCLotRecivedDate(event.target.value, this.state.qcLotReceivedDate);
         this.validateTestingAndReconstituionDate(this.state.qcReconstituionDate, event.target.value)
+    }
+
+    onNameOfTestHandler(event) {
+        this.setState({
+            nameOfTest: event.target.value
+        });
     }
 
     onReconstitutionDateHandler(event) {
@@ -351,7 +383,7 @@ class SubmitResults extends React.Component {
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
-                                <input className="form-control" type="text" />
+                                <input value={this.state.nameOfTest} onChange={() => this.onNameOfTestHandler(event)} className="form-control" type="text" />
                             </div>
                             <div style={boxLine} className="col-sm-3">
                                 <p><strong>RTRI Kit Lot No. *</strong></p>
@@ -401,7 +433,7 @@ class SubmitResults extends React.Component {
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
-                                <input className="form-control" type="text" />
+                                <input onChange={() => this.onQcLotNumberHandler(event)} className="form-control" type="text" />
                             </div>
 
                             <div style={boxLineLeft} className="col-sm-3">
@@ -433,7 +465,9 @@ class SubmitResults extends React.Component {
                                 <p><strong>Jutification for QC testing: *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <select className="custom-select" aria-label="Default select example">
+                                <select
+                                    value={this.state.testJustification} onChange={() => this.onTestJustificationHandler(event)}
+                                    className="custom-select" aria-label="Default select example">
                                     <option selected>Biweekly testing as per the protocol</option>
                                     <option value="1">New kit lot/batch</option>
                                     <option value="2">Change in environmental conditions</option>
