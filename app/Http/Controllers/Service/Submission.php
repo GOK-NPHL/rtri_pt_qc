@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\qcsubmission as SubmissionModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -74,7 +75,7 @@ class Submission extends Controller
 
     public function getSubmissions()
     {
-
+        $user = Auth::user();
         try {
             $submissions = SubmissionModel::select(
                 'qcsubmissions.id',
@@ -84,6 +85,7 @@ class Submission extends Controller
                 'laboratories.lab_name',
                 'laboratories.mfl_code',
             )->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
+                ->where('qcsubmissions.lab_id', '=', $user->laboratory_id)
                 ->get();
             return $submissions;
             // return SubmissionModel::all();
