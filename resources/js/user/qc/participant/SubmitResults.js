@@ -1,6 +1,6 @@
 import React from 'react';
 import StatsLabel from '../../../components/utils/stats/StatsLabel';
-import { SaveSubmission } from '../../../components/utils/Helpers';
+import { SaveSubmission, FetchCurrentParticipantDemographics } from '../../../components/utils/Helpers';
 import './Results.css';
 
 class SubmitResults extends React.Component {
@@ -22,6 +22,7 @@ class SubmitResults extends React.Component {
             resultNegative: { c: 0, v: 0, lt: 0 },
             resultRecent: { c: 0, v: 0, lt: 0 },
             resultLongterm: { c: 0, v: 0, lt: 0 },
+            userDemographics: []
         }
 
         this.onQcLotReceiceDateHandler = this.onQcLotReceiceDateHandler.bind(this);
@@ -39,6 +40,12 @@ class SubmitResults extends React.Component {
 
     componentDidMount() {
 
+        (async () => {
+            let userDemographics = await FetchCurrentParticipantDemographics();
+            this.setState({
+                userDemographics: userDemographics
+            });
+        })();
     }
 
     componentDidUpdate(prevProps) {
@@ -192,13 +199,13 @@ class SubmitResults extends React.Component {
             })
             $('#messageModal').modal('toggle');
             this.setState({
-                testingDate: '', 
+                testingDate: '',
                 qcReconstituionDate: ''
             });
         }
     }
 
-    validateTestingAndQCLotRecivedDate(testingDate,receiveDate) {
+    validateTestingAndQCLotRecivedDate(testingDate, receiveDate) {
         if (testingDate < receiveDate) {
             this.setState({
                 message: "QC lot Date received cannot be greater than testing date"
@@ -241,27 +248,30 @@ class SubmitResults extends React.Component {
                         {/* lab basic info */}
                         <div style={labInfo} className="row">
                             <div style={boxLineLeft} className="col-sm-3">
-                                <p>Lab code</p>
-                                14563
+                                <strong><p>Lab code</p></strong>
+                                {this.state.userDemographics.length > 0 ? this.state.userDemographics[0].mfl_code : ''}
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <p>Lab Name</p>
-                                EDARP
+                                <strong><p>Lab Name</p></strong>
+                                {this.state.userDemographics.length > 0 ? this.state.userDemographics[0].lab_name : ''}
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <p>Phone No.</p>
-                                +254-710236335
+                                <strong><p>Phone No.</p></strong>
+                                {this.state.userDemographics.length > 0 ? this.state.userDemographics[0].phone_number : ''}
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <p>Email</p>
-
+                                <strong><p>Email</p></strong>
+                                {this.state.userDemographics.length > 0 ? this.state.userDemographics[0].email : ''}
                             </div>
                         </div>
                         {/* row two */}
                         <div style={labInfo} className="row mt-1">
                             <div style={boxLineLeft} className="col-sm-3">
-                                <p>Tester Name</p>
-                                Duncan
+                                <strong><p>Tester Name</p></strong>
+                                {this.state.userDemographics.length > 0 ? this.state.userDemographics[0].name : ''}
+                                <span> </span>
+                                {this.state.userDemographics.length > 0 ? this.state.userDemographics[0].second_name : ''}
+
                             </div>
 
                         </div>

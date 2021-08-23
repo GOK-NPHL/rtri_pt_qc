@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\QC;
 
 use App\Http\Controllers\Controller;
+use App\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class QCParticipantController extends Controller
@@ -41,6 +44,29 @@ class QCParticipantController extends Controller
             return view('user.qc.participant.dashboard');
         } else {
             return view('user.general.dashboard');
+        }
+    }
+
+
+    public function getParticipantDemographics(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $usersDemo = User::select(
+                'users.id',
+                'users.name',
+                'users.second_name',
+                'laboratories.lab_name',
+                'laboratories.phone_number',
+                'laboratories.mfl_code',
+                'laboratories.email',
+
+            )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
+                ->where('users.id', '=', $user->id)
+                ->get();
+            return $usersDemo;
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could fetch users: ' . $ex->getMessage()], 500);
         }
     }
 }
