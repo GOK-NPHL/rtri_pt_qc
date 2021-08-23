@@ -144,10 +144,13 @@ class SubmitResults extends React.Component {
         });
     }
     onQcLotReceiceDateHandler(event) {
-        this.setState({
-            qcLotReceivedDate: event.target.value
-        });
-        this.validateTestingAndQCLotRecivedDate(this.state.testingDate, event.target.value);
+        let isValid = this.validateTestingAndQCLotRecivedDate(this.state.testingDate, event.target.value);
+
+        if (isValid) {
+            this.setState({
+                qcLotReceivedDate: event.target.value
+            });
+        }
     }
     onKitExpiryDateHandler(event) {
         this.setState({
@@ -155,10 +158,13 @@ class SubmitResults extends React.Component {
         });
     }
     onKitReceivedDateHandler(event) {
-        this.setState({
-            kitReceivedDate: event.target.value
-        });
-        this.validateTestingAndRecivedDate(this.state.testingDate, event.target.value);
+        let isValid = this.validateTestingAndRecivedDate(this.state.testingDate, event.target.value);
+        if (isValid) {
+            this.setState({
+                kitReceivedDate: event.target.value
+            });
+        }
+
     }
     onKitLotHandler(event) {
         this.setState({
@@ -170,51 +176,59 @@ class SubmitResults extends React.Component {
             testingDate: event.target.value
         });
         this.validateTestingAndRecivedDate(event.target.value, this.state.kitReceivedDate);
+        this.validateTestingAndQCLotRecivedDate(event.target.value, this.state.qcLotReceivedDate);
+        this.validateTestingAndReconstituionDate(this.state.qcReconstituionDate, event.target.value)
     }
 
     onReconstitutionDateHandler(event) {
-        this.setState({
-            qcReconstituionDate: event.target.value
-        });
-        this.validateTestingAndReconstituionDate(event.target.value, this.state.testingDate);
+
+        let isValid = this.validateTestingAndReconstituionDate(event.target.value, this.state.testingDate);
+        if (isValid) {
+            this.setState({
+                qcReconstituionDate: event.target.value
+            });
+        }
     }
 
     validateTestingAndRecivedDate(testingDate, receiveData) {
-        if (testingDate < receiveData) {
+        if (testingDate < receiveData && (testingDate && receiveData)) {
             this.setState({
-                message: "QC lot Date received cannot be greater than testing date"
-            })
-            $('#messageModal').modal('toggle');
-            this.setState({
+                message: "QC lot Date received cannot be greater than testing date",
                 testingDate: '',
                 kitReceivedDate: ''
-            });
+            })
+            $('#messageModal').modal('show');
+            return false;
+        } else {
+            return true;
         }
     }
 
     validateTestingAndReconstituionDate(reconstituionDate, testingDate) {
-        if (testingDate < reconstituionDate) {
+        if (testingDate < reconstituionDate && (reconstituionDate && testingDate)) {
             this.setState({
-                message: "Kit testing Date cannot be greater than reconstitution date"
-            })
-            $('#messageModal').modal('toggle');
-            this.setState({
+                message: "Kit testing Date cannot be greater than reconstitution date",
                 testingDate: '',
                 qcReconstituionDate: ''
-            });
+            })
+            $('#messageModal').modal('show');
+            return false;
+        } else {
+            return true;
         }
     }
 
     validateTestingAndQCLotRecivedDate(testingDate, receiveDate) {
-        if (testingDate < receiveDate) {
+        if (testingDate < receiveDate && (testingDate && receiveDate)) {
             this.setState({
-                message: "QC lot Date received cannot be greater than testing date"
-            })
-            $('#messageModal').modal('toggle');
-            this.setState({
+                message: "QC lot Date received cannot be greater than testing date",
                 testingDate: '',
                 qcLotReceivedDate: ''
-            });
+            })
+            $('#messageModal').modal('show');
+            return false;
+        } else {
+            return true;
         }
     }
 
