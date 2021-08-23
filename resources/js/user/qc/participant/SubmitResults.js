@@ -19,10 +19,14 @@ class SubmitResults extends React.Component {
             qcNegativeIntepreation: '',
             qcRecentIntepreation: '',
             qcLongtermIntepreation: '',
+            isQcDone: true,
             resultNegative: { c: 0, v: 0, lt: 0 },
             resultRecent: { c: 0, v: 0, lt: 0 },
             resultLongterm: { c: 0, v: 0, lt: 0 },
-            userDemographics: []
+            userDemographics: [],
+            otherComments: '',
+            notTestedReason: 'Issue with sample',
+
         }
 
         this.onQcLotReceiceDateHandler = this.onQcLotReceiceDateHandler.bind(this);
@@ -35,6 +39,9 @@ class SubmitResults extends React.Component {
         this.validateTestingAndReconstituionDate = this.validateTestingAndReconstituionDate.bind(this);
         this.validateTestingAndQCLotRecivedDate = this.validateTestingAndQCLotRecivedDate.bind(this);
         this.submitForm = this.submitForm.bind(this);
+
+        this.otherCommentsHandler = this.otherCommentsHandler.bind(this);
+        this.notTestedReasonHandler = this.notTestedReasonHandler.bind(this);
 
     }
 
@@ -59,9 +66,9 @@ class SubmitResults extends React.Component {
             this.state.kitReceivedDate.length == 0 ||
             this.state.kitLotNo.length == 0 ||
             this.state.testingDate.length == 0 ||
-            this.state.qcNegativeIntepreation.length == 0 ||
-            this.state.qcRecentIntepreation.length == 0 ||
-            this.state.qcLongtermIntepreation.length == 0
+            (this.state.qcNegativeIntepreation.length == 0 && this.state.isQcDone) ||
+            (this.state.qcRecentIntepreation.length == 0 && this.state.isQcDone) ||
+            (this.state.qcLongtermIntepreation.length == 0 && this.state.isQcDone)
         ) {
             this.setState({
                 message: "Fill in all the fields marked *"
@@ -81,6 +88,10 @@ class SubmitResults extends React.Component {
             submission["qcLotReceivedDate"] = this.state.qcLotReceivedDate;
             submission["resultRecent"] = this.state.resultRecent;
             submission["resultLongterm"] = this.state.resultLongterm;
+            submission["isQCTested"] = this.state.isQcDone;
+            !this.state.isQcDone ? submission["qcNotTestedReason"] = this.state.notTestedReason : '';
+            !this.state.isQcDone ? submission["qcNotTestedOtherReason"] = this.state.otherComments : '';
+
             (async () => {
                 let response = await SaveSubmission(submission);
                 console.log(response);
@@ -232,6 +243,17 @@ class SubmitResults extends React.Component {
         }
     }
 
+    notTestedReasonHandler(event) {
+        this.setState({
+            notTestedReason: event.target.value
+        });
+    }
+
+    otherCommentsHandler(event) {
+        this.setState({
+            otherComments: event.target.value
+        });
+    }
     render() {
         const labInfo = {
             backgroundColor: "#f9f9f9",
@@ -432,7 +454,9 @@ class SubmitResults extends React.Component {
                                 onClick={() => {
                                     $("#qc-test-results").toggle();
                                     $("#test-not-done-section").toggle();
-
+                                    this.setState({
+                                        isQcDone: !this.state.isQcDone
+                                    })
                                 }}
                                 type="checkbox"
                                 value="" id="qcTestDone" />
@@ -449,19 +473,15 @@ class SubmitResults extends React.Component {
                         <form style={{ "paddingRight": "20%", "paddingLeft": "20%" }}>
                             <div className="form-group" >
                                 <label htmlFor="exampleFormControlSelect1">Pick a reason</label>
-                                <select className="form-control" id="exampleFormControlSelect1">
-                                    <option>Issue with sample</option>
+                                <select value={this.state.notTestedReason} onChange={() => this.notTestedReasonHandler(event)} className="form-control" id="exampleFormControlSelect1">
+                                    <option selected="selected">Issue with sample</option>
                                     <option>Issue with RTRI kit lot</option>
                                     <option>Other</option>
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="exampleFormControlTextarea1">Your comments</label>
-                                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="exampleFormControlTextarea1">Do you need any support from the PT Provider ?</label>
-                                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <label htmlFor="exampleFormControlTextarea2">Other comments</label>
+                                <textarea value={this.state.otherComments} onChange={() => this.otherCommentsHandler(event)} className="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
                             </div>
                         </form>
                         {/* End why test not done */}
