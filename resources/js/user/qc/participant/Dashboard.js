@@ -34,7 +34,6 @@ class Dashboard extends React.Component {
 
         (async () => {
             let response = await FetchSubmissions();
-            console.log(response);
             this.setState({
                 data: response
             })
@@ -42,6 +41,20 @@ class Dashboard extends React.Component {
 
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            ((prevState.isSubmitResult != this.state.isSubmitResult))
+        ) {
+
+            (async () => {
+                let response = await FetchSubmissions();
+                this.setState({
+                    data: response,
+                    allTableElements: []
+                })
+            })();
+        }
+    }
 
     handlePageChange(pageNumber) {
         console.log(`active page is ${pageNumber}`);
@@ -74,7 +87,7 @@ class Dashboard extends React.Component {
         let tableElem = [];
 
         if (this.state.data.length > 0) {
-
+            console.log(this.state.data);
             this.state.data.map((element, index) => {
                 tableElem.push(
 
