@@ -53,8 +53,9 @@ class QCParticipantController extends Controller
         try {
             $user = Auth::user();
             $usersDemo = User::select(
-                'users.id',
+                'users.id as user_id',
                 'users.name',
+                'laboratories.id as lab_id',
                 'users.second_name',
                 'laboratories.lab_name',
                 'laboratories.phone_number',

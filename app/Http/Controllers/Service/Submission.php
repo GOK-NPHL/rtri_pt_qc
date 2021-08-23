@@ -35,6 +35,16 @@ class Submission extends Controller
                 "lot_date_received" => $submission["qcLotReceivedDate"],
                 "kit_expiry_date" => $submission["kitExpiryDate"],
                 "kit_lot_no" => $submission["kitLotNo"],
+                "name_of_test" => $submission["nameOfTest"],
+                "qc_lot_no" => $submission["kitLotNo"],
+                "lab_id" => $submission["labId"],
+                "user_id" => $submission["userId"],
+                "sample_reconstituion_date" => $submission["qcReconstituionDate"],
+
+                "test_justification" => $submission["testJustification"],
+                "qc_tested" => $submission["isQCTested"],
+                "not_test_reason" => $submission["qcNotTestedReason"],
+                "other_not_tested_reason" => $submission["qcNotTestedOtherReason"],
 
                 "result_lt_control_line" => $submission["resultLongterm"]["c"],
                 "result_lt_verification_line" => $submission["resultLongterm"]["v"],
@@ -57,7 +67,7 @@ class Submission extends Controller
             return response()->json(['Message' => 'Saved successfully'], 200);
         } catch (Exception $ex) {
             Log::error($ex);
-            return response()->json(['Message' => 'Could not save organisation units: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Could not save sumbmission: ' . $ex->getMessage()], 500);
         }
     }
 

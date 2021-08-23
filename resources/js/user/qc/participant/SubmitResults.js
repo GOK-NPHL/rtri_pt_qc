@@ -19,6 +19,8 @@ class SubmitResults extends React.Component {
             nameOfTest: '',
             qcLotNumber: '',
             testingDate: '',
+            labId: '',
+            userId: '',
             qcNegativeIntepreation: '',
             qcRecentIntepreation: '',
             qcLongtermIntepreation: '',
@@ -58,7 +60,10 @@ class SubmitResults extends React.Component {
         (async () => {
             let userDemographics = await FetchCurrentParticipantDemographics();
             this.setState({
-                userDemographics: userDemographics
+                userDemographics: userDemographics,
+                labId: userDemographics[0].lab_id,
+                userId: userDemographics[0].user_id
+                
             });
         })();
     }
@@ -103,11 +108,14 @@ class SubmitResults extends React.Component {
             submission["nameOfTest"] = this.state.nameOfTest;
             submission["isQCTested"] = this.state.isQcDone;
             submission["testJustification"] = this.state.testJustification;
-            !this.state.isQcDone ? submission["qcNotTestedReason"] = this.state.notTestedReason : '';
-            !this.state.isQcDone ? submission["qcNotTestedOtherReason"] = this.state.otherComments : '';
+            submission["qcNotTestedReason"] = !this.state.isQcDone ? this.state.notTestedReason : "";
+            submission["qcNotTestedOtherReason"] = !this.state.isQcDone ? this.state.otherComments : "";
+            submission["labId"] = this.state.labId;
+            submission["userId"] = this.state.userId;
+            
+
             (async () => {
                 let response = await SaveSubmission(submission);
-                console.log(response);
                 this.setState({
                     message: response.data.Message,
                 });
@@ -383,7 +391,7 @@ class SubmitResults extends React.Component {
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
-                                <input value={this.state.nameOfTest} onChange={() => this.onNameOfTestHandler(event)} className="form-control" type="text" />
+                                <input onChange={() => this.onNameOfTestHandler(event)} className="form-control" type="text" />
                             </div>
                             <div style={boxLine} className="col-sm-3">
                                 <p><strong>RTRI Kit Lot No. *</strong></p>

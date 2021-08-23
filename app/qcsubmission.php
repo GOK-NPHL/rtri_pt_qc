@@ -23,6 +23,15 @@ class qcsubmission extends Model
         "result_negative_longterm_line",
         "interpretation_longterm",
         "interpretation_recent",
-        "interpretation_negative"
+        "interpretation_negative",
+        "name_of_test",
+        "qc_lot_no",
+        "sample_reconstituion_date",
+        "test_justification",
+        "qc_tested",
+        "not_test_reason",
+        "other_not_tested_reason",
+        "lab_id",
+        "user_id"
     ];
 }

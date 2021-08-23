@@ -22,10 +22,12 @@ class CreateSubmissionsTable extends Migration
             $table->string("kit_lot_no");
             $table->date("kit_date_received");
             $table->date("kit_expiry_date");
-           
+
             $table->string("qc_lot_no");
             $table->date("lot_date_received");
             $table->date("sample_reconstituion_date");
+            $table->integer("lab_id");
+            $table->integer("user_id");
 
             $table->string("test_justification");
 
@@ -33,21 +35,21 @@ class CreateSubmissionsTable extends Migration
             $table->string("not_test_reason");
             $table->string("other_not_tested_reason");
 
-            $table->integer("result_lt_control_line");
-            $table->integer("result_lt_verification_line");
-            $table->integer("result_lt_longterm_line");
+            $table->integer("result_lt_control_line")->nullable();
+            $table->integer("result_lt_verification_line")->nullable();
+            $table->integer("result_lt_longterm_line")->nullable();
 
-            $table->integer("result_recent_control_line");
-            $table->integer("result_recent_verification_line");
-            $table->integer("result_recent_longterm_line");
+            $table->integer("result_recent_control_line")->nullable();
+            $table->integer("result_recent_verification_line")->nullable();
+            $table->integer("result_recent_longterm_line")->nullable();
 
-            $table->integer("result_negative_control_line");
-            $table->integer("result_negative_verification_line");
-            $table->integer("result_negative_longterm_line");
+            $table->integer("result_negative_control_line")->nullable();
+            $table->integer("result_negative_verification_line")->nullable();
+            $table->integer("result_negative_longterm_line")->nullable();
 
-            $table->string("interpretation_longterm");
-            $table->string("interpretation_recent");
-            $table->string("interpretation_negative");
+            $table->string("interpretation_longterm")->nullable();
+            $table->string("interpretation_recent")->nullable();
+            $table->string("interpretation_negative")->nullable();
         });
     }
 
