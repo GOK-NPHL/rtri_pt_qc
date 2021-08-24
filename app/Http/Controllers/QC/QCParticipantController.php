@@ -47,6 +47,15 @@ class QCParticipantController extends Controller
         }
     }
 
+    public function participantDemographicsPage()
+    {
+        if (Gate::allows('view_qc_component')) {
+            return view('user.qc.participant.participant_demo');
+        } else {
+            return view('user.general.dashboard');
+        }
+    }
+
 
     public function getParticipantDemographics(Request $request)
     {

@@ -38,6 +38,7 @@ Route::get('logout', [CustomAuthController::class, 'signOut'])->name('logout');
 
 Route::get('participant-home',[QCParticipantController::class, 'participantHome'])->name('participant-home');
 Route::get('participant-pt-home',[QCParticipantController::class, 'participantPTHome'])->name('participant-pt-home');
+Route::get('participant-qc-demographics',[QCParticipantController::class, 'participantDemographicsPage'])->name('participant-qc-demographics');
 
 Route::get('admin-logout', [AdminAuthController::class, 'signOut'])->name('admin-logout');
 Route::post('admin-login', [AdminAuthController::class, 'doLogin'])->name('admin-login');

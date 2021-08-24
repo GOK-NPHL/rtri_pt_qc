@@ -13,6 +13,7 @@ require('./bootstrap');
  */
 
 require('./user/qc/participant/Dashboard');
+require('./user/qc/participant/Demographics');
 require('./user/qc/admin/Dashboard');
 require('./user/qc/admin/AddLab');
 require('./user/qc/admin/EditLab');

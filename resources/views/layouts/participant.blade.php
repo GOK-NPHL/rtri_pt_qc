@@ -113,13 +113,7 @@ use Illuminate\Support\Facades\Gate;
                                 <li class="nav-item">
                                     <a href="pages/layout/top-nav.html" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Individual reports</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Summary</p>
+                                        <p>QC reports</p>
                                     </a>
                                 </li>
                             </ul>
@@ -138,15 +132,9 @@ use Illuminate\Support\Facades\Gate;
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="pages/layout/top-nav.html" class="nav-link">
+                                    <a href="{{ route('participant-qc-demographics') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>My Login Information</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Change password</p>
                                     </a>
                                 </li>
                             </ul>
