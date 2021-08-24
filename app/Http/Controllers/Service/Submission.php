@@ -42,7 +42,8 @@ class Submission extends Controller
                 "lab_id" => $submission["labId"],
                 "user_id" => $submission["userId"],
                 "sample_reconstituion_date" => $submission["qcReconstituionDate"],
-
+                "sample_type" => $submission["sampleType"],
+                
                 "test_justification" => $submission["testJustification"],
                 "qc_tested" => $submission["isQCTested"],
                 "not_test_reason" => $submission["qcNotTestedReason"],

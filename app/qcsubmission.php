@@ -32,6 +32,7 @@ class qcsubmission extends Model
         "not_test_reason",
         "other_not_tested_reason",
         "lab_id",
-        "user_id"
+        "user_id",
+        "sample_type"
     ];
 }

@@ -19,6 +19,7 @@ class SubmitResults extends React.Component {
             nameOfTest: '',
             qcLotNumber: '',
             testingDate: '',
+            sampleType: 'DTS',
             labId: '',
             userId: '',
             qcNegativeIntepreation: '',
@@ -45,8 +46,8 @@ class SubmitResults extends React.Component {
         this.validateTestingAndQCLotRecivedDate = this.validateTestingAndQCLotRecivedDate.bind(this);
         this.onQcLotNumberHandler = this.onQcLotNumberHandler.bind(this);
         this.onTestJustificationHandler = this.onTestJustificationHandler.bind(this);
-
-
+        this.onSampleTypeHandler = this.onSampleTypeHandler.bind(this);
+        
         this.submitForm = this.submitForm.bind(this);
 
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
@@ -112,7 +113,7 @@ class SubmitResults extends React.Component {
             submission["qcNotTestedOtherReason"] = !this.state.isQcDone ? this.state.otherComments : "";
             submission["labId"] = this.state.labId;
             submission["userId"] = this.state.userId;
-            
+            submission["sampleType"] = this.state.sampleType;
 
             (async () => {
                 let response = await SaveSubmission(submission);
@@ -191,6 +192,11 @@ class SubmitResults extends React.Component {
         });
     }
 
+    onSampleTypeHandler(event) {
+        this.setState({
+            sampleType: event.target.value
+        });
+    }
     onTestJustificationHandler(event) {
         this.setState({
             testJustification: event.target.value
@@ -477,8 +483,20 @@ class SubmitResults extends React.Component {
                                     value={this.state.testJustification} onChange={() => this.onTestJustificationHandler(event)}
                                     className="custom-select" aria-label="Default select example">
                                     <option selected>Biweekly testing as per the protocol</option>
-                                    <option value="1">New kit lot/batch</option>
-                                    <option value="2">Change in environmental conditions</option>
+                                    <option>New kit lot/batch</option>
+                                    <option>Change in environmental conditions</option>
+                                </select>
+                            </div>
+                            {/* sample type */}
+                            <div style={boxLine} className="col-sm-3">
+                                <p><strong>Sample type:</strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+                                <select
+                                    value={this.state.sampleType} onChange={() => this.onSampleTypeHandler(event)}
+                                    className="custom-select" aria-label="Default select example">
+                                    <option selected>DTS</option>
+                                    <option>Plasma</option>
                                 </select>
                             </div>
 
