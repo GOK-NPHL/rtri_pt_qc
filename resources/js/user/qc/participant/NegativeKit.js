@@ -19,10 +19,10 @@ class NegativeKit extends React.Component {
 
                 <tr>
                     <td>QC -Negative</td>
-                    <td ><input onClick={this.props.resultNegative(event)} value="c" type="checkbox" /></td>
-                    <td ><input onClick={this.props.resultNegative(event)} value="v" type="checkbox" /></td>
-                    <td ><input onClick={this.props.resultNegative(event)} value="lt" type="checkbox" /></td>
-                    <td onChange={this.props.qcInterpretationNegative(event)}>
+                    <td ><input onClick={()=>this.props.resultNegative(event)} value="c" type="checkbox" /></td>
+                    <td ><input onClick={()=>this.props.resultNegative(event)} value="v" type="checkbox" /></td>
+                    <td ><input onClick={()=>this.props.resultNegative(event)} value="lt" type="checkbox" /></td>
+                    <td onChange={()=>this.props.qcInterpretationNegative(event)}>
                         <div className="form-check form-check-inline">
                             <input className="form-check-input" type="radio" value="lt"
                                 name="negative-radio" id="result_lt" />

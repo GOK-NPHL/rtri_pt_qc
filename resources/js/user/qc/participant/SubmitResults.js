@@ -3,6 +3,8 @@ import StatsLabel from '../../../components/utils/stats/StatsLabel';
 import { SaveSubmission, FetchCurrentParticipantDemographics } from '../../../components/utils/Helpers';
 import './Results.css';
 import LongtermKit from './LongtermKit';
+import NegativeKit from './NegativeKit';
+import RecentKit from './RecentKit';
 
 class SubmitResults extends React.Component {
 
@@ -60,6 +62,10 @@ class SubmitResults extends React.Component {
 
         this.resultRecent = this.resultRecent.bind(this);
         this.qcInterpretationRecent = this.qcInterpretationRecent.bind(this);
+
+        this.resultNegative = this.resultNegative.bind(this);
+        this.qcInterpretationNegative = this.qcInterpretationNegative.bind(this);
+        
         
     }
 
@@ -606,7 +612,11 @@ class SubmitResults extends React.Component {
 
 
                                         {/*  QC - Negative */}
-                                        <tr>
+                                        <NegativeKit
+                                            resultNegative={this.resultNegative}
+                                            qcInterpretationNegative ={this.qcInterpretationNegative}
+                                        />
+                                        {/* <tr>
                                             <td>QC -Negative</td>
                                             <td ><input onClick={this.resultNegative.bind(this)} value="c" type="checkbox" /></td>
                                             <td ><input onClick={this.resultNegative.bind(this)} value="v" type="checkbox" /></td>
@@ -641,7 +651,7 @@ class SubmitResults extends React.Component {
                                                     </label>
                                                 </div>
                                             </td>
-                                        </tr>
+                                        </tr> */}
                                         {/*  End QC - Negative */}
 
                                     </tbody>
