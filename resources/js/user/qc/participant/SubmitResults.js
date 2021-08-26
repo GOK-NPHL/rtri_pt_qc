@@ -2,6 +2,7 @@ import React from 'react';
 import StatsLabel from '../../../components/utils/stats/StatsLabel';
 import { SaveSubmission, FetchCurrentParticipantDemographics } from '../../../components/utils/Helpers';
 import './Results.css';
+import LongtermKit from './LongtermKit';
 
 class SubmitResults extends React.Component {
 
@@ -47,13 +48,19 @@ class SubmitResults extends React.Component {
         this.onQcLotNumberHandler = this.onQcLotNumberHandler.bind(this);
         this.onTestJustificationHandler = this.onTestJustificationHandler.bind(this);
         this.onSampleTypeHandler = this.onSampleTypeHandler.bind(this);
-        
+
         this.submitForm = this.submitForm.bind(this);
 
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
         this.otherCommentsHandler = this.otherCommentsHandler.bind(this);
         this.notTestedReasonHandler = this.notTestedReasonHandler.bind(this);
 
+        this.resultLongterm = this.resultLongterm.bind(this);
+        this.qcInterpretationLongterm = this.qcInterpretationLongterm.bind(this);
+
+        this.resultRecent = this.resultRecent.bind(this);
+        this.qcInterpretationRecent = this.qcInterpretationRecent.bind(this);
+        
     }
 
     componentDidMount() {
@@ -64,7 +71,7 @@ class SubmitResults extends React.Component {
                 userDemographics: userDemographics,
                 labId: userDemographics[0].lab_id,
                 userId: userDemographics[0].user_id
-                
+
             });
         })();
     }
@@ -74,6 +81,17 @@ class SubmitResults extends React.Component {
     }
 
     submitForm() {
+        console.log(this.state.qcLotReceivedDate.length == 0,
+            this.state.kitExpiryDate.length == 0,
+            this.state.kitReceivedDate.length == 0,
+            this.state.kitLotNo.length == 0,
+            this.state.nameOfTest.length == 0,
+            this.state.qcLotNumber.length == 0,
+            this.state.qcReconstituionDate.length == 0,
+            this.state.testingDate.length == 0,
+            (this.state.qcNegativeIntepreation.length == 0 && this.state.isQcDone),
+            (this.state.qcRecentIntepreation.length == 0 && this.state.isQcDone),
+            (this.state.qcLongtermIntepreation.length == 0 && this.state.isQcDone));
         if (
             this.state.qcLotReceivedDate.length == 0 ||
             this.state.kitExpiryDate.length == 0 ||
@@ -574,82 +592,16 @@ class SubmitResults extends React.Component {
                                     </thead>
                                     <tbody>
                                         {/*  QC - Long Term*/}
-                                        <tr >
-                                            <td>QC - Long Term</td>
-                                            <td ><input onClick={this.resultLongterm.bind(this)} value="c" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultLongterm.bind(this)} value="v" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultLongterm.bind(this)} value="lt" type="checkbox" /></td>
-                                            <td onChange={this.qcInterpretationLongterm.bind(this)}>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="lt"
-                                                        name="long-term-radio" id="result_lt" />
-                                                    <label className="form-check-label" htmlFor="result_lt">
-                                                        LT
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="recent"
-                                                        name="long-term-radio" id="result_recent" />
-                                                    <label className="form-check-label" htmlFor="result_recent">
-                                                        recent
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="neg"
-                                                        name="long-term-radio" id="result_neg" />
-                                                    <label className="form-check-label" htmlFor="result_neg">
-                                                        neg
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="invalid"
-                                                        name="long-term-radio" id="result_invalid" />
-                                                    <label className="form-check-label" htmlFor="result_invalid">
-                                                        invalid
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        <LongtermKit
+                                            resultLongterm={this.resultLongterm}
+                                            qcInterpretationLongterm={this.qcInterpretationLongterm}
+                                        />
                                         {/*  End QC - Long Term */}
 
 
                                         {/*  QC - Recent */}
-                                        <tr>
-                                            <td>QC - Recent</td>
-                                            <td><input onClick={this.resultRecent.bind(this)} value="c" type="checkbox" /></td>
-                                            <td><input onClick={this.resultRecent.bind(this)} value="v" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultRecent.bind(this)} value="lt" type="checkbox" /></td>
-                                            <td onChange={this.qcInterpretationRecent.bind(this)}>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="lt"
-                                                        name="recent-radio" id="result_lt" />
-                                                    <label className="form-check-label" htmlFor="result_lt">
-                                                        LT
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="recent"
-                                                        name="recent-radio" id="result_recent" />
-                                                    <label className="form-check-label" htmlFor="result_recent">
-                                                        recent
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="neg"
-                                                        name="recent-radio" id="result_neg" />
-                                                    <label className="form-check-label" htmlFor="result_neg">
-                                                        neg
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="invalid"
-                                                        name="recent-radio" id="result_invalid" />
-                                                    <label className="form-check-label" htmlFor="result_invalid">
-                                                        invalid
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        <RecentKit resultRecent={this.resultRecent} qcInterpretationRecent={this.qcInterpretationRecent}/>
+                                        
                                         {/*  End QC - Long Recent */}
 
 
