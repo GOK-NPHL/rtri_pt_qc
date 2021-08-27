@@ -37,7 +37,8 @@ class SubmitResults extends React.Component {
             otherComments: '',
             notTestedReason: 'Issue with sample',
             isShowNegativeRepeat: false,
-            negativeTestRepeats: []
+            negativeTestRepeats: [],
+            isNegativeTestHasRepeats: false
 
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
@@ -189,7 +190,8 @@ class SubmitResults extends React.Component {
 
         this.setState({
             isShowNegativeRepeat: !this.state.isShowNegativeRepeat,
-            negativeTestRepeats: repeats
+            negativeTestRepeats: repeats,
+            isNegativeTestHasRepeats: true
         });
     }
     resultLongterm(event) {
@@ -649,6 +651,7 @@ class SubmitResults extends React.Component {
                                             repeatNegativeTest={this.repeatNegativeTest}
                                             resultNegative={this.resultNegative}
                                             qcInterpretationNegative={this.qcInterpretationNegative}
+                                            isNegativeTestHasRepeats={this.state.isNegativeTestHasRepeats}
                                         />
 
                                         {negativeTestRepeats}

@@ -54,7 +54,7 @@ class NegativeKit extends React.Component {
                     </td>
 
                     {
-                        this.props.isShowNegativeRepeat ?
+                        this.props.isShowNegativeRepeat && !this.props.isNegativeTestHasRepeats ?
                             <td>
                                 <button onClick={(event) => this.props.repeatNegativeTest(event)} type="button" className="btn btn-sm btn-outline-primary">Repeat</button>
                             </td> :
