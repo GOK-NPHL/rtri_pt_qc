@@ -155,6 +155,7 @@ class SubmitResults extends React.Component {
     }
 
     qcInterpretationNegative(event) {
+        console.log(event.target.value);
         this.setState({
             qcNegativeIntepreation: event.target.value,
             isShowNegativeRepeat: event.target.value == 'invalid' ? true : false
