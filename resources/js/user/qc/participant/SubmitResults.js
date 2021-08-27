@@ -35,6 +35,7 @@ class SubmitResults extends React.Component {
             userDemographics: [],
             otherComments: '',
             notTestedReason: 'Issue with sample',
+            isShowNegativeRepeat: false
 
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
@@ -65,8 +66,9 @@ class SubmitResults extends React.Component {
 
         this.resultNegative = this.resultNegative.bind(this);
         this.qcInterpretationNegative = this.qcInterpretationNegative.bind(this);
-        
-        
+
+        this.repeatNegativeTest = this.repeatNegativeTest.bind(this);
+
     }
 
     componentDidMount() {
@@ -154,7 +156,8 @@ class SubmitResults extends React.Component {
 
     qcInterpretationNegative(event) {
         this.setState({
-            qcNegativeIntepreation: event.target.value
+            qcNegativeIntepreation: event.target.value,
+            isShowNegativeRepeat: event.target.value == 'invalid' ? true : false
         });
     }
     qcInterpretationRecent(event) {
@@ -165,6 +168,11 @@ class SubmitResults extends React.Component {
     qcInterpretationLongterm(event) {
         this.setState({
             qcLongtermIntepreation: event.target.value
+        });
+    }
+    repeatNegativeTest(event) {
+        this.setState({
+            isShowNegativeRepeat: !this.state.isShowNegativeRepeat
         });
     }
     resultLongterm(event) {
@@ -606,53 +614,18 @@ class SubmitResults extends React.Component {
 
 
                                         {/*  QC - Recent */}
-                                        <RecentKit resultRecent={this.resultRecent} qcInterpretationRecent={this.qcInterpretationRecent}/>
-                                        
+                                        <RecentKit resultRecent={this.resultRecent} qcInterpretationRecent={this.qcInterpretationRecent} />
+
                                         {/*  End QC - Long Recent */}
 
 
                                         {/*  QC - Negative */}
                                         <NegativeKit
+                                            isShowNegativeRepeat={this.state.isShowNegativeRepeat}
+                                            repeatNegativeTest={this.repeatNegativeTest}
                                             resultNegative={this.resultNegative}
-                                            qcInterpretationNegative ={this.qcInterpretationNegative}
+                                            qcInterpretationNegative={this.qcInterpretationNegative}
                                         />
-                                        {/* <tr>
-                                            <td>QC -Negative</td>
-                                            <td ><input onClick={this.resultNegative.bind(this)} value="c" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultNegative.bind(this)} value="v" type="checkbox" /></td>
-                                            <td ><input onClick={this.resultNegative.bind(this)} value="lt" type="checkbox" /></td>
-                                            <td onChange={this.qcInterpretationNegative.bind(this)}>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="lt"
-                                                        name="negative-radio" id="result_lt" />
-                                                    <label className="form-check-label" htmlFor="result_lt">
-                                                        LT
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="recent"
-                                                        name="negative-radio" id="result_recent" />
-                                                    <label className="form-check-label" htmlFor="result_recent">
-                                                        recent
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" value="neg"
-                                                        name="negative-radio" id="result_neg" />
-                                                    <label className="form-check-label" htmlFor="result_neg">
-                                                        neg
-                                                    </label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" value="invalid"
-                                                        type="radio" name="negative-radio" id="result_invalid" />
-                                                    <label className="form-check-label" htmlFor="result_invalid">
-                                                        invalid
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        </tr> */}
-                                        {/*  End QC - Negative */}
 
                                     </tbody>
                                 </table>
