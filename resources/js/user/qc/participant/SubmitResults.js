@@ -5,6 +5,7 @@ import './Results.css';
 import LongtermKit from './LongtermKit';
 import NegativeKit from './NegativeKit';
 import RecentKit from './RecentKit';
+import { v4 as uuidv4 } from 'uuid';
 
 class SubmitResults extends React.Component {
 
@@ -35,7 +36,8 @@ class SubmitResults extends React.Component {
             userDemographics: [],
             otherComments: '',
             notTestedReason: 'Issue with sample',
-            isShowNegativeRepeat: false
+            isShowNegativeRepeat: false,
+            repeats: []
 
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
@@ -172,8 +174,21 @@ class SubmitResults extends React.Component {
         });
     }
     repeatNegativeTest(event) {
+        let repeats = this.state.repeats;
+        let uuid4 = uuidv4();
+
+        repeats.push(
+            <NegativeKit key={uuid4}
+                isShowNegativeRepeat={this.state.isShowNegativeRepeat}
+                repeatNegativeTest={this.repeatNegativeTest}
+                resultNegative={this.resultNegative}
+                qcInterpretationNegative={this.qcInterpretationNegative}
+            />
+        );
+
         this.setState({
-            isShowNegativeRepeat: !this.state.isShowNegativeRepeat
+            isShowNegativeRepeat: !this.state.isShowNegativeRepeat,
+            repeats: repeats
         });
     }
     resultLongterm(event) {
@@ -334,6 +349,13 @@ class SubmitResults extends React.Component {
         });
     }
     render() {
+        let repeats = [];
+        if (this.state.repeats.length > 0) {
+            this.state.repeats.map((repeat) => {
+                repeats.push(repeat);
+            });
+        }
+
         const labInfo = {
             backgroundColor: "#f9f9f9",
         };
@@ -627,6 +649,8 @@ class SubmitResults extends React.Component {
                                             resultNegative={this.resultNegative}
                                             qcInterpretationNegative={this.qcInterpretationNegative}
                                         />
+
+                                        {repeats}
 
                                     </tbody>
                                 </table>
