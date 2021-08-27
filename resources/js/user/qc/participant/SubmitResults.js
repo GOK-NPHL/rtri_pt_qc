@@ -37,7 +37,7 @@ class SubmitResults extends React.Component {
             otherComments: '',
             notTestedReason: 'Issue with sample',
             isShowNegativeRepeat: false,
-            repeats: []
+            negativeTestRepeats: []
 
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
@@ -174,11 +174,12 @@ class SubmitResults extends React.Component {
         });
     }
     repeatNegativeTest(event) {
-        let repeats = this.state.repeats;
+        let repeats = this.state.negativeTestRepeats;
         let uuid4 = uuidv4();
 
         repeats.push(
             <NegativeKit key={uuid4}
+                isRepeat={true}
                 isShowNegativeRepeat={this.state.isShowNegativeRepeat}
                 repeatNegativeTest={this.repeatNegativeTest}
                 resultNegative={this.resultNegative}
@@ -188,7 +189,7 @@ class SubmitResults extends React.Component {
 
         this.setState({
             isShowNegativeRepeat: !this.state.isShowNegativeRepeat,
-            repeats: repeats
+            negativeTestRepeats: repeats
         });
     }
     resultLongterm(event) {
@@ -349,10 +350,10 @@ class SubmitResults extends React.Component {
         });
     }
     render() {
-        let repeats = [];
-        if (this.state.repeats.length > 0) {
-            this.state.repeats.map((repeat) => {
-                repeats.push(repeat);
+        let negativeTestRepeats = [];
+        if (this.state.negativeTestRepeats.length > 0) {
+            this.state.negativeTestRepeats.map((repeat) => {
+                negativeTestRepeats.push(repeat);
             });
         }
 
@@ -650,7 +651,7 @@ class SubmitResults extends React.Component {
                                             qcInterpretationNegative={this.qcInterpretationNegative}
                                         />
 
-                                        {repeats}
+                                        {negativeTestRepeats}
 
                                     </tbody>
                                 </table>

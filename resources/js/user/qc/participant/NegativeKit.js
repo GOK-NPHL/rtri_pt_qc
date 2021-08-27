@@ -13,12 +13,12 @@ class NegativeKit extends React.Component {
     }
 
     render() {
-console.log(this.props.isShowNegativeRepeat);
+        console.log(this.props.isShowNegativeRepeat);
         return (
             <React.Fragment>
 
                 <tr>
-                    <td>QC -Negative</td>
+                    <td>{this.props.isRepeat ? 'Negative repeat' : 'QC -Negative'}</td>
                     <td ><input onClick={() => this.props.resultNegative(event)} value="c" type="checkbox" /></td>
                     <td ><input onClick={() => this.props.resultNegative(event)} value="v" type="checkbox" /></td>
                     <td ><input onClick={() => this.props.resultNegative(event)} value="lt" type="checkbox" /></td>
