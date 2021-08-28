@@ -5,6 +5,7 @@ import './Results.css';
 import LongtermKit from './LongtermKit';
 import NegativeKit from './NegativeKit';
 import RecentKit from './RecentKit';
+import { v4 as uuidv4 } from 'uuid';
 
 class SubmitResults extends React.Component {
 
@@ -26,16 +27,19 @@ class SubmitResults extends React.Component {
             labId: '',
             userId: '',
             qcNegativeIntepreation: '',
+            qcNegativeIntepreationRepeat: [],
             qcRecentIntepreation: '',
             qcLongtermIntepreation: '',
             isQcDone: true,
             resultNegative: { c: 0, v: 0, lt: 0 },
+            resultNegativeRepeat: [],
             resultRecent: { c: 0, v: 0, lt: 0 },
             resultLongterm: { c: 0, v: 0, lt: 0 },
             userDemographics: [],
             otherComments: '',
             notTestedReason: 'Issue with sample',
-            isShowNegativeRepeat: false
+            negativeTestRepeats: [],
+
 
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
@@ -68,7 +72,8 @@ class SubmitResults extends React.Component {
         this.qcInterpretationNegative = this.qcInterpretationNegative.bind(this);
 
         this.repeatNegativeTest = this.repeatNegativeTest.bind(this);
-
+        this.deleteRepeatkit = this.deleteRepeatkit.bind(this);
+        this.isRepeatsEmpty = this.isRepeatsEmpty.bind(this);
     }
 
     componentDidMount() {
@@ -89,17 +94,10 @@ class SubmitResults extends React.Component {
     }
 
     submitForm() {
-        console.log(this.state.qcLotReceivedDate.length == 0,
-            this.state.kitExpiryDate.length == 0,
-            this.state.kitReceivedDate.length == 0,
-            this.state.kitLotNo.length == 0,
-            this.state.nameOfTest.length == 0,
-            this.state.qcLotNumber.length == 0,
-            this.state.qcReconstituionDate.length == 0,
-            this.state.testingDate.length == 0,
-            (this.state.qcNegativeIntepreation.length == 0 && this.state.isQcDone),
-            (this.state.qcRecentIntepreation.length == 0 && this.state.isQcDone),
-            (this.state.qcLongtermIntepreation.length == 0 && this.state.isQcDone));
+
+        console.log(this.state.qcNegativeIntepreationRepeat);
+        console.log(this.state.resultNegativeRepeat);
+
         if (
             this.state.qcLotReceivedDate.length == 0 ||
             this.state.kitExpiryDate.length == 0 ||
@@ -140,6 +138,9 @@ class SubmitResults extends React.Component {
             submission["labId"] = this.state.labId;
             submission["userId"] = this.state.userId;
             submission["sampleType"] = this.state.sampleType;
+            //repeats
+            submission["qcNegativeIntepreationRepeat"] = this.state.qcNegativeIntepreationRepeat;
+            submission["resultNegativeRepeat"] = this.state.resultNegativeRepeat;
 
             (async () => {
                 let response = await SaveSubmission(submission);
@@ -154,12 +155,21 @@ class SubmitResults extends React.Component {
         }
     }
 
-    qcInterpretationNegative(event) {
-        console.log(event.target.value);
-        this.setState({
-            qcNegativeIntepreation: event.target.value,
-            isShowNegativeRepeat: event.target.value == 'invalid' ? true : false
-        });
+    qcInterpretationNegative(event, type, index) {
+        if (type == 'repeat') {
+            let qcNegativeIntepreationRepeat = this.state.qcNegativeIntepreationRepeat;
+            qcNegativeIntepreationRepeat[index] = event.target.value;
+
+            this.setState({
+                qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat
+            });
+
+        } else {
+            this.setState({
+                qcNegativeIntepreation: event.target.value,
+            });
+        }
+
     }
     qcInterpretationRecent(event) {
         this.setState({
@@ -172,9 +182,57 @@ class SubmitResults extends React.Component {
         });
     }
     repeatNegativeTest(event) {
+        let repeats = this.state.negativeTestRepeats;
+        let uuid4 = uuidv4();
+        let repeatLen = repeats.length;
+        let resultNegativeRepeat = this.state.resultNegativeRepeat;
+        resultNegativeRepeat.push({ c: 0, v: 0, lt: 0 });
+
+        let qcNegativeIntepreationRepeat = this.state.qcNegativeIntepreationRepeat;
+        qcNegativeIntepreationRepeat.push('invalid');
+
+        repeats.push(
+            <NegativeKit key={uuid4}
+                radioId={uuid4}
+                isRepeat={true}
+                // isShowNegativeRepeat={false}
+                repeatNegativeTest={this.repeatNegativeTest}
+                resultNegative={this.resultNegative}
+                qcInterpretationNegative={this.qcInterpretationNegative}
+                kitPositionInForm={repeatLen}
+                deleteRepeatkit={this.deleteRepeatkit}
+            />
+        );
+
         this.setState({
-            isShowNegativeRepeat: !this.state.isShowNegativeRepeat
+            // isShowNegativeRepeat: !this.state.isShowNegativeRepeat,
+            negativeTestRepeats: repeats,
+            resultNegativeRepeat: resultNegativeRepeat,
+            qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat
+
         });
+    }
+    deleteRepeatkit(kitPositionInForm) {
+        let repeats = this.state.negativeTestRepeats;
+        let qcNegativeIntepreationRepeat = this.state.qcNegativeIntepreationRepeat;
+        let resultNegativeRepeat = this.state.resultNegativeRepeat;
+
+        qcNegativeIntepreationRepeat.splice(kitPositionInForm, 1, null);
+        resultNegativeRepeat.splice(kitPositionInForm, 1, null);
+        repeats.splice(kitPositionInForm, 1, null);
+        this.setState({
+            negativeTestRepeats: repeats,
+            qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat,
+            resultNegativeRepeat: resultNegativeRepeat
+        });
+    }
+    isRepeatsEmpty() {
+        let repeats = this.state.negativeTestRepeats;
+        let hasValues = false;
+        repeats.map((item) => {
+            if (item) hasValues = true;
+        });
+        return hasValues
     }
     resultLongterm(event) {
         let result = this.state.resultLongterm;
@@ -198,16 +256,33 @@ class SubmitResults extends React.Component {
             resultRecent: result
         });
     }
-    resultNegative(event) {
-        let result = this.state.resultNegative;
-        if (result[event.target.value]) {
-            result[event.target.value] = 0;
+    resultNegative(event, type, index) {
+        if (type == 'repeat') {
+
+            let resultNegativeRepeat = this.state.resultNegativeRepeat;
+            let result = resultNegativeRepeat[index];
+            if (result[event.target.value]) {
+                result[event.target.value] = 0;
+            } else {
+                result[event.target.value] = 1;
+            }
+            resultNegativeRepeat[index] = result;
+            this.setState({
+                resultNegativeRepeat: resultNegativeRepeat
+            });
         } else {
-            result[event.target.value] = 1;
+            let result = this.state.resultNegative;
+            if (result[event.target.value]) {
+                result[event.target.value] = 0;
+            } else {
+                result[event.target.value] = 1;
+            }
+            this.setState({
+                resultNegative: result
+            });
+
         }
-        this.setState({
-            resultNegative: result
-        });
+
     }
     onQcLotReceiceDateHandler(event) {
         let isValid = this.validateTestingAndQCLotRecivedDate(this.state.testingDate, event.target.value);
@@ -334,6 +409,14 @@ class SubmitResults extends React.Component {
         });
     }
     render() {
+        let isRepeatsEmpty = this.isRepeatsEmpty();
+        let negativeTestRepeats = [];
+        if (this.state.negativeTestRepeats.length > 0) {
+            this.state.negativeTestRepeats.map((repeat) => {
+                negativeTestRepeats.push(repeat);
+            });
+        }
+
         const labInfo = {
             backgroundColor: "#f9f9f9",
         };
@@ -622,11 +705,17 @@ class SubmitResults extends React.Component {
 
                                         {/*  QC - Negative */}
                                         <NegativeKit
-                                            isShowNegativeRepeat={this.state.isShowNegativeRepeat}
+                                            // isShowNegativeRepeat={this.state.isShowNegativeRepeat}
                                             repeatNegativeTest={this.repeatNegativeTest}
                                             resultNegative={this.resultNegative}
                                             qcInterpretationNegative={this.qcInterpretationNegative}
+                                            repeatNegativeTest={this.repeatNegativeTest}
+                                            isMainKit={true}
+                                            kitPositionInForm={0}
+                                            isReaptsEmpty={isRepeatsEmpty}
                                         />
+
+                                        {negativeTestRepeats}
 
                                     </tbody>
                                 </table>
