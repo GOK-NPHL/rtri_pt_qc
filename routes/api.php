@@ -6,6 +6,7 @@ use App\Http\Controllers\PT\PTReadinessController;
 use App\Http\Controllers\PT\PTShipmentController;
 use App\Http\Controllers\QC\QCAdminUsersController;
 use App\Http\Controllers\QC\QCParticipantController;
+use App\Http\Controllers\Service\CommonsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -61,4 +62,4 @@ Route::get('/get_user_samples', [PTShipmentController::class, 'getUserSamples'])
 
 Route::get('/get_participant_demographics', [QCParticipantController::class, 'getParticipantDemographics']);
 
-Route::get('/get_counties', [QCParticipantController::class, 'get_counties']);
+Route::get('/get_counties', [CommonsController::class, 'getCounties']);
