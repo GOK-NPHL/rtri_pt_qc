@@ -566,6 +566,18 @@ export async function FetchCounties() {
     }
 }
 
+export async function FetchQcByMonthCountyFacility() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_qc_by_month_county_facility/`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
 export async function SaveParticipant(lab) {
     try {
         const response = await axios({
