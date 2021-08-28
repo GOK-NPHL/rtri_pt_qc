@@ -28,19 +28,23 @@ class SubmitResults extends React.Component {
             userId: '',
             qcNegativeIntepreation: '',
             qcNegativeIntepreationRepeat: [],
+            qcRecentIntepreationRepeat: [],
+            qcLongtermIntepreationRepeat: [],
             qcRecentIntepreation: '',
             qcLongtermIntepreation: '',
             isQcDone: true,
             resultNegative: { c: 0, v: 0, lt: 0 },
             resultNegativeRepeat: [],
+            resultRecentRepeat: [],
+            resultLongtermRepeat: [],
             resultRecent: { c: 0, v: 0, lt: 0 },
             resultLongterm: { c: 0, v: 0, lt: 0 },
             userDemographics: [],
             otherComments: '',
             notTestedReason: 'Issue with sample',
             negativeTestRepeats: [],
-
-
+            recentTestRepeats: [],
+            longtermTestRepeats: [],
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
         this.onQcLotReceiceDateHandler = this.onQcLotReceiceDateHandler.bind(this);
@@ -74,6 +78,9 @@ class SubmitResults extends React.Component {
         this.repeatNegativeTest = this.repeatNegativeTest.bind(this);
         this.deleteRepeatkit = this.deleteRepeatkit.bind(this);
         this.isRepeatsEmpty = this.isRepeatsEmpty.bind(this);
+
+        this.repeatRecentTest = this.repeatRecentTest.bind(this);
+        this.repeatLongtermTest = this.repeatLongtermTest.bind(this);
     }
 
     componentDidMount() {
@@ -142,6 +149,13 @@ class SubmitResults extends React.Component {
             submission["qcNegativeIntepreationRepeat"] = this.state.qcNegativeIntepreationRepeat;
             submission["resultNegativeRepeat"] = this.state.resultNegativeRepeat;
 
+            submission["resultRecentRepeat"] = this.state.resultRecentRepeat;
+            submission["qcRecentIntepreationRepeat"] = this.state.qcRecentIntepreationRepeat;
+
+            submission["resultLongtermRepeat"] = this.state.resultLongtermRepeat;
+            submission["qcLongtermIntepreationRepeat"] = this.state.qcLongtermIntepreationRepeat;
+
+
             (async () => {
                 let response = await SaveSubmission(submission);
                 this.setState({
@@ -171,15 +185,37 @@ class SubmitResults extends React.Component {
         }
 
     }
-    qcInterpretationRecent(event) {
-        this.setState({
-            qcRecentIntepreation: event.target.value
-        });
+    qcInterpretationRecent(event, type, index) {
+        if (type == 'repeat') {
+            let qcRecentIntepreationRepeat = this.state.qcRecentIntepreationRepeat;
+            qcRecentIntepreationRepeat[index] = event.target.value;
+
+            this.setState({
+                qcRecentIntepreationRepeat: qcRecentIntepreationRepeat
+            });
+
+        } else {
+            this.setState({
+                qcRecentIntepreation: event.target.value
+            });
+        }
+
     }
-    qcInterpretationLongterm(event) {
-        this.setState({
-            qcLongtermIntepreation: event.target.value
-        });
+    qcInterpretationLongterm(event, type, index) {
+        if (type == 'repeat') {
+            let qcLongtermIntepreationRepeat = this.state.qcLongtermIntepreationRepeat;
+            qcLongtermIntepreationRepeat[index] = event.target.value;
+
+            this.setState({
+                qcLongtermIntepreationRepeat: qcLongtermIntepreationRepeat
+            });
+
+        } else {
+            this.setState({
+                qcLongtermIntepreation: event.target.value
+            });
+        }
+
     }
     repeatNegativeTest(event) {
         let repeats = this.state.negativeTestRepeats;
@@ -212,50 +248,185 @@ class SubmitResults extends React.Component {
 
         });
     }
-    deleteRepeatkit(kitPositionInForm) {
-        let repeats = this.state.negativeTestRepeats;
-        let qcNegativeIntepreationRepeat = this.state.qcNegativeIntepreationRepeat;
-        let resultNegativeRepeat = this.state.resultNegativeRepeat;
 
-        qcNegativeIntepreationRepeat.splice(kitPositionInForm, 1, null);
-        resultNegativeRepeat.splice(kitPositionInForm, 1, null);
-        repeats.splice(kitPositionInForm, 1, null);
+    repeatRecentTest(event) {
+
+        let repeats = this.state.recentTestRepeats;
+        let uuid4 = uuidv4();
+        let repeatLen = repeats.length;
+        let resultRecentRepeat = this.state.resultRecentRepeat;
+        resultRecentRepeat.push({ c: 0, v: 0, lt: 0 });
+
+        let qcRecentIntepreationRepeat = this.state.qcRecentIntepreationRepeat;
+        qcRecentIntepreationRepeat.push('invalid');
+
+        repeats.push(
+            <RecentKit key={uuid4}
+                radioId={uuid4}
+                isRepeat={true}
+                repeatRecentTest={this.repeatRecentTest}
+                resultRecent={this.resultRecent}
+                qcInterpretationRecent={this.qcInterpretationRecent}
+                kitPositionInForm={repeatLen}
+                deleteRepeatkit={this.deleteRepeatkit}
+            />
+        );
+
         this.setState({
-            negativeTestRepeats: repeats,
-            qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat,
-            resultNegativeRepeat: resultNegativeRepeat
+            recentTestRepeats: repeats,
+            resultRecentRepeat: resultRecentRepeat,
+            qcRecentIntepreationRepeat: qcRecentIntepreationRepeat
+
         });
     }
-    isRepeatsEmpty() {
-        let repeats = this.state.negativeTestRepeats;
+
+    repeatLongtermTest(event) {
+
+        let repeats = this.state.longtermTestRepeats;
+        let uuid4 = uuidv4();
+        let repeatLen = repeats.length;
+        let resultLongtermRepeat = this.state.resultLongtermRepeat;
+        resultLongtermRepeat.push({ c: 0, v: 0, lt: 0 });
+
+        let qcLongtermIntepreationRepeat = this.state.qcLongtermIntepreationRepeat;
+        qcLongtermIntepreationRepeat.push('invalid');
+
+        repeats.push(
+            <LongtermKit key={uuid4}
+                radioId={uuid4}
+                isRepeat={true}
+                repeatLongtermTest={this.repeatLongtermTest}
+                resultLongterm={this.resultLongterm}
+                qcInterpretationLongterm={this.qcInterpretationLongterm}
+                kitPositionInForm={repeatLen}
+                deleteRepeatkit={this.deleteRepeatkit}
+            />
+        );
+
+        this.setState({
+            tongtermTestRepeats: repeats,
+            resultLongtermRepeat: resultLongtermRepeat,
+            qcLongtermIntepreationRepeat: qcLongtermIntepreationRepeat
+
+        });
+    }
+
+    deleteRepeatkit(kitPositionInForm, type) {
+        let repeats = [];
+        let arrInterpretation = [];
+        let arrResult = [];
+        if (type == 'negative') {
+            repeats = this.state.negativeTestRepeats;
+            arrInterpretation = this.state.qcNegativeIntepreationRepeat;
+            arrResult = this.state.resultNegativeRepeat;
+        } else if (type == 'recent') {
+            repeats = this.state.recentTestRepeats;
+            arrInterpretation = this.state.qcRecentIntepreationRepeat;
+            arrResult = this.state.resultRecentRepeat;
+        } else if (type == 'longterm') {
+
+            repeats = this.state.longtermTestRepeats;
+            arrInterpretation = this.state.qcLongtermIntepreationRepeat;
+            arrResult = this.state.resultLongtermRepeat;
+        }
+
+        arrInterpretation.splice(kitPositionInForm, 1, null);
+        arrResult.splice(kitPositionInForm, 1, null);
+        repeats.splice(kitPositionInForm, 1, null);
+
+        if (type == 'negative') {
+            this.setState({
+                negativeTestRepeats: repeats,
+                qcNegativeIntepreationRepeat: arrInterpretation,
+                resultNegativeRepeat: arrResult
+            });
+        } else if (type == 'recent') {
+            this.setState({
+                recentTestRepeats: repeats,
+                qcRecentIntepreationRepeat: arrInterpretation,
+                resultRecentRepeat: arrResult
+            });
+        } else if (type == 'longterm') {
+            this.setState({
+                longtermTestRepeats: repeats,
+                qcLongtermIntepreationRepeat: arrInterpretation,
+                resultLongtermRepeat: arrResult
+            });
+        }
+
+    }
+    isRepeatsEmpty(type) {
+        let repeats = [];
+        if (type == 'negative') {
+            repeats = this.state.negativeTestRepeats;
+
+        } else if (type == 'recent') {
+            repeats = this.state.recentTestRepeats;
+        } else if (type == 'longterm') {
+            repeats = this.state.longtermTestRepeats;
+        }
+
         let hasValues = false;
         repeats.map((item) => {
             if (item) hasValues = true;
         });
         return hasValues
     }
-    resultLongterm(event) {
-        let result = this.state.resultLongterm;
-        if (result[event.target.value]) {
-            result[event.target.value] = 0;
+    resultLongterm(event, type, index) {
+
+        if (type == 'repeat') {
+            let resultLongtermRepeat = this.state.resultLongtermRepeat;
+            let result = resultLongtermRepeat[index];
+            if (result[event.target.value]) {
+                result[event.target.value] = 0;
+            } else {
+                result[event.target.value] = 1;
+            }
+            resultLongtermRepeat[index] = result;
+            this.setState({
+                resultLongtermRepeat: resultLongtermRepeat
+            });
         } else {
-            result[event.target.value] = 1;
+            let result = this.state.resultLongterm;
+            if (result[event.target.value]) {
+                result[event.target.value] = 0;
+            } else {
+                result[event.target.value] = 1;
+            }
+            this.setState({
+                resultLongterm: result
+            });
         }
-        this.setState({
-            resultLongterm: result
-        });
     }
-    resultRecent(event) {
-        let result = this.state.resultRecent;
-        if (result[event.target.value]) {
-            result[event.target.value] = 0;
+
+    resultRecent(event, type, index) {
+
+        if (type == 'repeat') {
+            let resultRecentRepeat = this.state.resultRecentRepeat;
+            let result = resultRecentRepeat[index];
+            if (result[event.target.value]) {
+                result[event.target.value] = 0;
+            } else {
+                result[event.target.value] = 1;
+            }
+            resultRecentRepeat[index] = result;
+            this.setState({
+                resultRecentRepeat: resultRecentRepeat
+            });
         } else {
-            result[event.target.value] = 1;
+            let result = this.state.resultRecent;
+            if (result[event.target.value]) {
+                result[event.target.value] = 0;
+            } else {
+                result[event.target.value] = 1;
+            }
+            this.setState({
+                resultRecent: result
+            });
         }
-        this.setState({
-            resultRecent: result
-        });
+
     }
+
     resultNegative(event, type, index) {
         if (type == 'repeat') {
 
@@ -408,12 +579,30 @@ class SubmitResults extends React.Component {
             otherComments: event.target.value
         });
     }
+
     render() {
-        let isRepeatsEmpty = this.isRepeatsEmpty();
+
+        let isNegativeRepeatsEmpty = this.isRepeatsEmpty('negative');
         let negativeTestRepeats = [];
         if (this.state.negativeTestRepeats.length > 0) {
             this.state.negativeTestRepeats.map((repeat) => {
                 negativeTestRepeats.push(repeat);
+            });
+        }
+
+        let isRecentRepeatsEmpty = this.isRepeatsEmpty('recent');
+        let recentTestRepeats = [];
+        if (this.state.recentTestRepeats.length > 0) {
+            this.state.recentTestRepeats.map((repeat) => {
+                recentTestRepeats.push(repeat);
+            });
+        }
+
+        let isLongtermRepeatsEmpty = this.isRepeatsEmpty('longterm');
+        let longtermTestRepeats = [];
+        if (this.state.longtermTestRepeats.length > 0) {
+            this.state.longtermTestRepeats.map((repeat) => {
+                longtermTestRepeats.push(repeat);
             });
         }
 
@@ -693,26 +882,37 @@ class SubmitResults extends React.Component {
                                         <LongtermKit
                                             resultLongterm={this.resultLongterm}
                                             qcInterpretationLongterm={this.qcInterpretationLongterm}
+                                            repeatLongtermTest={this.repeatLongtermTest}
+                                            isMainKit={true}
+                                            kitPositionInForm={0}
+                                            isReaptsEmpty={isLongtermRepeatsEmpty}
                                         />
+                                        {longtermTestRepeats}
+
                                         {/*  End QC - Long Term */}
 
 
                                         {/*  QC - Recent */}
-                                        <RecentKit resultRecent={this.resultRecent} qcInterpretationRecent={this.qcInterpretationRecent} />
+                                        <RecentKit
+                                            repeatRecentTest={this.repeatRecentTest}
+                                            resultRecent={this.resultRecent}
+                                            qcInterpretationRecent={this.qcInterpretationRecent}
+                                            isMainKit={true}
+                                            kitPositionInForm={0}
+                                            isReaptsEmpty={isRecentRepeatsEmpty}
+                                        />
+                                        {recentTestRepeats}
 
                                         {/*  End QC - Long Recent */}
 
-
                                         {/*  QC - Negative */}
                                         <NegativeKit
-                                            // isShowNegativeRepeat={this.state.isShowNegativeRepeat}
                                             repeatNegativeTest={this.repeatNegativeTest}
                                             resultNegative={this.resultNegative}
                                             qcInterpretationNegative={this.qcInterpretationNegative}
-                                            repeatNegativeTest={this.repeatNegativeTest}
                                             isMainKit={true}
                                             kitPositionInForm={0}
-                                            isReaptsEmpty={isRepeatsEmpty}
+                                            isReaptsEmpty={isNegativeRepeatsEmpty}
                                         />
 
                                         {negativeTestRepeats}

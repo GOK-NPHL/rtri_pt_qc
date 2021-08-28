@@ -124,7 +124,7 @@ class NegativeKit extends React.Component {
                             (!this.state.isShowNegativeRepeat && !this.props.isMainKit) ?
                             <td>
                                 <button onClick={(event) => {
-                                    this.props.deleteRepeatkit(this.state.kitPositionInForm);
+                                    this.props.deleteRepeatkit(this.state.kitPositionInForm, 'negative');
                                 }} type="button" className="btn btn-sm btn-outline-primary">Delete</button>
                             </td> :
                             <td style={{ "display": "none" }}></td>

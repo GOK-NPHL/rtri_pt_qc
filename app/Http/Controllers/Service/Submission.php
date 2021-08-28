@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Service;
 
 use App\Http\Controllers\Controller;
 use App\qcsubmission as SubmissionModel;
+use App\RepeatSubmission;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,7 @@ class Submission extends Controller
                 "user_id" => $submission["userId"],
                 "sample_reconstituion_date" => $submission["qcReconstituionDate"],
                 "sample_type" => $submission["sampleType"],
-                
+
                 "test_justification" => $submission["testJustification"],
                 "qc_tested" => $submission["isQCTested"],
                 "not_test_reason" => $submission["qcNotTestedReason"],
@@ -66,11 +67,93 @@ class Submission extends Controller
                 "interpretation_negative" => $submission["qcNegativeIntepreation"],
             ]);
 
-            $submissionModel->save();
+            $submissionId = $submissionModel->save();
+            $this->saveNegativeRepeats($submission, $submissionId);
+            $this->saveRecentRepeats($submission, $submissionId);
+            $this->saveLongtermRepeats($submission, $submissionId);
+
             return response()->json(['Message' => 'Saved successfully'], 200);
         } catch (Exception $ex) {
             Log::error($ex);
             return response()->json(['Message' => 'Could not save sumbmission: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    function saveNegativeRepeats($submission, $submissionId)
+    {
+
+        if (count($submission["resultNegativeRepeat"]) > 0) {
+
+            for ($x = 0; $x < count($submission["resultNegativeRepeat"]); $x++) {
+
+                if ($submission["resultNegativeRepeat"][$x]) {
+                    $submissionModel = new RepeatSubmission([
+                        "qcsubmissions_id" => $submissionId,
+                        "result_control_line" => $submission["resultNegativeRepeat"][$x]["c"],
+                        "result_verification_line" => $submission["resultNegativeRepeat"][$x]["v"],
+                        "result_longterm_line" => $submission["resultNegativeRepeat"][$x]["lt"],
+                        "interpretation" => $submission["qcNegativeIntepreationRepeat"][$x],
+                        "test_type" => "negative"
+                    ]);
+
+                    $submissionModel->save();
+                } else {
+                    Log::info("empty result === >");
+                    Log::info($submission["resultNegativeRepeat"][$x]);
+                }
+            }
+        }
+    }
+
+    function saveRecentRepeats($submission, $submissionId)
+    {
+
+        if (count($submission["resultRecentRepeat"]) > 0) {
+
+            for ($x = 0; $x < count($submission["resultRecentRepeat"]); $x++) {
+
+                if ($submission["resultRecentRepeat"][$x]) {
+                    $submissionModel = new RepeatSubmission([
+                        "qcsubmissions_id" => $submissionId,
+                        "result_control_line" => $submission["resultRecentRepeat"][$x]["c"],
+                        "result_verification_line" => $submission["resultRecentRepeat"][$x]["v"],
+                        "result_longterm_line" => $submission["resultRecentRepeat"][$x]["lt"],
+                        "interpretation" => $submission["qcRecentIntepreationRepeat"][$x],
+                        "test_type" => "recent"
+                    ]);
+
+                    $submissionModel->save();
+                } else {
+                    Log::info("empty result === >");
+                    Log::info($submission["resultRecentRepeat"][$x]);
+                }
+            }
+        }
+    }
+
+    function saveLongtermRepeats($submission, $submissionId)
+    {
+
+        if (count($submission["resultLongtermRepeat"]) > 0) {
+
+            for ($x = 0; $x < count($submission["resultLongtermRepeat"]); $x++) {
+
+                if ($submission["resultLongtermRepeat"][$x]) {
+                    $submissionModel = new RepeatSubmission([
+                        "qcsubmissions_id" => $submissionId,
+                        "result_control_line" => $submission["resultLongtermRepeat"][$x]["c"],
+                        "result_verification_line" => $submission["resultLongtermRepeat"][$x]["v"],
+                        "result_longterm_line" => $submission["resultLongtermRepeat"][$x]["lt"],
+                        "interpretation" => $submission["qcLongtermIntepreationRepeat"][$x],
+                        "test_type" => "longterm"
+                    ]);
+
+                    $submissionModel->save();
+                } else {
+                    Log::info("empty result === >");
+                    Log::info($submission["resultLongtermRepeat"][$x]);
+                }
+            }
         }
     }
 
