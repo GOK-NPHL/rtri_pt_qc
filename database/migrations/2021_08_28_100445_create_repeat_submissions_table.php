@@ -17,22 +17,15 @@ class CreateRepeatSubmissionsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->integer("qcsubmissions_id");
-            
-            $table->integer("result_lt_control_line")->nullable();
-            $table->integer("result_lt_verification_line")->nullable();
-            $table->integer("result_lt_longterm_line")->nullable();
 
-            $table->integer("result_recent_control_line")->nullable();
-            $table->integer("result_recent_verification_line")->nullable();
-            $table->integer("result_recent_longterm_line")->nullable();
+            $table->string("test_type");
 
-            $table->integer("result_negative_control_line")->nullable();
-            $table->integer("result_negative_verification_line")->nullable();
-            $table->integer("result_negative_longterm_line")->nullable();
+            $table->integer("result_control_line")->nullable();
+            $table->integer("result_verification_line")->nullable();
+            $table->integer("result_longterm_line")->nullable();
 
-            $table->string("interpretation_longterm")->nullable();
-            $table->string("interpretation_recent")->nullable();
-            $table->string("interpretation_negative")->nullable();
+            $table->string("interpretation")->nullable();
+
         });
     }
 
