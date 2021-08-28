@@ -69,6 +69,7 @@ class Submission extends Controller
 
             $submissionId = $submissionModel->save();
             $this->saveNegativeRepeats($submission, $submissionId);
+            $this->saveRecentRepeats($submission, $submissionId);
 
             return response()->json(['Message' => 'Saved successfully'], 200);
         } catch (Exception $ex) {
@@ -98,6 +99,32 @@ class Submission extends Controller
                 } else {
                     Log::info("empty result === >");
                     Log::info($submission["resultNegativeRepeat"][$x]);
+                }
+            }
+        }
+    }
+
+    function saveRecentRepeats($submission, $submissionId)
+    {
+
+        if (count($submission["resultRecentRepeat"]) > 0) {
+
+            for ($x = 0; $x < count($submission["resultRecentRepeat"]); $x++) {
+
+                if ($submission["resultRecentRepeat"][$x]) {
+                    $submissionModel = new RepeatSubmission([
+                        "qcsubmissions_id" => $submissionId,
+                        "result_control_line" => $submission["resultRecentRepeat"][$x]["c"],
+                        "result_verification_line" => $submission["resultRecentRepeat"][$x]["v"],
+                        "result_longterm_line" => $submission["resultRecentRepeat"][$x]["lt"],
+                        "interpretation" => $submission["qcRecentIntepreationRepeat"][$x],
+                        "test_type" => "recent"
+                    ]);
+
+                    $submissionModel->save();
+                } else {
+                    Log::info("empty result === >");
+                    Log::info($submission["resultRecentRepeat"][$x]);
                 }
             }
         }
