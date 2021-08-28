@@ -60,3 +60,5 @@ Route::get('/get_shipment_by_id/{id}', [PTShipmentController::class, 'getShipmen
 Route::get('/get_user_samples', [PTShipmentController::class, 'getUserSamples'])->middleware('auth');
 
 Route::get('/get_participant_demographics', [QCParticipantController::class, 'getParticipantDemographics']);
+
+Route::get('/get_counties', [QCParticipantController::class, 'get_counties']);
