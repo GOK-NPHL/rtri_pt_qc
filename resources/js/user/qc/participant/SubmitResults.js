@@ -138,6 +138,9 @@ class SubmitResults extends React.Component {
             submission["labId"] = this.state.labId;
             submission["userId"] = this.state.userId;
             submission["sampleType"] = this.state.sampleType;
+            //repeats
+            submission["qcNegativeIntepreationRepeat"] = this.state.qcNegativeIntepreationRepeat;
+            submission["resultNegativeRepeat"] = this.state.resultNegativeRepeat;
 
             (async () => {
                 let response = await SaveSubmission(submission);
