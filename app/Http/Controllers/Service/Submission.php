@@ -70,6 +70,7 @@ class Submission extends Controller
             $submissionId = $submissionModel->save();
             $this->saveNegativeRepeats($submission, $submissionId);
             $this->saveRecentRepeats($submission, $submissionId);
+            $this->saveLongtermRepeats($submission, $submissionId);
 
             return response()->json(['Message' => 'Saved successfully'], 200);
         } catch (Exception $ex) {
@@ -125,6 +126,32 @@ class Submission extends Controller
                 } else {
                     Log::info("empty result === >");
                     Log::info($submission["resultRecentRepeat"][$x]);
+                }
+            }
+        }
+    }
+
+    function saveLongtermRepeats($submission, $submissionId)
+    {
+
+        if (count($submission["resultLongtermRepeat"]) > 0) {
+
+            for ($x = 0; $x < count($submission["resultLongtermRepeat"]); $x++) {
+
+                if ($submission["resultLongtermRepeat"][$x]) {
+                    $submissionModel = new RepeatSubmission([
+                        "qcsubmissions_id" => $submissionId,
+                        "result_control_line" => $submission["resultLongtermRepeat"][$x]["c"],
+                        "result_verification_line" => $submission["resultLongtermRepeat"][$x]["v"],
+                        "result_longterm_line" => $submission["resultLongtermRepeat"][$x]["lt"],
+                        "interpretation" => $submission["qcLongtermIntepreationRepeat"][$x],
+                        "test_type" => "longterm"
+                    ]);
+
+                    $submissionModel->save();
+                } else {
+                    Log::info("empty result === >");
+                    Log::info($submission["resultLongtermRepeat"][$x]);
                 }
             }
         }

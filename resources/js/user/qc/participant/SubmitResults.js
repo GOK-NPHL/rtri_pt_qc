@@ -29,12 +29,14 @@ class SubmitResults extends React.Component {
             qcNegativeIntepreation: '',
             qcNegativeIntepreationRepeat: [],
             qcRecentIntepreationRepeat: [],
+            qcLongtermIntepreationRepeat: [],
             qcRecentIntepreation: '',
             qcLongtermIntepreation: '',
             isQcDone: true,
             resultNegative: { c: 0, v: 0, lt: 0 },
             resultNegativeRepeat: [],
             resultRecentRepeat: [],
+            resultLongtermRepeat: [],
             resultRecent: { c: 0, v: 0, lt: 0 },
             resultLongterm: { c: 0, v: 0, lt: 0 },
             userDemographics: [],
@@ -42,6 +44,7 @@ class SubmitResults extends React.Component {
             notTestedReason: 'Issue with sample',
             negativeTestRepeats: [],
             recentTestRepeats: [],
+            longtermTestRepeats: [],
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
         this.onQcLotReceiceDateHandler = this.onQcLotReceiceDateHandler.bind(this);
@@ -77,7 +80,7 @@ class SubmitResults extends React.Component {
         this.isRepeatsEmpty = this.isRepeatsEmpty.bind(this);
 
         this.repeatRecentTest = this.repeatRecentTest.bind(this);
-
+        this.repeatLongtermTest = this.repeatLongtermTest.bind(this);
     }
 
     componentDidMount() {
@@ -149,6 +152,9 @@ class SubmitResults extends React.Component {
             submission["resultRecentRepeat"] = this.state.resultRecentRepeat;
             submission["qcRecentIntepreationRepeat"] = this.state.qcRecentIntepreationRepeat;
 
+            submission["resultLongtermRepeat"] = this.state.resultLongtermRepeat;
+            submission["qcLongtermIntepreationRepeat"] = this.state.qcLongtermIntepreationRepeat;
+
 
             (async () => {
                 let response = await SaveSubmission(submission);
@@ -195,10 +201,21 @@ class SubmitResults extends React.Component {
         }
 
     }
-    qcInterpretationLongterm(event) {
-        this.setState({
-            qcLongtermIntepreation: event.target.value
-        });
+    qcInterpretationLongterm(event, type, index) {
+        if (type == 'repeat') {
+            let qcLongtermIntepreationRepeat = this.state.qcLongtermIntepreationRepeat;
+            qcLongtermIntepreationRepeat[index] = event.target.value;
+
+            this.setState({
+                qcLongtermIntepreationRepeat: qcLongtermIntepreationRepeat
+            });
+
+        } else {
+            this.setState({
+                qcLongtermIntepreation: event.target.value
+            });
+        }
+
     }
     repeatNegativeTest(event) {
         let repeats = this.state.negativeTestRepeats;
@@ -232,7 +249,6 @@ class SubmitResults extends React.Component {
         });
     }
 
-
     repeatRecentTest(event) {
 
         let repeats = this.state.recentTestRepeats;
@@ -264,6 +280,37 @@ class SubmitResults extends React.Component {
         });
     }
 
+    repeatLongtermTest(event) {
+
+        let repeats = this.state.longtermTestRepeats;
+        let uuid4 = uuidv4();
+        let repeatLen = repeats.length;
+        let resultLongtermRepeat = this.state.resultLongtermRepeat;
+        resultLongtermRepeat.push({ c: 0, v: 0, lt: 0 });
+
+        let qcLongtermIntepreationRepeat = this.state.qcLongtermIntepreationRepeat;
+        qcLongtermIntepreationRepeat.push('invalid');
+
+        repeats.push(
+            <LongtermKit key={uuid4}
+                radioId={uuid4}
+                isRepeat={true}
+                repeatLongtermTest={this.repeatLongtermTest}
+                resultLongterm={this.resultLongterm}
+                qcInterpretationLongterm={this.qcInterpretationLongterm}
+                kitPositionInForm={repeatLen}
+                deleteRepeatkit={this.deleteRepeatkit}
+            />
+        );
+
+        this.setState({
+            tongtermTestRepeats: repeats,
+            resultLongtermRepeat: resultLongtermRepeat,
+            qcLongtermIntepreationRepeat: qcLongtermIntepreationRepeat
+
+        });
+    }
+
     deleteRepeatkit(kitPositionInForm, type) {
         let repeats = [];
         let arrInterpretation = [];
@@ -276,6 +323,11 @@ class SubmitResults extends React.Component {
             repeats = this.state.recentTestRepeats;
             arrInterpretation = this.state.qcRecentIntepreationRepeat;
             arrResult = this.state.resultRecentRepeat;
+        } else if (type == 'longterm') {
+
+            repeats = this.state.longtermTestRepeats;
+            arrInterpretation = this.state.qcLongtermIntepreationRepeat;
+            arrResult = this.state.resultLongtermRepeat;
         }
 
         arrInterpretation.splice(kitPositionInForm, 1, null);
@@ -294,6 +346,12 @@ class SubmitResults extends React.Component {
                 qcRecentIntepreationRepeat: arrInterpretation,
                 resultRecentRepeat: arrResult
             });
+        } else if (type == 'longterm') {
+            this.setState({
+                longtermTestRepeats: repeats,
+                qcLongtermIntepreationRepeat: arrInterpretation,
+                resultLongtermRepeat: arrResult
+            });
         }
 
     }
@@ -304,23 +362,41 @@ class SubmitResults extends React.Component {
 
         } else if (type == 'recent') {
             repeats = this.state.recentTestRepeats;
+        } else if (type == 'longterm') {
+            repeats = this.state.longtermTestRepeats;
         }
+
         let hasValues = false;
         repeats.map((item) => {
             if (item) hasValues = true;
         });
         return hasValues
     }
-    resultLongterm(event) {
-        let result = this.state.resultLongterm;
-        if (result[event.target.value]) {
-            result[event.target.value] = 0;
+    resultLongterm(event, type, index) {
+
+        if (type == 'repeat') {
+            let resultLongtermRepeat = this.state.resultLongtermRepeat;
+            let result = resultLongtermRepeat[index];
+            if (result[event.target.value]) {
+                result[event.target.value] = 0;
+            } else {
+                result[event.target.value] = 1;
+            }
+            resultLongtermRepeat[index] = result;
+            this.setState({
+                resultLongtermRepeat: resultLongtermRepeat
+            });
         } else {
-            result[event.target.value] = 1;
+            let result = this.state.resultLongterm;
+            if (result[event.target.value]) {
+                result[event.target.value] = 0;
+            } else {
+                result[event.target.value] = 1;
+            }
+            this.setState({
+                resultLongterm: result
+            });
         }
-        this.setState({
-            resultLongterm: result
-        });
     }
 
     resultRecent(event, type, index) {
@@ -519,6 +595,14 @@ class SubmitResults extends React.Component {
         if (this.state.recentTestRepeats.length > 0) {
             this.state.recentTestRepeats.map((repeat) => {
                 recentTestRepeats.push(repeat);
+            });
+        }
+
+        let isLongtermRepeatsEmpty = this.isRepeatsEmpty('longterm');
+        let longtermTestRepeats = [];
+        if (this.state.longtermTestRepeats.length > 0) {
+            this.state.longtermTestRepeats.map((repeat) => {
+                longtermTestRepeats.push(repeat);
             });
         }
 
@@ -798,7 +882,13 @@ class SubmitResults extends React.Component {
                                         <LongtermKit
                                             resultLongterm={this.resultLongterm}
                                             qcInterpretationLongterm={this.qcInterpretationLongterm}
+                                            repeatLongtermTest={this.repeatLongtermTest}
+                                            isMainKit={true}
+                                            kitPositionInForm={0}
+                                            isReaptsEmpty={isLongtermRepeatsEmpty}
                                         />
+                                        {longtermTestRepeats}
+
                                         {/*  End QC - Long Term */}
 
 
