@@ -42,6 +42,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
             let dataKey = countyName + labName + kitLot + testingDate;
 
             dataElements[dataKey] = {
+                'month': recentTest.testing_date,
                 'invalids': 0,
                 'correct_negative': 0,
                 'correct_longterm': 0,
@@ -102,6 +103,12 @@ class QCByMonthByCountyAndFacility extends React.Component {
         }
 
         let columnzz = [
+            {
+                label: 'Month',
+                field: 'month',
+                sort: 'asc',
+                width: 150
+            },
             {
                 label: 'County',
                 field: 'county',
