@@ -30,7 +30,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
     formatDataToTableFormat(data) {
 
         let dataElements = {};
-
+        
         let recents = data.recent;
         recents.map((recentTest) => {
             let labName = recentTest.lab_name.trim().toLowerCase().replace(/\s/g, '');
@@ -74,7 +74,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
             dataElements[dataKey]['correct_longterm'] = (test.correct_count * 100) / test.total_tests;
             dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
         });
-
+        
         let invalidss = data.invalids;
         invalidss.map((test) => {
             let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
@@ -90,11 +90,12 @@ class QCByMonthByCountyAndFacility extends React.Component {
             // console.log(value);
             value['invalids'] = Math.round((value['invalids'] * 100) / value['total_tested']);
         }
-
+        
         return Object.values(dataElements);
     }
 
     render() {
+        
         let rowzz = [];
         if (this.state.data) {
             let isDataEmpty = Object.keys(this.state.data).length; //gives 0 if empty or an integer > 0 if non-empty
