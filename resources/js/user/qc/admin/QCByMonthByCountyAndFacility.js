@@ -61,6 +61,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = countyName + labName + kitLot + testingDate;
             dataElements[dataKey]['correct_negative'] = (test.correct_count * 100) / test.total_tests;
+            dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
         });
 
         let longterms = data.longterm;
@@ -71,6 +72,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = countyName + labName + kitLot + testingDate;
             dataElements[dataKey]['correct_longterm'] = (test.correct_count * 100) / test.total_tests;
+            dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
         });
 
         let invalidss = data.invalids;
@@ -80,8 +82,13 @@ class QCByMonthByCountyAndFacility extends React.Component {
             let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = countyName + labName + kitLot + testingDate;
-            dataElements[dataKey]['invalids'] = (test.correct_count * 100) / test.total_tests;
+            dataElements[dataKey]['invalids'] = test.correct_count;
         });
+
+        for (const [key, value] of Object.entries(dataElements)) {
+            // console.log(value);
+            value['invalids'] = Math.round((value['invalids'] * 100) / value['total_tested']);
+        }
 
         return Object.values(dataElements);
     }
@@ -143,7 +150,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
                 sort: 'asc',
                 width: 150
             }
-        ]
+        ];
 
         let data = {
             columns: columnzz,
@@ -153,35 +160,36 @@ class QCByMonthByCountyAndFacility extends React.Component {
         let qCByMonthByCountyAndFacility = <React.Fragment>
             <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
-                    <a className="nav-link nav-link-custom active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                    <a className="nav-link nav-link-custom active" id="home-tab" data-toggle="tab"
+                        href="#home" role="tab" aria-controls="home" aria-selected="true">month disaggregated by county and facility</a>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     <a className="nav-link nav-link-custom" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link nav-link-custom" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-                </li>
+                </li> */}
             </ul>
-            <div className="tab-content" id="myTabContent">
+            <div className="tab-content mt-3" id="myTabContent">
                 <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-
+                    <MDBDataTable
+                        striped
+                        // bootstrap4
+                        bordered
+                        small
+                        data={data}
+                    />
                 </div>
-                <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                {/* <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div> */}
+                {/* <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div> */}
             </div>
         </React.Fragment>
 
         return (
             <React.Fragment>
-                {/* {qCByMonthByCountyAndFacility} */}
+                <h4 className="mb-4">QC Performance</h4>
+                {qCByMonthByCountyAndFacility}
                 {/* <ExportDashboardToCSV data={rowzz} columns={columnzz}/> */}
-                <MDBDataTable
-                    striped
-                    // bootstrap4
-                    bordered
-                    small
-                    data={data}
-                />
             </React.Fragment>
         );
     }
