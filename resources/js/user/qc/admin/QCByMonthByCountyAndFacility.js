@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { FetchQcByMonthCountyFacility } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { MDBDataTable } from 'mdbreact';
+import ExportDashboardToCSV from './ExportDashboardToCSV';
 
 class QCByMonthByCountyAndFacility extends React.Component {
 
@@ -173,8 +174,10 @@ class QCByMonthByCountyAndFacility extends React.Component {
         return (
             <React.Fragment>
                 {/* {qCByMonthByCountyAndFacility} */}
+                {/* <ExportDashboardToCSV data={rowzz} columns={columnzz}/> */}
                 <MDBDataTable
                     striped
+                    // bootstrap4
                     bordered
                     small
                     data={data}
