@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FetchQcByMonthCountyFacility } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { MDBDataTable } from 'mdbreact';
 import ExportDashboardToCSV from './ExportDashboardToCSV';
 
-class QCByMonthByCountyAndFacility extends React.Component {
+class QCByMonthByAndFacility extends React.Component {
 
     constructor(props) {
         super(props);
@@ -34,11 +33,10 @@ class QCByMonthByCountyAndFacility extends React.Component {
         let recents = data.recent;
         recents.map((recentTest) => {
             let labName = recentTest.lab_name.trim().toLowerCase().replace(/\s/g, '');
-            let countyName = recentTest.county_name.trim().toLowerCase().replace(/\s/g, '');
             let kitLot = String(recentTest.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(recentTest.testing_date).trim().toLowerCase().replace(/\s/g, '');
 
-            let dataKey = countyName + labName + kitLot + testingDate;
+            let dataKey = labName + kitLot + testingDate;
 
             dataElements[dataKey] = {
                 'month': recentTest.testing_date,
@@ -48,18 +46,16 @@ class QCByMonthByCountyAndFacility extends React.Component {
                 'correct_recent': (recentTest.correct_count * 100) / recentTest.total_tests,
                 'total_tested': recentTest.total_tests,
                 'kit_lot ': recentTest.kit_lot_no,
-                'lab_name': recentTest.lab_name,
-                'county': recentTest.county_name,
+                'lab_name': recentTest.lab_name
             }
         });
 
         let negatives = data.negative;
         negatives.map((test) => {
             let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
-            let countyName = test.county_name.trim().toLowerCase().replace(/\s/g, '');
             let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
-            let dataKey = countyName + labName + kitLot + testingDate;
+            let dataKey = labName + kitLot + testingDate;
             dataElements[dataKey]['correct_negative'] = (test.correct_count * 100) / test.total_tests;
             dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
         });
@@ -67,10 +63,9 @@ class QCByMonthByCountyAndFacility extends React.Component {
         let longterms = data.longterm;
         longterms.map((test) => {
             let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
-            let countyName = test.county_name.trim().toLowerCase().replace(/\s/g, '');
             let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
-            let dataKey = countyName + labName + kitLot + testingDate;
+            let dataKey = labName + kitLot + testingDate;
             dataElements[dataKey]['correct_longterm'] = (test.correct_count * 100) / test.total_tests;
             dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
         });
@@ -78,10 +73,9 @@ class QCByMonthByCountyAndFacility extends React.Component {
         let invalidss = data.invalids;
         invalidss.map((test) => {
             let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
-            let countyName = test.county_name.trim().toLowerCase().replace(/\s/g, '');
             let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
-            let dataKey = countyName + labName + kitLot + testingDate;
+            let dataKey = labName + kitLot + testingDate;
             dataElements[dataKey]['invalids'] = test.correct_count;
         });
 
@@ -99,7 +93,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
             let isDataEmpty = Object.keys(this.state.data).length; //gives 0 if empty or an integer > 0 if non-empty
             if (isDataEmpty != 0) {
                 try {
-                    rowzz = this.formatDataToTableFormat(this.state.data['county_lab_kit_date']);
+                    rowzz = this.formatDataToTableFormat(this.state.data['lab_kit_date']);
                 } catch (err) {
                 }
             }
@@ -109,12 +103,6 @@ class QCByMonthByCountyAndFacility extends React.Component {
             {
                 label: 'Month',
                 field: 'month',
-                sort: 'asc',
-                width: 150
-            },
-            {
-                label: 'County',
-                field: 'county',
                 sort: 'asc',
                 width: 150
             },
@@ -167,11 +155,11 @@ class QCByMonthByCountyAndFacility extends React.Component {
             rows: rowzz
         };
 
-        let qCByMonthByCountyAndFacility = <React.Fragment>
+        let qCByMonthByAndFacility = <React.Fragment>
             <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
                     <a className="nav-link nav-link-custom active" id="home-tab" data-toggle="tab"
-                        href="#home" role="tab" aria-controls="home" aria-selected="true">Perfomance by month, county and facility</a>
+                        href="#home" role="tab" aria-controls="home" aria-selected="true">Overall disaggregated by month </a>
                 </li>
                 {/* <li className="nav-item">
                     <a className="nav-link nav-link-custom" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
@@ -198,7 +186,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
         return (
             <React.Fragment>
                 <h4 className="mb-4">QC Performance</h4>
-                {qCByMonthByCountyAndFacility}
+                {qCByMonthByAndFacility}
                 {/* <ExportDashboardToCSV data={rowzz} columns={columnzz}/> */}
             </React.Fragment>
         );
@@ -206,4 +194,4 @@ class QCByMonthByCountyAndFacility extends React.Component {
 
 }
 
-export default QCByMonthByCountyAndFacility;
+export default QCByMonthByAndFacility;

@@ -8,99 +8,87 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class AggregatorController extends Controller
+class DissagrationOverallByMotnh extends Controller
 {
-    public function __construct()
-    {
-        // $this->middleware('guest:admin', ['except' => ['signOut']]);
-        $this->middleware('auth:admin', ['except' => ['signOut', 'adminLogin', 'doLogin']]);
-    }
 
-    function getQcByMonthCountyFacility()
+
+    function getDissagrations()
     {
-        $correntRecents = $this->getCorrectRecentsByMonthCountyFacility();
-        $correntLongterm = $this->getCorrectLontermByMonthCountyFacility();
-        $correntNegative = $this->getCorrectNegativeByMonthCountyFacility();
-        $invalids = $this->getInvalidsByMonthCountyFacility();
-        $dissagrationOverallByMonthObj = new DissagrationOverallByMotnh();
+
+        $correntRecents = $this->getCorrectRecentsByMonthFacility();
+        $correntLongterm = $this->getCorrectLontermByMonthFacility();
+        $correntNegative = $this->getCorrectNegativeByMonthFacility();
+        $invalids = $this->getInvalidsByMonthFacility();
+
         return [
-            'county_lab_kit_date' => [
-                'recent' => $correntRecents,
-                'longterm' => $correntLongterm,
-                'negative' => $correntNegative,
-                'invalids' => $invalids
-            ],
-            'lab_kit_date' => $dissagrationOverallByMonthObj->getDissagrations()
+            'recent' => $correntRecents,
+            'longterm' => $correntLongterm,
+            'negative' => $correntNegative,
+            'invalids' => $invalids
         ];
     }
 
-    // dissagrgation by month, county, lab, kitlot
-    function getCorrectRecentsByMonthCountyFacility()
+    // dissagrgation by month, lab, kitlot
+    function getCorrectRecentsByMonthFacility()
     {
 
         $correctCounts = SubmissionModel::selectRaw(
             'laboratories.lab_name as lab_name,
             laboratories.id as lab_id,
                 qcsubmissions.kit_lot_no,
-                counties.name as county_name,
                 count(*) as correct_count,
                 CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
             '
         )
             ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
-            ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->where('result_recent_control_line', 1)
             ->where('result_recent_longterm_line', 0)
             ->where('result_recent_verification_line', 1)
-            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts);
 
         return $results;
     }
 
-    function getCorrectLontermByMonthCountyFacility()
+    function getCorrectLontermByMonthFacility()
     {
 
         $correctCounts = SubmissionModel::selectRaw(
             'laboratories.lab_name as lab_name,
                 laboratories.id as lab_id,
                     qcsubmissions.kit_lot_no,
-                    counties.name as county_name,
                     count(*) as correct_count,
                     CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
                     '
         )
             ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
-            ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->where('result_lt_control_line', 1)
             ->where('result_lt_longterm_line', 1)
             ->where('result_lt_verification_line', 1)
-            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts);
 
         return $results;
     }
 
-    function getCorrectNegativeByMonthCountyFacility()
+    function getCorrectNegativeByMonthFacility()
     {
 
         $correctCounts = SubmissionModel::selectRaw(
             'laboratories.lab_name as lab_name,
                     laboratories.id as lab_id,
                         qcsubmissions.kit_lot_no,
-                        counties.name as county_name,
                         count(*) as correct_count,
                         CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
                         '
         )
             ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
-            ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->where('result_negative_control_line', 1)
             ->where('result_negative_longterm_line', 0)
             ->where('result_negative_verification_line', 0)
-            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts);
 
@@ -108,20 +96,18 @@ class AggregatorController extends Controller
     }
 
 
-    function getInvalidsByMonthCountyFacility()
+    function getInvalidsByMonthFacility()
     {
 
         $correctCounts = SubmissionModel::selectRaw(
             'laboratories.lab_name as lab_name,
                     laboratories.id as lab_id,
                         qcsubmissions.kit_lot_no,
-                        counties.name as county_name,
                         count(*) as correct_count,
                         CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
                         '
         )
             ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
-            ->join('counties', 'counties.id', '=', 'laboratories.county')
 
             ->where(function ($q) {
                 $q->where('result_negative_control_line', 0)->orWhere('result_recent_control_line', 0)->orWhere('result_lt_control_line', 0)
@@ -129,7 +115,7 @@ class AggregatorController extends Controller
                         $q->where('result_lt_control_line', 1)->where('result_lt_longterm_line', 1)->where('result_lt_verification_line', 0);
                     });
             })
-            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no');
         $results = $this->joinToTotalTested($correctCounts);
 
         return $results;
@@ -138,13 +124,11 @@ class AggregatorController extends Controller
     function joinToTotalTested($recentsCount)
     {
         $results =
-            DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,laboratories.lab_name as lab_name, counties.name as county_name,
+            DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,laboratories.lab_name as lab_name,
             CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date, 
             qcsubmissions.kit_lot_no, laboratories.id as lab_id, COALESCE(recentsCount.correct_count,0) as correct_count')
             ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
-            ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
-                $join->on('counties.name', '=', 'recentsCount.county_name');
                 $join->on('laboratories.id', '=', 'recentsCount.lab_id');
                 $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');
                 $join->on(
@@ -153,10 +137,10 @@ class AggregatorController extends Controller
                     'recentsCount.testing_date'
                 );
             }, 'left')
-            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
+            ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
             ->orderBy('testing_date')
             ->get();
         return $results;
     }
-    //end of dissagrgation by month, county, lab, kitlot
+    //end of dissagrgation by month, lab, kitlot
 }
