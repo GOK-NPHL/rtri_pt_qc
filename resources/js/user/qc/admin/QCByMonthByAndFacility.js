@@ -43,7 +43,7 @@ class QCByMonthByAndFacility extends React.Component {
                 'invalids': 0,
                 'correct_negative': 0,
                 'correct_longterm': 0,
-                'correct_recent': (recentTest.correct_count * 100) / recentTest.total_tests,
+                'correct_recent': Math.round((recentTest.correct_count * 100) / recentTest.total_tests),
                 'total_tested': recentTest.total_tests,
                 'kit_lot ': recentTest.kit_lot_no,
                 'lab_name': recentTest.lab_name
@@ -56,7 +56,7 @@ class QCByMonthByAndFacility extends React.Component {
             let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = labName + kitLot + testingDate;
-            dataElements[dataKey]['correct_negative'] = (test.correct_count * 100) / test.total_tests;
+            dataElements[dataKey]['correct_negative'] = Math.round((test.correct_count * 100) / test.total_tests);
             dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
         });
 
@@ -66,7 +66,7 @@ class QCByMonthByAndFacility extends React.Component {
             let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = labName + kitLot + testingDate;
-            dataElements[dataKey]['correct_longterm'] = (test.correct_count * 100) / test.total_tests;
+            dataElements[dataKey]['correct_longterm'] = Math.round((test.correct_count * 100) / test.total_tests);
             dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
         });
 
