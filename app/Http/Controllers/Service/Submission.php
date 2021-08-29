@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Service;
 
 use App\Http\Controllers\Controller;
 use App\qcsubmission as SubmissionModel;
+use App\QcSubmissionResult;
 use App\RepeatSubmission;
 use Exception;
 use Illuminate\Http\Request;
@@ -50,25 +51,43 @@ class Submission extends Controller
                 "not_test_reason" => $submission["qcNotTestedReason"],
                 "other_not_tested_reason" => $submission["qcNotTestedOtherReason"],
 
-                "result_lt_control_line" => $submission["resultLongterm"]["c"],
-                "result_lt_verification_line" => $submission["resultLongterm"]["v"],
-                "result_lt_longterm_line" => $submission["resultLongterm"]["lt"],
-
-                "result_recent_control_line" => $submission["resultRecent"]["c"],
-                "result_recent_verification_line" => $submission["resultRecent"]["v"],
-                "result_recent_longterm_line" => $submission["resultRecent"]["lt"],
-
-                "result_negative_control_line" => $submission["resultNegative"]["c"],
-                "result_negative_verification_line" => $submission["resultNegative"]["v"],
-                "result_negative_longterm_line" => $submission["resultNegative"]["lt"],
-
-                "interpretation_longterm" => $submission["qcLongtermIntepreation"],
-                "interpretation_recent" => $submission["qcRecentIntepreation"],
-                "interpretation_negative" => $submission["qcNegativeIntepreation"],
             ]);
 
             $submissionModel->save();
             $submissionId = $submissionModel->id;
+
+            $qcLtResult = new QcSubmissionResult([
+                "control_line" => $submission["resultLongterm"]["c"],
+                "verification_line" => $submission["resultLongterm"]["v"],
+                "interpretation" => $submission["qcLongtermIntepreation"],
+                "longterm_line" => $submission["resultLongterm"]["lt"],
+                "qcsubmission_id" => $submissionId,
+                "type" => "longterm"
+            ]);
+            $qcLtResult->save();
+
+            $qcNegativeResult = new QcSubmissionResult([
+                "control_line" => $submission["resultNegative"]["c"],
+                "verification_line" => $submission["resultNegative"]["v"],
+                "interpretation" => $submission["qcNegativeIntepreation"],
+                "longterm_line" => $submission["resultNegative"]["lt"],
+                "qcsubmission_id" => $submissionId,
+                "type" => "negative"
+
+            ]);
+            $qcNegativeResult->save();
+
+            $qcRecentResult = new QcSubmissionResult([
+
+                "control_line" => $submission["resultRecent"]["c"],
+                "verification_line" => $submission["resultRecent"]["v"],
+                "interpretation" => $submission["qcRecentIntepreation"],
+                "longterm_line" => $submission["resultRecent"]["lt"],
+                "qcsubmission_id" => $submissionId,
+                "type" => "recent"
+            ]);
+            $qcRecentResult->save();
+
             $this->saveNegativeRepeats($submission, $submissionId);
             $this->saveRecentRepeats($submission, $submissionId);
             $this->saveLongtermRepeats($submission, $submissionId);
@@ -186,7 +205,7 @@ class Submission extends Controller
 
             DB::table('qcsubmissions')->where('id', $request->id)->where('user_id', $user->id)->delete();
             DB::table('repeat_submissions')->where('qcsubmissions_id', $request->id)->delete();
-            
+            DB::table('qc_submission_results')->where('qcsubmission_id', $request->id)->delete();
             return response()->json(['Message' => 'Deleted Successfully'], 200);
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error deleting submission: ' . $ex->getMessage()], 500);

@@ -35,21 +35,6 @@ class CreateSubmissionsTable extends Migration
             $table->string("not_test_reason")->nullable();;
             $table->string("other_not_tested_reason")->nullable();
 
-            $table->integer("result_lt_control_line")->nullable();
-            $table->integer("result_lt_verification_line")->nullable();
-            $table->integer("result_lt_longterm_line")->nullable();
-
-            $table->integer("result_recent_control_line")->nullable();
-            $table->integer("result_recent_verification_line")->nullable();
-            $table->integer("result_recent_longterm_line")->nullable();
-
-            $table->integer("result_negative_control_line")->nullable();
-            $table->integer("result_negative_verification_line")->nullable();
-            $table->integer("result_negative_longterm_line")->nullable();
-
-            $table->string("interpretation_longterm")->nullable();
-            $table->string("interpretation_recent")->nullable();
-            $table->string("interpretation_negative")->nullable();
         });
     }
 
