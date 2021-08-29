@@ -4,13 +4,12 @@ import { FetchQcByMonthCountyFacility } from '../../../components/utils/Helpers'
 import { v4 as uuidv4 } from 'uuid';
 import QCByMonthByCountyAndFacility from './QCByMonthByCountyAndFacility';
 
-
 class Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            qCByMonthByCountyAndFacility: []
+            qCByMonthByCountyAndFacility: {}
         }
     }
 
@@ -18,17 +17,14 @@ class Dashboard extends React.Component {
 
         (async () => {
             let qCByMonthByCountyAndFacility = await FetchQcByMonthCountyFacility();
-            console.log(qCByMonthByCountyAndFacility);
+            // console.log(qCByMonthByCountyAndFacility);
             this.setState({
                 qCByMonthByCountyAndFacility: qCByMonthByCountyAndFacility
             })
         })();
-
     }
 
-
     render() {
-
 
         return (
             <React.Fragment>

@@ -9,18 +9,91 @@ class QCByMonthByCountyAndFacility extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            data: {}
         }
+        this.formatDataToTableFormat = this.formatDataToTableFormat.bind(this);
     }
 
     componentDidMount() {
 
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.data !== this.props.data) {
+            this.setState({
+                data: this.props.data
+            })
+        }
+    }
+
+    formatDataToTableFormat(data) {
+        console.log("verify data");
+        console.log(data);
+        let dataElements = {};
+
+        let recents = data.recent;
+        recents.map((recentTest) => {
+            let labName = recentTest.lab_name.trim().toLowerCase().replace(/\s/g, '');
+            let countyName = recentTest.county_name.trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(recentTest.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let testingDate = String(recentTest.testing_date).trim().toLowerCase().replace(/\s/g, '');
+
+            let dataKey = countyName + labName + kitLot + testingDate;
+
+            dataElements[dataKey] = {
+                'invalids': 0,
+                'correct_negative': 0,
+                'correct_longterm': 0,
+                'correct_recent': (recentTest.correct_count * 100) / recentTest.total_tests,
+                'total_tested': recentTest.total_tests,
+                'kit_lot ': recentTest.kit_lot_no,
+                'lab_name': recentTest.lab_name,
+                'county': recentTest.county_name,
+            }
+        });
+
+        let negatives = data.negative;
+        negatives.map((test) => {
+            let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
+            let countyName = test.county_name.trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
+            let dataKey = countyName + labName + kitLot + testingDate;
+            dataElements[dataKey]['correct_negative'] = (test.correct_count * 100) / test.total_tests;
+        });
+
+        let longterms = data.longterm;
+        longterms.map((test) => {
+            let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
+            let countyName = test.county_name.trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
+            let dataKey = countyName + labName + kitLot + testingDate;
+            dataElements[dataKey]['correct_longterm'] = (test.correct_count * 100) / test.total_tests;
+        });
+
+        let invalidss = data.invalids;
+        invalidss.map((test) => {
+            let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
+            let countyName = test.county_name.trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
+            let dataKey = countyName + labName + kitLot + testingDate;
+            dataElements[dataKey]['invalids'] = (test.correct_count * 100) / test.total_tests;
+        });
+
+        return Object.values(dataElements);
+    }
 
     render() {
+        let rowzz = [];
 
-        let columns = [
+        let isDataEmpty = Object.keys(this.state.data).length; //gives 0 if empty or an integer > 0 if non-empty
+        if (isDataEmpty != 0) {
+            rowzz = this.formatDataToTableFormat(this.state.data);
+        }
+
+        let columnzz = [
             {
                 label: 'County',
                 field: 'county',
@@ -71,6 +144,11 @@ class QCByMonthByCountyAndFacility extends React.Component {
             }
         ]
 
+        let data = {
+            columns: columnzz,
+            rows: rowzz
+        };
+
         let qCByMonthByCountyAndFacility = <React.Fragment>
             <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
@@ -91,77 +169,6 @@ class QCByMonthByCountyAndFacility extends React.Component {
                 <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
             </div>
         </React.Fragment>
-
-
-        const data = {
-            columns: [
-                {
-                    label: 'Name',
-                    field: 'name',
-                    sort: 'asc',
-                    width: 150
-                },
-                {
-                    label: 'Position',
-                    field: 'position',
-                    sort: 'asc',
-                    width: 270
-                },
-                {
-                    label: 'Office',
-                    field: 'office',
-                    sort: 'asc',
-                    width: 200
-                },
-                {
-                    label: 'Age',
-                    field: 'age',
-                    sort: 'asc',
-                    width: 100
-                },
-                {
-                    label: 'Start date',
-                    field: 'date',
-                    sort: 'asc',
-                    width: 150
-                },
-                {
-                    label: 'Salary',
-                    field: 'salary',
-                    sort: 'asc',
-                    width: 100
-                }
-            ],
-
-            rows: [
-                {
-                    name: 'Tiger Nixon',
-                    position: 'System Architect',
-                    office: 'Edinburgh',
-                    age: '61',
-                    date: '2011/04/25',
-                    salary: '$320'
-                },
-                {
-                    name: 'Garrett Winters',
-                    position: 'Accountant',
-                    office: 'Tokyo',
-                    age: '63',
-                    date: '2011/07/25',
-                    salary: '$170'
-                },
-                {
-                    name: 'Ashton Cox',
-                    position: 'Junior Technical Author',
-                    office: 'San Francisco',
-                    age: '66',
-                    date: '2009/01/12',
-                    salary: '$86'
-                }
-
-            ]
-        };
-
 
         return (
             <React.Fragment>
