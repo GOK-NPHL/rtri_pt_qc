@@ -159,7 +159,7 @@ class QCByMonthByAndFacility extends React.Component {
             <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
                     <a className="nav-link nav-link-custom active" id="home-tab" data-toggle="tab"
-                        href="#home" role="tab" aria-controls="home" aria-selected="true">Overall disaggregated by month </a>
+                        href="#home" role="tab" aria-controls="home" aria-selected="true">Tabular data</a>
                 </li>
                 {/* <li className="nav-item">
                     <a className="nav-link nav-link-custom" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
@@ -185,7 +185,7 @@ class QCByMonthByAndFacility extends React.Component {
 
         return (
             <React.Fragment>
-                <h4 className="mb-4">QC Performance</h4>
+                <h4 className="mb-4">Overall disaggregated by month </h4>
                 {qCByMonthByAndFacility}
                 {/* <ExportDashboardToCSV data={rowzz} columns={columnzz}/> */}
             </React.Fragment>
