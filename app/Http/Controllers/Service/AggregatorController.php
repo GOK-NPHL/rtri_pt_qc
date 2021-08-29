@@ -29,11 +29,13 @@ class AggregatorController extends Controller
         $correntRecents = $this->getCorrectRecentsByMonthCountyFacility($aggregationByCounty);
         $correntLongterm = $this->getCorrectLontermByMonthCountyFacility($aggregationByCounty);
         $correntNegative = $this->getCorrectNegativeByMonthCountyFacility($aggregationByCounty);
+        $invalids = $this->getInvalidsByMonthCountyFacility($aggregationByCounty);
 
         return [
             'recent' => $correntRecents,
             'longterm' => $correntLongterm,
-            'negative' => $correntNegative
+            'negative' => $correntNegative,
+            'invalids' => $invalids
         ];
     }
 
@@ -109,6 +111,34 @@ class AggregatorController extends Controller
         return $results;
     }
 
+
+    function getInvalidsByMonthCountyFacility($aggregationByCounty)
+    {
+
+        $correctCounts = SubmissionModel::selectRaw(
+            'laboratories.lab_name as lab_name,
+                    laboratories.id as lab_id,
+                        qcsubmissions.kit_lot_no,
+                        counties.name as county_name,
+                        count(*) as correct_count,
+                        qcsubmissions.testing_date'
+        )
+            ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
+            ->join('counties', 'counties.id', '=', 'laboratories.county')
+
+            ->where(function ($q) {
+                $q->where('result_negative_control_line', 0)->orWhere('result_recent_control_line', 0)->orWhere('result_lt_control_line', 0)
+                    ->orWhere(function ($q) {
+                        $q->where('result_lt_control_line', 1)->where('result_lt_longterm_line', 1)->where('result_lt_verification_line', 0);
+                    });
+            })
+            ->groupBy('laboratories.id', 'counties.name', 'qcsubmissions.testing_date', 'qcsubmissions.kit_lot_no')
+            ->orderBy('qcsubmissions.testing_date');
+        // Log::info($correctCounts);
+        $results = $this->joinToTotalTested($correctCounts);
+
+        return $results;
+    }
 
     function joinToTotalTested($recentsCount)
     {
