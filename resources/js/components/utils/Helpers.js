@@ -483,7 +483,7 @@ export async function DeleteSubmissions(id) {
     try {
         const response = await axios({
             method: 'delete',
-            url: `${settings.serverBaseApi}/delete_submissions/`+ id,
+            url: `${settings.serverBaseApi}/delete_submissions/` + id,
             // data: {
             //     user: user,
             // }
@@ -546,6 +546,30 @@ export async function FetchParticipant(labId) {
 
     try {
         const response = await axios.get(`${settings.serverBaseApi}/get_participant/` + labId);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
+export async function FetchCounties() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_counties/`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
+export async function FetchQcByMonthCountyFacility() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_qc_by_month_county_facility/`);
         const responseData = response.data;
         return responseData;
     } catch (err) {

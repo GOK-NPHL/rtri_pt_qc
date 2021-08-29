@@ -6,6 +6,8 @@ use App\Http\Controllers\PT\PTReadinessController;
 use App\Http\Controllers\PT\PTShipmentController;
 use App\Http\Controllers\QC\QCAdminUsersController;
 use App\Http\Controllers\QC\QCParticipantController;
+use App\Http\Controllers\Service\AggregatorController;
+use App\Http\Controllers\Service\CommonsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -60,3 +62,7 @@ Route::get('/get_shipment_by_id/{id}', [PTShipmentController::class, 'getShipmen
 Route::get('/get_user_samples', [PTShipmentController::class, 'getUserSamples'])->middleware('auth');
 
 Route::get('/get_participant_demographics', [QCParticipantController::class, 'getParticipantDemographics']);
+
+Route::get('/get_counties', [CommonsController::class, 'getCounties']);
+
+Route::get('/get_qc_by_month_county_facility', [AggregatorController::class, 'getQcByMonthCountyFacility']);

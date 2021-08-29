@@ -67,7 +67,8 @@ class Submission extends Controller
                 "interpretation_negative" => $submission["qcNegativeIntepreation"],
             ]);
 
-            $submissionId = $submissionModel->save();
+            $submissionModel->save();
+            $submissionId = $submissionModel->id;
             $this->saveNegativeRepeats($submission, $submissionId);
             $this->saveRecentRepeats($submission, $submissionId);
             $this->saveLongtermRepeats($submission, $submissionId);
@@ -182,7 +183,10 @@ class Submission extends Controller
     {
         $user = Auth::user();
         try {
+
             DB::table('qcsubmissions')->where('id', $request->id)->where('user_id', $user->id)->delete();
+            DB::table('repeat_submissions')->where('qcsubmissions_id', $request->id)->delete();
+            
             return response()->json(['Message' => 'Deleted Successfully'], 200);
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error deleting submission: ' . $ex->getMessage()], 500);
