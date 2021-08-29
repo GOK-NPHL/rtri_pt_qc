@@ -160,6 +160,7 @@ class DissagrationOverallByMotnh extends Controller
             CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date, 
             qcsubmissions.kit_lot_no, laboratories.id as lab_id, COALESCE(recentsCount.correct_count,0) as correct_count')
                 ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
+                ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
                     $join->on('laboratories.id', '=', 'recentsCount.lab_id');
                     $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');

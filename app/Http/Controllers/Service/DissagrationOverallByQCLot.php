@@ -120,7 +120,6 @@ class DissagrationOverallByQCLot extends Controller
             //     CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
             // '
         )
-
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
             ->where(function ($q) {
                 $q->where('qc_submission_results.control_line', 0)
@@ -143,11 +142,9 @@ class DissagrationOverallByQCLot extends Controller
         $results = null;
         if ($type != 'invalids') {
             // CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date, 
-            $results =
-                DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,
- 
- qcsubmissions.kit_lot_no, COALESCE(recentsCount.correct_count,0) as correct_count')
- ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
+            $results = DB::table('qcsubmissions')->selectRaw('count(*) as total_tests, qcsubmissions.kit_lot_no, 
+                COALESCE(recentsCount.correct_count,0) as correct_count')
+                ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
                     $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');
                 }, 'left')->where('qc_submission_results.type', $type)
@@ -161,6 +158,7 @@ class DissagrationOverallByQCLot extends Controller
                 DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,
  
  qcsubmissions.kit_lot_no, COALESCE(recentsCount.correct_count,0) as correct_count')
+                ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
                     $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');
                 }, 'left')

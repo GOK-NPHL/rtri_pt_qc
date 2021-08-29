@@ -77,6 +77,7 @@ class QCByMonthByAndFacility extends React.Component {
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = labName + kitLot + testingDate;
             dataElements[dataKey]['invalids'] = test.correct_count;
+            dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
         });
 
         for (const [key, value] of Object.entries(dataElements)) {
