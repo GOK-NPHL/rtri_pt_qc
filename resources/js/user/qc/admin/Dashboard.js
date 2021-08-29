@@ -4,6 +4,7 @@ import { FetchQcByMonthCountyFacility } from '../../../components/utils/Helpers'
 import { v4 as uuidv4 } from 'uuid';
 import QCByMonthByCountyAndFacility from './QCByMonthByCountyAndFacility';
 import QCByMonthByAndFacility from './QCByMonthByAndFacility';
+import QCByKitLot from './QCByKitLot';
 
 class Dashboard extends React.Component {
 
@@ -31,6 +32,7 @@ class Dashboard extends React.Component {
             <React.Fragment>
                 <QCByMonthByCountyAndFacility data={this.state.qCByMonthByCountyAndFacility} />
                 <QCByMonthByAndFacility data={this.state.qCByMonthByCountyAndFacility} />
+                <QCByKitLot data={this.state.qCByMonthByCountyAndFacility} />
             </React.Fragment>
         );
     }
