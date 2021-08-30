@@ -21,7 +21,8 @@ class UserForm extends React.Component {
             email: '',
             phoneNumber: '',
             password: '',
-            pageState: 'add'
+            pageState: 'add',
+            pageHeading: 'Add New User'
         }
 
         this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -43,7 +44,8 @@ class UserForm extends React.Component {
                 if (userBio.status == 500) {
                     this.setState({
                         message: userBio.data.Message,
-                        pageState: 'edit'
+                        pageState: 'edit',
+                        pageHeading: "Edit User"
                     })
                     $('#addAdminUserModal').modal('toggle');
                 } else {
@@ -53,7 +55,8 @@ class UserForm extends React.Component {
                         name: userBio.name,
                         email: userBio.email,
                         phoneNumber: userBio.phone_number,
-                        pageState: 'edit'
+                        pageState: 'edit',
+                        pageHeading: "Edit User"
                     });
                 }
 
@@ -135,7 +138,7 @@ class UserForm extends React.Component {
                             password: '',
                             email: ''
                         });
-                    }else{
+                    } else {
                         this.setState({
                             message: response.data.Message,
                         });
@@ -157,7 +160,7 @@ class UserForm extends React.Component {
 
                 <div className="card" style={{ "backgroundColor": "#ecf0f1" }}>
                     <div className="card-body">
-                        <h5 className="card-title">Add New User</h5><br />
+                        <h5 className="card-title">{this.state.pageHeading}</h5><br />
                         <hr />
                         <div style={{ "margin": "0 auto", "width": "60%" }} className="text-center">
                             <form action="#" >
@@ -197,6 +200,9 @@ class UserForm extends React.Component {
                                             value={this.state.password}
                                             onChange={(event) => this.handlePasswordChange(event.target.value)}
                                             type="text" className="form-control" id="u_password" />
+                                        {this.state.pageState == 'edit' ?
+                                            <small style={{ "color": "red" }} className="form-text">Leave blank to retain previous password.</small> :
+                                            ''}
                                     </div>
                                 </div>
 
