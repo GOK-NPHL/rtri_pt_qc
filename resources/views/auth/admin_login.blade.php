@@ -25,7 +25,7 @@
                 <img style="max-height: 120px;" src="{{asset('images/nphl-logo-2.png')}}" />
 
                 <div class="mt-2">
-                    <h2 style="color: black;">KNEQAS PT System <p class="mt-4"> Administrative Login</p>
+                    <h2 style="color: black;">KNEQAS RTRI QC System <p class="mt-4"> Administrative Login</p>
                     </h2>
                 </div>
 
