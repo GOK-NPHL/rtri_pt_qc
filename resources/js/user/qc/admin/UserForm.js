@@ -22,7 +22,7 @@ class UserForm extends React.Component {
             phoneNumber: '',
             password: '',
             pageState: 'add',
-            pageHeading: 'Add New User'
+            pageHeading: 'Add New Manager'
         }
 
         this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -45,7 +45,7 @@ class UserForm extends React.Component {
                     this.setState({
                         message: userBio.data.Message,
                         pageState: 'edit',
-                        pageHeading: "Edit User"
+                        pageHeading: "Edit Manager"
                     })
                     $('#addAdminUserModal').modal('toggle');
                 } else {
@@ -56,7 +56,7 @@ class UserForm extends React.Component {
                         email: userBio.email,
                         phoneNumber: userBio.phone_number,
                         pageState: 'edit',
-                        pageHeading: "Edit User"
+                        pageHeading: "Edit Manager"
                     });
                 }
 
