@@ -79,7 +79,7 @@ Once the containers are up and running, you can check status by running docker c
 Run below to get into the app continer session:
 
 ```
-sudo docker-compose exec  app bash
+sudo docker-compose exec rtriqc_app bash
 ```
 
 you could add -u 0 get into the sudo session in the container.
