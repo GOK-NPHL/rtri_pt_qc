@@ -670,6 +670,23 @@ export async function UpdateLabPersonel(personel) {
     }
 }
 
+export async function UpdateOwnBio(personel) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/own_bio_update`,
+            data: {
+                personel: personel,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+}
+
 export async function SaveReadiness(readiness) {
     try {
         const response = await axios({

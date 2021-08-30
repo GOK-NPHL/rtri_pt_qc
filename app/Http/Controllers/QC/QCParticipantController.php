@@ -66,6 +66,7 @@ class QCParticipantController extends Controller
                 'users.name',
                 'laboratories.id as lab_id',
                 'users.second_name',
+                'users.phone_number as user_phone_number',
                 'laboratories.lab_name',
                 'laboratories.phone_number',
                 'laboratories.mfl_code',

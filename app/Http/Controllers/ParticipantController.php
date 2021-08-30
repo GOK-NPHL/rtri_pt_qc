@@ -119,6 +119,26 @@ class ParticipantController extends Controller
         }
     }
 
+    public function editOwnPersonalBio(Request $request)
+    {
+        try {
+            $user = User::find($request->personel['id']);
+            $user->name = $request->personel['first_name'];
+            $user->second_name = $request->personel['second_name'];
+            $user->email = $request->personel['email'];
+            $user->phone_number = $request->personel['phone_number'];
+            if (!empty($request->personel['password'])) {
+                $user->password = Hash::make($request->personel['password']);
+            }
+            $user->save();
+
+            return response()->json(['Message' => 'Updated successfully'], 200);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Could not update bio: ' . $ex->getMessage()], 500);
+        }
+    }
+
+
     public function getLabPersonel(Request $request)
     {
         try {
