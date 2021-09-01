@@ -39,6 +39,7 @@ class PersonelForm extends React.Component {
         this.handleIsQcActiveChange = this.handleIsQcActiveChange.bind(this);
         this.handleIsPtActiveChange = this.handleIsPtActiveChange.bind(this);
         this.handleIsActiveChange = this.handleIsActiveChange.bind(this);
+        this.validatePassword = this.validatePassword.bind(this);
 
     }
 
@@ -95,7 +96,6 @@ class PersonelForm extends React.Component {
     }
 
     handleIsActiveChange(isActive) {
-        console.log(isActive);
         this.setState({
             isActive: isActive
         });
@@ -147,9 +147,37 @@ class PersonelForm extends React.Component {
         this.setState({
             password: password
         });
+
     }
 
+    validatePassword(password) {
+        let isValid = true;
+        let upperCaseLetters = /[A-Z]/g;
+        if (
+            (password.length < 6 || !(password.match(upperCaseLetters)))
+            && this.state.pageState == 'add'
+        ) {
+
+            this.setState({
+                message: "Password length should not be less than 6 characters and should contain an upper case letter",
+            })
+            $('#addPersonelModal').modal('toggle');
+
+            isValid = false;
+
+        } else {
+
+            isValid = true;
+        }
+        return isValid;
+    }
+
+
     savePersonel() {
+
+        if (!this.validatePassword(this.state.password) && this.state.pageState == 'add') {
+            return;
+        }
 
         if (
             this.state.facility == '' ||
@@ -212,10 +240,11 @@ class PersonelForm extends React.Component {
                 $('#addPersonelModal').modal('toggle');
             })();
         }
+
+
     }
 
     componentDidUpdate() {
-        console.log(this.state.participantList);
         try {
             $('#u_facility').selectpicker();
         } catch (err) {
@@ -316,6 +345,7 @@ class PersonelForm extends React.Component {
                                         <label htmlFor="u_password" >Password  *</label>
                                         <input
                                             value={this.state.password}
+                                            onBlur={(event) => this.validatePassword(event.target.value)}
                                             onChange={(event) => this.handlePasswordChange(event.target.value)}
                                             type="email" className="form-control" id="u_password" />
                                     </div>
