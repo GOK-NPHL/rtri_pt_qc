@@ -156,6 +156,7 @@ class PersonelForm extends React.Component {
             this.state.email == '' ||
             this.state.phoneNumber == '' ||
             this.state.firstName == '' ||
+            this.state.secondName == '' ||
             (this.state.pageState == 'add' && this.state.password == '')
 
         ) {
@@ -227,6 +228,7 @@ class PersonelForm extends React.Component {
     render() {
 
         let labLists = [];
+        labLists.push(<option key={uuidv4()}>-- select lab --</option>);
         this.state.participantList.map((participant) => {
             labLists.push(<option key={participant.id} value={participant.id}>{participant.lab_name}</option>);
         });
@@ -288,7 +290,7 @@ class PersonelForm extends React.Component {
 
 
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="u_second_name" >Second Name</label>
+                                        <label htmlFor="u_second_name" >Second Name *</label>
 
                                         <input
                                             value={this.state.secondName}
