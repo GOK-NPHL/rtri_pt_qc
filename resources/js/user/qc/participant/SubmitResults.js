@@ -59,6 +59,7 @@ class SubmitResults extends React.Component {
         this.onQcLotNumberHandler = this.onQcLotNumberHandler.bind(this);
         this.onTestJustificationHandler = this.onTestJustificationHandler.bind(this);
         this.onSampleTypeHandler = this.onSampleTypeHandler.bind(this);
+        this.validateTestingDateAndCurrentDate = this.validateTestingDateAndCurrentDate.bind(this);
 
         this.submitForm = this.submitForm.bind(this);
 
@@ -505,6 +506,7 @@ class SubmitResults extends React.Component {
         this.setState({
             testingDate: event.target.value
         });
+        this.validateTestingDateAndCurrentDate(event.target.value);
         this.validateTestingAndRecivedDate(event.target.value, this.state.kitReceivedDate);
         this.validateTestingAndQCLotRecivedDate(event.target.value, this.state.qcLotReceivedDate);
         this.validateTestingAndReconstituionDate(this.state.qcReconstituionDate, event.target.value)
@@ -532,6 +534,22 @@ class SubmitResults extends React.Component {
                 message: "QC lot Date received cannot be greater than testing date",
                 testingDate: '',
                 kitReceivedDate: ''
+            })
+            $('#messageModal').modal('show');
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    validateTestingDateAndCurrentDate(sampleTestingDate) {
+
+        let today = new Date();
+        let testingDate = new Date(sampleTestingDate);
+        if (testingDate > today) {
+            this.setState({
+                message: "Testing date cannot be greater than todays date",
+                testingDate: '',
             })
             $('#messageModal').modal('show');
             return false;
