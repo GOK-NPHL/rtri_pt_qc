@@ -103,10 +103,9 @@ class ParticipantController extends Controller
             $user->email = $request->personel['email'];
             $user->phone_number = $request->personel['phone_number'];
             $user->is_active = $request->personel['is_active'];
-            if (!empty($request->user['password'])) {
+            if (!empty($request->personel['password'])) {
                 $user->password = Hash::make($request->personel['password']);
             }
-
             $user->has_qc_access = $request->personel['has_qc_access'];
             $user->has_pt_access = $request->personel['has_pt_access'];
 

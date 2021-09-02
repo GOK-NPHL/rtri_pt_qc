@@ -154,8 +154,7 @@ class PersonelForm extends React.Component {
         let isValid = true;
         let upperCaseLetters = /[A-Z]/g;
         if (
-            (password.length < 6 || !(password.match(upperCaseLetters)))
-            && this.state.pageState == 'add'
+            password.length < 6 || !(password.match(upperCaseLetters))
         ) {
 
             this.setState({
@@ -179,6 +178,10 @@ class PersonelForm extends React.Component {
             return;
         }
 
+        if (!this.validatePassword(this.state.password) && this.state.pageState == 'edit' && (this.state.password)) {
+            return;
+        }
+      
         if (
             this.state.facility == '' ||
             this.state.email == '' ||
@@ -345,9 +348,14 @@ class PersonelForm extends React.Component {
                                         <label htmlFor="u_password" >Password  *</label>
                                         <input
                                             value={this.state.password}
-                                            onBlur={(event) => this.validatePassword(event.target.value)}
+                                            onBlur={(event) => {
+                                                if (this.state.pageState == 'edit' && event.target.value) {
+                                                    this.validatePassword(event.target.value)
+                                                }
+                                            }}
                                             onChange={(event) => this.handlePasswordChange(event.target.value)}
                                             type="email" className="form-control" id="u_password" />
+                                            <small style={{ "color": "red" }} className="form-text">Leave blank to retain previous password.</small>
                                     </div>
                                 </div>
 
