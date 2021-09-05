@@ -29,6 +29,7 @@ class UserForm extends React.Component {
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handlePhoneChange = this.handlePhoneChange.bind(this);
+        this.validatePassword = this.validatePassword.bind(this);
     }
 
     componentDidMount() {
@@ -40,7 +41,6 @@ class UserForm extends React.Component {
 
             (async () => {
                 let userBio = await FetchAdminUser(pathObject.params.userId);
-                console.log(userBio)
                 if (userBio.status == 500) {
                     this.setState({
                         message: userBio.data.Message,
@@ -64,6 +64,28 @@ class UserForm extends React.Component {
 
         }
 
+    }
+
+    validatePassword(password) {
+        console.log(password);
+        let isValid = true;
+        let upperCaseLetters = /[A-Z]/g;
+        if (
+            password.length < 6 || !(password.match(upperCaseLetters))
+        ) {
+
+            this.setState({
+                message: "Password length should not be less than 6 characters and should contain an upper case letter",
+            })
+            $('#addAdminUserModal').modal('toggle');
+
+            isValid = false;
+
+        } else {
+
+            isValid = true;
+        }
+        return isValid;
     }
 
     handleNameChange(name) {
@@ -103,6 +125,14 @@ class UserForm extends React.Component {
     //     }
     // }
     saveUser() {
+
+        if (!this.validatePassword(this.state.password) && this.state.pageState == 'add') {
+            return;
+        }
+
+        if (!this.validatePassword(this.state.password) && this.state.pageState == 'edit' && (this.state.password)) {
+            return;
+        }
 
         if (
             this.state.name == '' ||
@@ -198,6 +228,11 @@ class UserForm extends React.Component {
                                     <div className="col-sm-10">
                                         <input
                                             value={this.state.password}
+                                            onBlur={(event) => {
+                                                if (this.state.pageState == 'edit' && event.target.value) {
+                                                    this.validatePassword(event.target.value)
+                                                }
+                                            }}
                                             onChange={(event) => this.handlePasswordChange(event.target.value)}
                                             type="text" className="form-control" id="u_password" />
                                         {this.state.pageState == 'edit' ?
