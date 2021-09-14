@@ -118,12 +118,19 @@ class Dashboard extends React.Component {
                         <td>{element['kit_lot_no']}</td>
                         <td>{element['testing_date']}</td>
                         <td>
-                            {/* <a
-                                href="#"
-                                style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
-                                <i className="fas fa-user-edit"></i>
-                            </a> */}
+			 <a
+			                                href="#"
+			                                onClick={() => {
+								                                    this.setState({
+													                                            isSubmitResult: true,
+													                                            isEdit: true,
+													                                            editId: element['id']
+													                                        })
+								                                }}
+			                                style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+			                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+			                                <i className="fas fa-user-edit"></i>
+			                            </a>
                             <a
                                 onClick={() => this.deleteSubmissionHandler(element['id'])}
                                 style={{ "display": "inlineBlock" }}
