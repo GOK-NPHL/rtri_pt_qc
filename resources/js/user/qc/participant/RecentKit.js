@@ -7,7 +7,10 @@ class RecentKit extends React.Component {
         this.state = {
             isRecentTestHasRepeats: false,
             isShowRecentRepeat: false,
-            kitPositionInForm: this.props.kitPositionInForm
+            kitPositionInForm: this.props.kitPositionInForm,
+            hasRecentControl: null,
+            hasRecentVerification: null,
+            hasRecentLongterm: null
         }
 
     }
@@ -22,9 +25,50 @@ class RecentKit extends React.Component {
                 isRecentTestHasRepeats: this.props.isReaptsEmpty
             })
         }
+        if (prevProps.resultRecentEditResults != this.props.resultRecentEditResults) {
+            this.setState({
+                hasRecentControl: this.props.resultRecentEditResults['c'] == 1 ? true : false,
+                hasRecentVerification: this.props.resultRecentEditResults['v'] == 1 ? true : false,
+                hasRecentLongterm: this.props.resultRecentEditResults['lt'] == 1 ? true : false
+            })
+        }
     }
 
     render() {
+
+        let ltRadio = <input className="form-check-input" type="radio" value="lt"
+            name={`recent-radio-${this.props.radioId}`} id="result_lt" />
+        if (this.props.isEdit && this.props.qcRecentIntepreationEditResults == 'lt') {
+            ltRadio = <input className="form-check-input" type="radio" value="lt"
+                name={`recent-radio-${this.props.radioId}`} id="result_lt" checked />
+        }
+
+
+        let invalidLt = <input className="form-check-input" type="radio" value="invalid"
+            name={`recent-radio-${this.props.radioId}`} id="result_invalid_recent" />
+        if (this.props.isEdit && this.props.qcRecentIntepreationEditResults == 'invalid') {
+            invalidLt = <input className="form-check-input" type="radio" value="invalid"
+                name={`recent-radio-${this.props.radioId}`} id="result_invalid_recent" checked />
+        }
+
+        let negLt =
+            <input className="form-check-input" type="radio" value="neg"
+                name={`recent-radio-${this.props.radioId}`} id="result_neg" />
+
+        if (this.props.isEdit && this.props.qcRecentIntepreationEditResults == 'neg') {
+            negLt = <input className="form-check-input" type="radio" value="neg"
+                name={`recent-radio-${this.props.radioId}`} id="result_neg" checked />
+        }
+
+
+        let recentLt = <input className="form-check-input" type="radio" value="recent"
+            name={`recent-radio-${this.props.radioId}`} id="result_recent" />
+        if (this.props.isEdit && this.props.qcRecentIntepreationEditResults == 'recent') {
+            recentLt = <input className="form-check-input" type="radio" value="recent"
+                name={`recent-radio-${this.props.radioId}`} id="result_recent" checked />
+
+        }
+
 
         return (
             <React.Fragment>
@@ -40,7 +84,14 @@ class RecentKit extends React.Component {
                             }
                         }
 
-                    } value="c" type="checkbox" /></td>
+                    }
+                        onChange={(event) => {
+                            this.setState({
+                                hasRecentControl: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasRecentControl}
+                        value="c" type="checkbox" /></td>
                     <td><input onClick={
                         () => {
                             if (this.props.isRepeat) {
@@ -49,7 +100,14 @@ class RecentKit extends React.Component {
                                 this.props.resultRecent(event)
                             }
                         }
-                    } value="v" type="checkbox" /></td>
+                    }
+                        onChange={(event) => {
+                            this.setState({
+                                hasRecentVerification: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasRecentVerification}
+                        value="v" type="checkbox" /></td>
                     <td ><input onClick={
                         () => {
                             if (this.props.isRepeat) {
@@ -58,7 +116,15 @@ class RecentKit extends React.Component {
                                 this.props.resultRecent(event)
                             }
                         }
-                    } value="lt" type="checkbox" /></td>
+                    }
+                        onChange={(event) => {
+                            this.setState({
+                                hasRecentLongterm: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasRecentLongterm}
+
+                        value="lt" type="checkbox" /></td>
                     <td onChange={
                         (event) => {
                             if (event.target.value == 'invalid') {
@@ -81,29 +147,32 @@ class RecentKit extends React.Component {
 
                     }>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" value="lt"
-                                name={`recent-radio-${this.props.radioId}`} id="result_lt" />
+
+                            {ltRadio}
+
                             <label className="form-check-label" htmlFor="result_lt">
                                 LT
                             </label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" value="recent"
-                                name={`recent-radio-${this.props.radioId}`} id="result_recent" />
+
+                            {recentLt}
+
                             <label className="form-check-label" htmlFor="result_recent">
                                 recent
                             </label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" value="neg"
-                                name={`recent-radio-${this.props.radioId}`} id="result_neg" />
+
+                            {negLt}
+
                             <label className="form-check-label" htmlFor="result_neg">
                                 neg
                             </label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" value="invalid"
-                                name={`recent-radio-${this.props.radioId}`} id="result_invalid" />
+
+                            {invalidLt}
                             <label className="form-check-label" htmlFor="result_invalid">
                                 invalid
                             </label>

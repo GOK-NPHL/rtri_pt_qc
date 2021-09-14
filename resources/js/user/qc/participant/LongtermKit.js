@@ -7,7 +7,10 @@ class LongtermKit extends React.Component {
         this.state = {
             isLongtermTestHasRepeats: false,
             isShowLongtermRepeat: false,
-            kitPositionInForm: this.props.kitPositionInForm
+            kitPositionInForm: this.props.kitPositionInForm,
+            hasLongtermControl: null,
+            hasLongtermVerification: null,
+            hasLongtermLongterm: null
         }
 
     }
@@ -19,14 +22,58 @@ class LongtermKit extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.isReaptsEmpty != this.props.isReaptsEmpty) {
             this.setState({
-                isLongtermTestHasRepeats: this.props.isReaptsEmpty
+                isLongtermTestHasRepeats: this.props.isReaptsEmpty,
             })
         }
+        if (prevProps.resultLongtermEditResults != this.props.resultLongtermEditResults) {
+            this.setState({
+                hasLongtermControl: this.props.resultLongtermEditResults['c'] == 1 ? true : false,
+                hasLongtermVerification: this.props.resultLongtermEditResults['v'] == 1 ? true : false,
+                hasLongtermLongterm: this.props.resultLongtermEditResults['lt'] == 1 ? true : false
+
+            })
+
+        }
+
     }
 
     render() {
+        let ltRadio = <input className="form-check-input" type="radio" value="lt"
+            name={`long-term-radio-${this.props.radioId}`} id="result_lt"
+        />
+        if (this.props.isEdit && this.props.qcLongtermIntepreationEditResults == 'lt') {
+            ltRadio = <input className="form-check-input" type="radio" value="lt"
+                name={`long-term-radio-${this.props.radioId}`} id="result_lt"
+                checked
+            />
+        }
+
+        let invalidLt = <input className="form-check-input" type="radio" value="invalid"
+            name={`long-term-radio-${this.props.radioId}`} id="result_invalid" />
+        if (this.props.isEdit && this.props.qcLongtermIntepreationEditResults == 'invalid') {
+            invalidLt = <input className="form-check-input" type="radio" value="invalid"
+                name={`long-term-radio-${this.props.radioId}`} id="result_invalid"
+                checked />
+        }
+
+
+        let negLt = <input className="form-check-input" type="radio" value="neg"
+            name={`long-term-radio-${this.props.radioId}`} id="result_neg" />
+        if (this.props.isEdit && this.props.qcLongtermIntepreationEditResults == 'neg') {
+            negLt = <input className="form-check-input" type="radio" value="neg"
+                name={`long-term-radio-${this.props.radioId}`} id="result_neg" checked />
+        }
+
+
+        let recentLt = <input className="form-check-input" type="radio" value="recent"
+            name={`long-term-radio-${this.props.radioId}`} id="result_recent" />
+        if (this.props.isEdit && this.props.qcLongtermIntepreationEditResults == 'recent') {
+            recentLt = <input className="form-check-input" type="radio" value="recent"
+                name={`long-term-radio-${this.props.radioId}`} id="result_recent" checked />
+        }
 
         return (
+
             <React.Fragment>
                 <tr >
                     <td>{this.props.isRepeat ? 'Long term repeat' : 'QC - Long Term'}</td>
@@ -38,7 +85,17 @@ class LongtermKit extends React.Component {
                                 this.props.resultLongterm(event)
                             }
                         }
-                    } value="c" type="checkbox" /></td>
+                    }
+
+                        onChange={(event) => {
+                            this.setState({
+                                hasLongtermControl: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasLongtermControl}
+
+
+                        value="c" type="checkbox" /></td>
                     <td ><input onClick={
                         () => {
                             if (this.props.isRepeat) {
@@ -47,7 +104,18 @@ class LongtermKit extends React.Component {
                                 this.props.resultLongterm(event)
                             }
                         }
-                    } value="v" type="checkbox" /></td>
+                    }
+
+
+                        onChange={(event) => {
+                            this.setState({
+                                hasLongtermVerification: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasLongtermVerification}
+
+
+                        value="v" type="checkbox" /></td>
                     <td ><input onClick={
                         () => {
                             if (this.props.isRepeat) {
@@ -56,7 +124,16 @@ class LongtermKit extends React.Component {
                                 this.props.resultLongterm(event)
                             }
                         }
-                    } value="lt" type="checkbox" /></td>
+                    }
+
+                        onChange={(event) => {
+                            this.setState({
+                                hasLongtermLongterm: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasLongtermLongterm}
+
+                        value="lt" type="checkbox" /></td>
                     <td onChange={
                         (event) => {
                             if (event.target.value == 'invalid') {
@@ -78,29 +155,28 @@ class LongtermKit extends React.Component {
                         }
                     }>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" value="lt"
-                                name={`long-term-radio-${this.props.radioId}`} id="result_lt" />
+                            {ltRadio}
                             <label className="form-check-label" htmlFor="result_lt">
                                 LT
                             </label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" value="recent"
-                                name={`long-term-radio-${this.props.radioId}`} id="result_recent" />
+
+                            {recentLt}
                             <label className="form-check-label" htmlFor="result_recent">
                                 recent
                             </label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" value="neg"
-                                name={`long-term-radio-${this.props.radioId}`} id="result_neg" />
+
+                            {negLt}
                             <label className="form-check-label" htmlFor="result_neg">
                                 neg
                             </label>
                         </div>
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="radio" value="invalid"
-                                name={`long-term-radio-${this.props.radioId}`} id="result_invalid" />
+                            {invalidLt}
+
                             <label className="form-check-label" htmlFor="result_invalid">
                                 invalid
                             </label>

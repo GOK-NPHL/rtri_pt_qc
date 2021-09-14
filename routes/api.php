@@ -8,6 +8,7 @@ use App\Http\Controllers\QC\QCAdminUsersController;
 use App\Http\Controllers\QC\QCParticipantController;
 use App\Http\Controllers\Service\AggregatorController;
 use App\Http\Controllers\Service\CommonsController;
+use App\Http\Controllers\Service\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/save_submission', 'Service\Submission@createSubmission');
 Route::get('/get_submissions', 'Service\Submission@getSubmissions');
 Route::delete('/delete_submissions/{id}', 'Service\Submission@deleteSubmission');
+Route::get('/get_submission_by_id/{id}', [Submission::class, 'getSubmissionById']);
+
 
 Route::get('/get_admin_users', [QCAdminUsersController::class, 'getAdminUsers']);
 Route::get('/get_admin_user/{id}', [AdminAuthController::class, 'getAdminUser']);

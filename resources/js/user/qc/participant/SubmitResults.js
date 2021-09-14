@@ -1,6 +1,6 @@
 import React from 'react';
 import StatsLabel from '../../../components/utils/stats/StatsLabel';
-import { SaveSubmission, FetchCurrentParticipantDemographics } from '../../../components/utils/Helpers';
+import { SaveSubmission, FetchCurrentParticipantDemographics, FetchSubmission } from '../../../components/utils/Helpers';
 import './Results.css';
 import LongtermKit from './LongtermKit';
 import NegativeKit from './NegativeKit';
@@ -45,6 +45,7 @@ class SubmitResults extends React.Component {
             negativeTestRepeats: [],
             recentTestRepeats: [],
             longtermTestRepeats: [],
+            edittableSubmission: {}
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
         this.onQcLotReceiceDateHandler = this.onQcLotReceiceDateHandler.bind(this);
@@ -87,13 +88,99 @@ class SubmitResults extends React.Component {
     componentDidMount() {
 
         (async () => {
+            let edittableSubmission = null;
             let userDemographics = await FetchCurrentParticipantDemographics();
-            this.setState({
-                userDemographics: userDemographics,
-                labId: userDemographics[0].lab_id,
-                userId: userDemographics[0].user_id
+            if (this.props.isEdit) {
+                console.log("editable");
+                edittableSubmission = await FetchSubmission(this.props.editId);
+                console.log(edittableSubmission);
+                console.log("editable ==>");
+            }
 
-            });
+            if (this.props.isEdit) {
+
+                let resultNegative = { c: 0, v: 0, lt: 0 };
+                let resultRecent = { c: 0, v: 0, lt: 0 };
+                let resultLongterm = { c: 0, v: 0, lt: 0 };
+
+                let qcRecentIntepreation = '';
+                let qcLongtermIntepreation = '';
+                let qcNegativeIntepreation = '';
+
+                edittableSubmission['test_results'].map((result) => {
+                    if (result.type == 'longterm') {
+                        resultLongterm['c'] = result.control_line;
+                        resultLongterm['lt'] = result.longterm_line;
+                        resultLongterm['v'] = result.verification_line;
+                        qcLongtermIntepreation = result.interpretation;
+                    }
+                    if (result.type == 'negative') {
+                        resultNegative['c'] = result.control_line;
+                        resultNegative['lt'] = result.longterm_line;
+                        resultNegative['v'] = result.verification_line;
+                        qcNegativeIntepreation = result.interpretation;
+                    }
+                    if (result.type == 'recent') {
+                        resultRecent['c'] = result.control_line;
+                        resultRecent['lt'] = result.longterm_line;
+                        resultRecent['v'] = result.verification_line;
+                        qcRecentIntepreation = result.interpretation;
+                    }
+                });
+
+                this.setState({
+                    qcLotReceivedDate: edittableSubmission['data']['lot_date_received'],
+                    qcReconstituionDate: edittableSubmission['data']['sample_reconstituion_date'],
+                    kitExpiryDate: edittableSubmission['data']['kit_expiry_date'],
+                    testJustification: edittableSubmission['data']['test_justification'],
+                    kitReceivedDate: edittableSubmission['data']['kit_date_received'],
+                    kitLotNo: edittableSubmission['data']['kit_lot_no'],
+                    nameOfTest: edittableSubmission['data']['name_of_test'],
+                    qcLotNumber: edittableSubmission['data']['qc_lot_no'],
+                    testingDate: edittableSubmission['data']['testing_date'],
+                    sampleType: edittableSubmission['data']['sample_type'],
+                    labId: edittableSubmission['data']['lab_id'],
+                    userId: edittableSubmission['data']['user_id'],
+
+                    isQcDone: edittableSubmission['data']['qc_tested'] == 1 ? true : false,
+
+                    resultNegativeRepeat: [],
+                    resultRecentRepeat: [],
+                    resultLongtermRepeat: [],
+
+                    negativeTestRepeats: [],
+                    recentTestRepeats: [],
+                    longtermTestRepeats: [],
+
+                    qcNegativeIntepreationRepeat: [],
+                    qcRecentIntepreationRepeat: [],
+                    qcLongtermIntepreationRepeat: [],
+
+                    resultNegative: resultNegative,
+                    resultRecent: resultRecent,
+                    resultLongterm: resultLongterm,
+
+                    qcRecentIntepreation: qcRecentIntepreation,
+                    qcLongtermIntepreation: qcLongtermIntepreation,
+                    qcNegativeIntepreation: qcNegativeIntepreation,
+
+                    userDemographics: userDemographics,
+                    otherComments: edittableSubmission['data']['not_test_reason'] ? edittableSubmission['data']['not_test_reason'] : '',
+                    notTestedReason: edittableSubmission['data']['other_not_tested_reason'] ? edittableSubmission['data']['other_not_tested_reason'] : 'Issue with sample',
+
+                });
+
+            } else {
+                this.setState({
+                    userDemographics: userDemographics,
+                    labId: userDemographics[0].lab_id,
+                    userId: userDemographics[0].user_id,
+                    edittableSubmission: edittableSubmission
+
+                });
+
+            }
+
         })();
     }
 
@@ -102,9 +189,6 @@ class SubmitResults extends React.Component {
     }
 
     submitForm() {
-
-        console.log(this.state.qcNegativeIntepreationRepeat);
-        console.log(this.state.resultNegativeRepeat);
 
         if (
             this.state.qcLotReceivedDate.length == 0 ||
@@ -378,22 +462,20 @@ class SubmitResults extends React.Component {
         if (type == 'repeat') {
             let resultLongtermRepeat = this.state.resultLongtermRepeat;
             let result = resultLongtermRepeat[index];
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
             resultLongtermRepeat[index] = result;
+
             this.setState({
                 resultLongtermRepeat: resultLongtermRepeat
             });
         } else {
             let result = this.state.resultLongterm;
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
+
             this.setState({
                 resultLongterm: result
             });
@@ -405,22 +487,18 @@ class SubmitResults extends React.Component {
         if (type == 'repeat') {
             let resultRecentRepeat = this.state.resultRecentRepeat;
             let result = resultRecentRepeat[index];
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
             resultRecentRepeat[index] = result;
+
             this.setState({
                 resultRecentRepeat: resultRecentRepeat
             });
         } else {
             let result = this.state.resultRecent;
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
             this.setState({
                 resultRecent: result
             });
@@ -433,22 +511,20 @@ class SubmitResults extends React.Component {
 
             let resultNegativeRepeat = this.state.resultNegativeRepeat;
             let result = resultNegativeRepeat[index];
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
             resultNegativeRepeat[index] = result;
+
             this.setState({
                 resultNegativeRepeat: resultNegativeRepeat
             });
         } else {
             let result = this.state.resultNegative;
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
+
             this.setState({
                 resultNegative: result
             });
@@ -720,14 +796,14 @@ class SubmitResults extends React.Component {
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
-                                <input onChange={() => this.onNameOfTestHandler(event)} className="form-control" type="text" />
+                                <input value={this.state.nameOfTest} onChange={() => this.onNameOfTestHandler(event)} className="form-control" type="text" />
                             </div>
                             <div style={boxLine} className="col-sm-3">
                                 <p><strong>RTRI Kit Lot No. *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
-                                <input onChange={() => this.onKitLotHandler(event)} className="form-control" type="text" />
+                                <input value={this.state.kitLotNo} onChange={() => this.onKitLotHandler(event)} className="form-control" type="text" />
                             </div>
                         </div>
                         {/* end testing dates */}
@@ -749,7 +825,7 @@ class SubmitResults extends React.Component {
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
-                                <input onChange={() => this.onKitExpiryDateHandler(event)} className="form-control" type="date" />
+                                <input value={this.state.kitExpiryDate} onChange={() => this.onKitExpiryDateHandler(event)} className="form-control" type="date" />
                             </div>
                         </div>
                         {/* end  kit info  */}
@@ -770,7 +846,7 @@ class SubmitResults extends React.Component {
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
-                                <input onChange={() => this.onQcLotNumberHandler(event)} className="form-control" type="text" />
+                                <input value={this.state.qcLotNumber} onChange={() => this.onQcLotNumberHandler(event)} className="form-control" type="text" />
                             </div>
 
                             <div style={boxLineLeft} className="col-sm-3">
@@ -904,6 +980,10 @@ class SubmitResults extends React.Component {
                                             isMainKit={true}
                                             kitPositionInForm={0}
                                             isReaptsEmpty={isLongtermRepeatsEmpty}
+                                            isEdit={this.props.isEdit}
+                                            resultLongtermEditResults={this.state.resultLongterm}
+                                            qcLongtermIntepreationEditResults={this.state.qcLongtermIntepreation}
+
                                         />
                                         {longtermTestRepeats}
 
@@ -918,6 +998,9 @@ class SubmitResults extends React.Component {
                                             isMainKit={true}
                                             kitPositionInForm={0}
                                             isReaptsEmpty={isRecentRepeatsEmpty}
+                                            isEdit={this.props.isEdit}
+                                            resultRecentEditResults={this.state.resultRecent}
+                                            qcRecentIntepreationEditResults={this.state.qcRecentIntepreation}
                                         />
                                         {recentTestRepeats}
 
@@ -931,6 +1014,9 @@ class SubmitResults extends React.Component {
                                             isMainKit={true}
                                             kitPositionInForm={0}
                                             isReaptsEmpty={isNegativeRepeatsEmpty}
+                                            isEdit={this.props.isEdit}
+                                            resultNegativeEditResults={this.state.resultNegative}
+                                            qcNegativeIntepreationEditResults={this.state.qcNegativeIntepreation}
                                         />
 
                                         {negativeTestRepeats}
@@ -946,8 +1032,10 @@ class SubmitResults extends React.Component {
 
                     </div>
                     <div className="d-flex w-100 justify-content-center">
-
-                        <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
+                        {!this.props.isEdit ?
+                            <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
+                            : ''
+                        }
                         <button type="button" onClick={() => {
                             this.props.toggleView();
                         }} className="btn btn-danger float-left mx-2">Cancel</button>
