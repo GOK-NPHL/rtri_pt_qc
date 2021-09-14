@@ -8,7 +8,9 @@ class LongtermKit extends React.Component {
             isLongtermTestHasRepeats: false,
             isShowLongtermRepeat: false,
             kitPositionInForm: this.props.kitPositionInForm,
-            resultLongtermControl: false
+            hasLongtermControl: null,
+            hasLongtermVerification: null,
+            hasLongtermLongterm: null
         }
 
     }
@@ -25,9 +27,14 @@ class LongtermKit extends React.Component {
         }
         if (prevProps.resultLongtermEditResults != this.props.resultLongtermEditResults) {
             this.setState({
-                resultLongtermControl: this.props.resultLongtermEditResults['c'] == 1 ? true : false
+                hasLongtermControl: this.props.resultLongtermEditResults['c'] == 1 ? true : false,
+                hasLongtermVerification: this.props.resultLongtermEditResults['v'] == 1 ? true : false,
+                hasLongtermLongterm: this.props.resultLongtermEditResults['lt'] == 1 ? true : false
+
             })
+
         }
+
     }
 
     render() {
@@ -40,7 +47,6 @@ class LongtermKit extends React.Component {
                 checked
             />
         }
-
 
         let invalidLt = <input className="form-check-input" type="radio" value="invalid"
             name={`long-term-radio-${this.props.radioId}`} id="result_invalid" />
@@ -80,8 +86,14 @@ class LongtermKit extends React.Component {
                             }
                         }
                     }
-                        onChange={() => { }}
-                        checked={this.props.isEdit && this.props.resultLongtermEditResults['c'] == 1}
+
+                        onChange={(event) => {
+                            this.setState({
+                                hasLongtermControl: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasLongtermControl}
+
 
                         value="c" type="checkbox" /></td>
                     <td ><input onClick={
@@ -93,8 +105,16 @@ class LongtermKit extends React.Component {
                             }
                         }
                     }
-                        onChange={() => { }}
-                        checked={this.props.isEdit && this.props.resultLongtermEditResults['v'] == 1}
+
+
+                        onChange={(event) => {
+                            this.setState({
+                                hasLongtermVerification: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasLongtermVerification}
+
+
                         value="v" type="checkbox" /></td>
                     <td ><input onClick={
                         () => {
@@ -105,8 +125,14 @@ class LongtermKit extends React.Component {
                             }
                         }
                     }
-                        onChange={() => { }}
-                        checked={this.props.isEdit && this.props.resultLongtermEditResults['lt'] == 1}
+
+                        onChange={(event) => {
+                            this.setState({
+                                hasLongtermLongterm: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasLongtermLongterm}
+
                         value="lt" type="checkbox" /></td>
                     <td onChange={
                         (event) => {
