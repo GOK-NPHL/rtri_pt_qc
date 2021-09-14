@@ -7,7 +7,10 @@ class RecentKit extends React.Component {
         this.state = {
             isRecentTestHasRepeats: false,
             isShowRecentRepeat: false,
-            kitPositionInForm: this.props.kitPositionInForm
+            kitPositionInForm: this.props.kitPositionInForm,
+            hasRecentControl: null,
+            hasRecentVerification: null,
+            hasRecentLongterm: null
         }
 
     }
@@ -20,6 +23,13 @@ class RecentKit extends React.Component {
         if (prevProps.isReaptsEmpty != this.props.isReaptsEmpty) {
             this.setState({
                 isRecentTestHasRepeats: this.props.isReaptsEmpty
+            })
+        }
+        if (prevProps.resultRecentEditResults != this.props.resultRecentEditResults) {
+            this.setState({
+                hasRecentControl: this.props.resultRecentEditResults['c'] == 1 ? true : false,
+                hasRecentVerification: this.props.resultRecentEditResults['v'] == 1 ? true : false,
+                hasRecentLongterm: this.props.resultRecentEditResults['lt'] == 1 ? true : false
             })
         }
     }
@@ -75,8 +85,12 @@ class RecentKit extends React.Component {
                         }
 
                     }
-                        onChange={() => { }}
-                        checked={this.props.isEdit && this.props.resultRecentEditResults['c'] == 1}
+                        onChange={(event) => {
+                            this.setState({
+                                hasRecentControl: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasRecentControl}
                         value="c" type="checkbox" /></td>
                     <td><input onClick={
                         () => {
@@ -87,8 +101,12 @@ class RecentKit extends React.Component {
                             }
                         }
                     }
-                        onChange={() => { }}
-                        checked={this.props.isEdit && this.props.resultRecentEditResults['v'] == 1}
+                        onChange={(event) => {
+                            this.setState({
+                                hasRecentVerification: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasRecentVerification}
                         value="v" type="checkbox" /></td>
                     <td ><input onClick={
                         () => {
@@ -99,8 +117,13 @@ class RecentKit extends React.Component {
                             }
                         }
                     }
-                        onChange={() => { }}
-                        checked={this.props.isEdit && this.props.resultRecentEditResults['lt'] == 1}
+                        onChange={(event) => {
+                            this.setState({
+                                hasRecentLongterm: event.target.checked
+                            })
+                        }}
+                        checked={this.state.hasRecentLongterm}
+
                         value="lt" type="checkbox" /></td>
                     <td onChange={
                         (event) => {
