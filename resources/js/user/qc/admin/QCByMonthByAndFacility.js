@@ -32,7 +32,7 @@ class QCByMonthByAndFacility extends React.Component {
 
         let recents = data.recent;
         recents.map((recentTest) => {
-            let kitLot = String(recentTest.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(recentTest.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(recentTest.testing_date).trim().toLowerCase().replace(/\s/g, '');
 
             let dataKey =  kitLot + testingDate;
@@ -44,13 +44,13 @@ class QCByMonthByAndFacility extends React.Component {
                 'correct_longterm': 0,
                 'correct_recent': Math.round((recentTest.correct_count * 100) / recentTest.total_tests),
                 'total_tested': recentTest.total_tests,
-                'kit_lot ': recentTest.kit_lot_no
+                'kit_lot ': recentTest.qc_lot_no
             }
         });
 
         let negatives = data.negative;
         negatives.map((test) => {
-            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = kitLot + testingDate;
             dataElements[dataKey]['correct_negative'] = Math.round((test.correct_count * 100) / test.total_tests);
@@ -59,7 +59,7 @@ class QCByMonthByAndFacility extends React.Component {
 
         let longterms = data.longterm;
         longterms.map((test) => {
-            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = kitLot + testingDate;
             dataElements[dataKey]['correct_longterm'] = Math.round((test.correct_count * 100) / test.total_tests);
@@ -68,7 +68,7 @@ class QCByMonthByAndFacility extends React.Component {
 
         let invalidss = data.invalids;
         invalidss.map((test) => {
-            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = kitLot + testingDate;
             dataElements[dataKey]['invalids'] = test.correct_count;
@@ -103,7 +103,7 @@ class QCByMonthByAndFacility extends React.Component {
                 width: 150
             },
             {
-                label: 'Kit lot ',
+                label: 'QC Kit lot ',
                 field: 'kit_lot ',
                 sort: 'asc',
                 width: 150

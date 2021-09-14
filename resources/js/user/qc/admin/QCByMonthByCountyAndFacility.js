@@ -35,7 +35,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
         recents.map((recentTest) => {
             let labName = recentTest.lab_name.trim().toLowerCase().replace(/\s/g, '');
             let countyName = recentTest.county_name.trim().toLowerCase().replace(/\s/g, '');
-            let kitLot = String(recentTest.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(recentTest.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(recentTest.testing_date).trim().toLowerCase().replace(/\s/g, '');
 
             let dataKey = countyName + labName + kitLot + testingDate;
@@ -47,7 +47,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
                 'correct_longterm': 0,
                 'correct_recent': Math.round((recentTest.correct_count * 100) / recentTest.total_tests),
                 'total_tested': recentTest.total_tests,
-                'kit_lot ': recentTest.kit_lot_no,
+                'kit_lot ': recentTest.qc_lot_no,
                 'lab_name': recentTest.lab_name,
                 'county': recentTest.county_name,
             }
@@ -57,7 +57,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
         negatives.map((test) => {
             let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
             let countyName = test.county_name.trim().toLowerCase().replace(/\s/g, '');
-            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = countyName + labName + kitLot + testingDate;
             dataElements[dataKey]['correct_negative'] = Math.round((test.correct_count * 100) / test.total_tests);
@@ -68,7 +68,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
         longterms.map((test) => {
             let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
             let countyName = test.county_name.trim().toLowerCase().replace(/\s/g, '');
-            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = countyName + labName + kitLot + testingDate;
             dataElements[dataKey]['correct_longterm'] = Math.round((test.correct_count * 100) / test.total_tests);
@@ -79,7 +79,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
         invalidss.map((test) => {
             let labName = test.lab_name.trim().toLowerCase().replace(/\s/g, '');
             let countyName = test.county_name.trim().toLowerCase().replace(/\s/g, '');
-            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let testingDate = String(test.testing_date).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = countyName + labName + kitLot + testingDate;
             dataElements[dataKey]['invalids'] = test.correct_count;
@@ -127,7 +127,7 @@ class QCByMonthByCountyAndFacility extends React.Component {
                 width: 150
             },
             {
-                label: 'Kit lot ',
+                label: 'QC Kit lot ',
                 field: 'kit_lot ',
                 sort: 'asc',
                 width: 150

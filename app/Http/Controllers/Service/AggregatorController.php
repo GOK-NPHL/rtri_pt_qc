@@ -43,7 +43,7 @@ class AggregatorController extends Controller
         $correctCounts = SubmissionModel::selectRaw(
             'laboratories.lab_name as lab_name,
             laboratories.id as lab_id,
-                qcsubmissions.kit_lot_no,
+                qcsubmissions.qc_lot_no,
                 counties.name as county_name,
                 count(*) as correct_count,
                 CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
@@ -56,7 +56,7 @@ class AggregatorController extends Controller
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 1)
             ->where('qc_submission_results.type', 'recent')
-            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'recent');
 
@@ -69,7 +69,7 @@ class AggregatorController extends Controller
         $correctCounts = SubmissionModel::selectRaw(
             'laboratories.lab_name as lab_name,
                 laboratories.id as lab_id,
-                    qcsubmissions.kit_lot_no,
+                    qcsubmissions.qc_lot_no,
                     counties.name as county_name,
                     count(*) as correct_count,
                     CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
@@ -82,7 +82,7 @@ class AggregatorController extends Controller
             ->where('qc_submission_results.longterm_line', 1)
             ->where('qc_submission_results.verification_line', 1)
             ->where('qc_submission_results.type', 'longterm')
-            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'longterm');
 
@@ -95,7 +95,7 @@ class AggregatorController extends Controller
         $correctCounts = SubmissionModel::selectRaw(
             'laboratories.lab_name as lab_name,
                     laboratories.id as lab_id,
-                        qcsubmissions.kit_lot_no,
+                        qcsubmissions.qc_lot_no,
                         counties.name as county_name,
                         count(*) as correct_count,
                         CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
@@ -108,7 +108,7 @@ class AggregatorController extends Controller
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 0)
             ->where('qc_submission_results.type', 'negative')
-            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'negative');
 
@@ -122,7 +122,7 @@ class AggregatorController extends Controller
         $correctCounts = SubmissionModel::selectRaw(
             'laboratories.lab_name as lab_name,
                     laboratories.id as lab_id,
-                        qcsubmissions.kit_lot_no,
+                        qcsubmissions.qc_lot_no,
                         counties.name as county_name,
                         count(*) as correct_count,
                         CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
@@ -140,7 +140,7 @@ class AggregatorController extends Controller
                             ->where('qc_submission_results.type', 'longterm');
                     });
             })
-            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no');
         $results = $this->joinToTotalTested($correctCounts, "invalids");
 
         return $results;
@@ -155,41 +155,41 @@ class AggregatorController extends Controller
             $results =
                 DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,laboratories.lab_name as lab_name, counties.name as county_name,
             CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date, 
-            qcsubmissions.kit_lot_no, laboratories.id as lab_id, COALESCE(recentsCount.correct_count,0) as correct_count')
+            qcsubmissions.qc_lot_no, laboratories.id as lab_id, COALESCE(recentsCount.correct_count,0) as correct_count')
                 ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
                 ->join('counties', 'counties.id', '=', 'laboratories.county')
                 ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
                     $join->on('counties.name', '=', 'recentsCount.county_name');
                     $join->on('laboratories.id', '=', 'recentsCount.lab_id');
-                    $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');
+                    $join->on('qcsubmissions.qc_lot_no', '=', 'recentsCount.qc_lot_no');
                     $join->on(
                         DB::raw('CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR))'),
                         '=',
                         'recentsCount.testing_date'
                     );
                 }, 'left')->where('qc_submission_results.type', $type)
-                ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
+                ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no', 'correct_count')
                 ->orderBy('testing_date')
                 ->get();
         } else {
             $results =
                 DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,laboratories.lab_name as lab_name, counties.name as county_name,
             CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date, 
-            qcsubmissions.kit_lot_no, laboratories.id as lab_id, COALESCE(recentsCount.correct_count,0) as correct_count')
+            qcsubmissions.qc_lot_no, laboratories.id as lab_id, COALESCE(recentsCount.correct_count,0) as correct_count')
                 ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
                 ->join('counties', 'counties.id', '=', 'laboratories.county')
                 ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
                     $join->on('counties.name', '=', 'recentsCount.county_name');
                     $join->on('laboratories.id', '=', 'recentsCount.lab_id');
-                    $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');
+                    $join->on('qcsubmissions.qc_lot_no', '=', 'recentsCount.qc_lot_no');
                     $join->on(
                         DB::raw('CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR))'),
                         '=',
                         'recentsCount.testing_date'
                     );
-                }, 'left')->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
+                }, 'left')->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no', 'correct_count')
                 ->orderBy('testing_date')
                 ->get();
         }

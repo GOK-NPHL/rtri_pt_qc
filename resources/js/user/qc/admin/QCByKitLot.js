@@ -32,7 +32,7 @@ class QCByKitLot extends React.Component {
 
         let recents = data.recent;
         recents.map((recentTest) => {
-            let kitLot = String(recentTest.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(recentTest.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
 
             let dataKey = kitLot;
 
@@ -42,14 +42,14 @@ class QCByKitLot extends React.Component {
                 'correct_longterm': 0,
                 'correct_recent': Math.round((recentTest.correct_count * 100) / recentTest.total_tests),
                 'total_tested': recentTest.total_tests,
-                'kit_lot ': recentTest.kit_lot_no
+                'kit_lot ': recentTest.qc_lot_no
 
             }
         });
 
         let negatives = data.negative;
         negatives.map((test) => {
-            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = kitLot;
             dataElements[dataKey]['correct_negative'] = Math.round((test.correct_count * 100) / test.total_tests);
             dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
@@ -57,7 +57,7 @@ class QCByKitLot extends React.Component {
 
         let longterms = data.longterm;
         longterms.map((test) => {
-            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = kitLot;
             dataElements[dataKey]['correct_longterm'] = Math.round((test.correct_count * 100) / test.total_tests);
             dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
@@ -65,7 +65,7 @@ class QCByKitLot extends React.Component {
 
         let invalidss = data.invalids;
         invalidss.map((test) => {
-            let kitLot = String(test.kit_lot_no).trim().toLowerCase().replace(/\s/g, '');
+            let kitLot = String(test.qc_lot_no).trim().toLowerCase().replace(/\s/g, '');
             let dataKey = kitLot;
             dataElements[dataKey]['invalids'] = test.correct_count;
             // dataElements[dataKey]['total_tested'] = test.total_tests + dataElements[dataKey]['total_tested'];
@@ -94,7 +94,7 @@ class QCByKitLot extends React.Component {
         let columnzz = [
 
             {
-                label: 'Kit lot ',
+                label: 'QC Kit lot ',
                 field: 'kit_lot ',
                 sort: 'asc',
                 width: 150
