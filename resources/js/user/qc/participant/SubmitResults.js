@@ -748,7 +748,7 @@ class SubmitResults extends React.Component {
                         {/* row two */}
                         <div style={labInfo} className="row mt-1">
                             <div style={boxLineLeft} className="col-sm-3">
-                                <strong><p>Tester Name</p></strong>
+                                <strong><p>Submitter Name</p></strong>
                                 {this.state.userDemographics.length > 0 ? this.state.userDemographics[0].name : ''}
                                 <span> </span>
                                 {this.state.userDemographics.length > 0 ? this.state.userDemographics[0].second_name : ''}
@@ -865,6 +865,14 @@ class SubmitResults extends React.Component {
                             <div style={boxLine} className="col-sm-3">
                                 <input value={this.state.qcReconstituionDate} onChange={() => this.onReconstitutionDateHandler(event)} className="form-control" type="date" />
                             </div>
+
+                            <div style={boxLine} className="col-sm-3">
+                                <p><strong>Tester name:</strong></p>
+                            </div>
+                            <div style={boxLine} className="col-sm-3">
+                                <input className="form-control" type="text" />
+                            </div>
+
                         </div>
                         {/* end  QC Lot info  */}
                         <hr />
