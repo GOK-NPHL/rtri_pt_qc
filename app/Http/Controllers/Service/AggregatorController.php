@@ -81,7 +81,7 @@ class AggregatorController extends Controller
             ->where('qc_submission_results.control_line', 1)
             ->where('qc_submission_results.longterm_line', 1)
             ->where('qc_submission_results.verification_line', 1)
-            ->where('qc_submission_results.type', 'negative')
+            ->where('qc_submission_results.type', 'longterm')
             ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.kit_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'longterm');
