@@ -198,6 +198,52 @@ class Submission extends Controller
         }
     }
 
+    public function getSubmissionById(Request $request)
+    {
+
+        $user = Auth::user();
+        try {
+            $submission = SubmissionModel::select(
+                'qcsubmissions.id',
+                'qcsubmissions.testing_date',
+                'qcsubmissions.name_of_test',
+                'qcsubmissions.kit_lot_no',
+                'qcsubmissions.kit_date_received',
+                'qcsubmissions.kit_expiry_date',
+                'qcsubmissions.qc_lot_no',
+                'qcsubmissions.lot_date_received',
+                'qcsubmissions.sample_reconstituion_date',
+                'qcsubmissions.user_id',
+                'qcsubmissions.sample_type',
+                'qcsubmissions.test_justification',
+                'qcsubmissions.qc_tested',
+                'qcsubmissions.not_test_reason',
+                'qcsubmissions.other_not_tested_reason',
+                'laboratories.email',
+                'qcsubmissions.lab_id',
+                'laboratories.lab_name',
+                'laboratories.mfl_code'
+
+            )->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
+
+                ->where('qcsubmissions.lab_id', '=', $user->laboratory_id)
+                ->where('qcsubmissions.id', '=', $request->id)
+                ->get();
+
+            $submissionResults = DB::table('qc_submission_results')
+                ->select('type', 'control_line', 'verification_line', 'longterm_line', 'interpretation')
+                ->where('qcsubmission_id', $request->id)
+                ->get();
+
+            $payload = ['data' => $submission[0], 'test_results' => $submissionResults];
+
+            return $payload;
+            // return SubmissionModel::all();
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
+        }
+    }
+
     public function deleteSubmission(Request $request)
     {
         $user = Auth::user();

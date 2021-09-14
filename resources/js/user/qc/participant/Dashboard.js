@@ -24,6 +24,8 @@ class Dashboard extends React.Component {
             startTableData: 0,
             endeTableData: 10,
             activePage: 1,
+            isEdit: false,
+            editId: null
         }
         this.toggleView = this.toggleView.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
@@ -73,7 +75,7 @@ class Dashboard extends React.Component {
     deleteSubmissionHandler(id) {
 
         (async () => {
-            let response =  await DeleteSubmissions(id);
+            let response = await DeleteSubmissions(id);
             console.log(response)
             this.setState({
                 message: response.data.Message,
@@ -98,6 +100,7 @@ class Dashboard extends React.Component {
 
     toggleView() {
         this.setState({
+            isEdit: !this.state.isEdit,
             isSubmitResult: !this.state.isSubmitResult
         })
     }
@@ -118,12 +121,19 @@ class Dashboard extends React.Component {
                         <td>{element['kit_lot_no']}</td>
                         <td>{element['testing_date']}</td>
                         <td>
-                            {/* <a
+                            <a
                                 href="#"
+                                onClick={() => {
+                                    this.setState({
+                                        isSubmitResult: true,
+                                        isEdit: true,
+                                        editId: element['id']
+                                    })
+                                }}
                                 style={{ "display": "inlineBlock", 'marginRight': '5px' }}
                                 className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
                                 <i className="fas fa-user-edit"></i>
-                            </a> */}
+                            </a>
                             <a
                                 onClick={() => this.deleteSubmissionHandler(element['id'])}
                                 style={{ "display": "inlineBlock" }}
@@ -165,7 +175,8 @@ class Dashboard extends React.Component {
                         <div className="float-right">
                             <button onClick={() => {
                                 this.setState({
-                                    isSubmitResult: true
+                                    isSubmitResult: true,
+                                    isEdit: false
                                 })
                             }} type="button" className="btn btn-info">Submit result</button>
                         </div>
@@ -239,7 +250,7 @@ class Dashboard extends React.Component {
 
         let dashboardContent = [dashboardHeader, dashboardTable];
         if (this.state.isSubmitResult) {
-            dashboardContent = <SubmitResults toggleView={this.toggleView} />
+            dashboardContent = <SubmitResults isEdit={this.state.isEdit} editId={this.state.editId} toggleView={this.toggleView} />
         }
 
         return (
