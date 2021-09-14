@@ -462,22 +462,20 @@ class SubmitResults extends React.Component {
         if (type == 'repeat') {
             let resultLongtermRepeat = this.state.resultLongtermRepeat;
             let result = resultLongtermRepeat[index];
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
             resultLongtermRepeat[index] = result;
+
             this.setState({
                 resultLongtermRepeat: resultLongtermRepeat
             });
         } else {
             let result = this.state.resultLongterm;
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
+
             this.setState({
                 resultLongterm: result
             });
@@ -489,22 +487,18 @@ class SubmitResults extends React.Component {
         if (type == 'repeat') {
             let resultRecentRepeat = this.state.resultRecentRepeat;
             let result = resultRecentRepeat[index];
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
             resultRecentRepeat[index] = result;
+
             this.setState({
                 resultRecentRepeat: resultRecentRepeat
             });
         } else {
             let result = this.state.resultRecent;
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
             this.setState({
                 resultRecent: result
             });
@@ -517,22 +511,20 @@ class SubmitResults extends React.Component {
 
             let resultNegativeRepeat = this.state.resultNegativeRepeat;
             let result = resultNegativeRepeat[index];
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
             resultNegativeRepeat[index] = result;
+
             this.setState({
                 resultNegativeRepeat: resultNegativeRepeat
             });
         } else {
             let result = this.state.resultNegative;
-            if (result[event.target.value]) {
-                result[event.target.value] = 0;
-            } else {
-                result[event.target.value] = 1;
-            }
+
+            let reslt = event.target.checked ? 1 : 0;
+            result[event.target.value] = reslt;
+
             this.setState({
                 resultNegative: result
             });
