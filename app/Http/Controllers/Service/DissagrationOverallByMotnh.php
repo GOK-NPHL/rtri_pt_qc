@@ -28,26 +28,24 @@ class DissagrationOverallByMotnh extends Controller
         ];
     }
 
-    // dissagrgation by month, lab, kitlot
+    // dissagrgation by month, kitlot
     function getCorrectRecentsByMonthFacility()
     {
 
         $correctCounts = SubmissionModel::selectRaw(
-            'laboratories.lab_name as lab_name,
-            laboratories.id as lab_id,
-                qcsubmissions.kit_lot_no,
+
+            'qcsubmissions.kit_lot_no,
                 count(*) as correct_count,
                 CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
             '
         )
-            ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
             ->where('qc_submission_results.control_line', 1)
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 1)
             ->where('qc_submission_results.type', 'recent')
 
-            ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('testing_date', 'qcsubmissions.kit_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'recent');
 
@@ -58,20 +56,18 @@ class DissagrationOverallByMotnh extends Controller
     {
 
         $correctCounts = SubmissionModel::selectRaw(
-            'laboratories.lab_name as lab_name,
-                laboratories.id as lab_id,
+            '
                     qcsubmissions.kit_lot_no,
                     count(*) as correct_count,
                     CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
                     '
         )
-            ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
             ->where('qc_submission_results.control_line', 1)
             ->where('qc_submission_results.longterm_line', 1)
             ->where('qc_submission_results.verification_line', 1)
             ->where('qc_submission_results.type', 'longterm')
-            ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('testing_date', 'qcsubmissions.kit_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'longterm');
 
@@ -82,20 +78,18 @@ class DissagrationOverallByMotnh extends Controller
     {
 
         $correctCounts = SubmissionModel::selectRaw(
-            'laboratories.lab_name as lab_name,
-                    laboratories.id as lab_id,
+            '
                         qcsubmissions.kit_lot_no,
                         count(*) as correct_count,
                         CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
                         '
         )
-            ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
             ->where('qc_submission_results.control_line', 1)
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 0)
             ->where('qc_submission_results.type', 'negative')
-            ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('testing_date', 'qcsubmissions.kit_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'negative');
 
@@ -107,14 +101,12 @@ class DissagrationOverallByMotnh extends Controller
     {
 
         $correctCounts = SubmissionModel::selectRaw(
-            'laboratories.lab_name as lab_name,
-                    laboratories.id as lab_id,
+            '
                         qcsubmissions.kit_lot_no,
                         count(*) as correct_count,
                         CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
                         '
         )
-            ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
             ->where(function ($q) {
                 $q->where('qc_submission_results.control_line', 0)
@@ -125,7 +117,7 @@ class DissagrationOverallByMotnh extends Controller
                             ->where('qc_submission_results.type', 'longterm');
                     });
             })
-            ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no');
+            ->groupBy('testing_date', 'qcsubmissions.kit_lot_no');
         $results = $this->joinToTotalTested($correctCounts, 'invalids');
 
         return $results;
@@ -136,13 +128,11 @@ class DissagrationOverallByMotnh extends Controller
         $results = null;
         if ($type != 'invalids') {
             $results =
-                DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,laboratories.lab_name as lab_name,
+                DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,
             CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date, 
-            qcsubmissions.kit_lot_no, laboratories.id as lab_id, COALESCE(recentsCount.correct_count,0) as correct_count')
-                ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
+            qcsubmissions.kit_lot_no, COALESCE(recentsCount.correct_count,0) as correct_count')
                 ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
-                    $join->on('laboratories.id', '=', 'recentsCount.lab_id');
                     $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');
                     $join->on(
                         DB::raw('CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR))'),
@@ -150,19 +140,17 @@ class DissagrationOverallByMotnh extends Controller
                         'recentsCount.testing_date'
                     );
                 }, 'left')->where('qc_submission_results.type', $type)
-                ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
+                ->groupBy('testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
                 ->orderBy('testing_date')
                 ->get();
             return $results;
         } else {
             $results =
-                DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,laboratories.lab_name as lab_name,
+                DB::table('qcsubmissions')->selectRaw('count(*) as total_tests,
             CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date, 
-            qcsubmissions.kit_lot_no, laboratories.id as lab_id, COALESCE(recentsCount.correct_count,0) as correct_count')
-                ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
+            qcsubmissions.kit_lot_no, COALESCE(recentsCount.correct_count,0) as correct_count')
                 ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
-                    $join->on('laboratories.id', '=', 'recentsCount.lab_id');
                     $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');
                     $join->on(
                         DB::raw('CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR))'),
@@ -170,11 +158,11 @@ class DissagrationOverallByMotnh extends Controller
                         'recentsCount.testing_date'
                     );
                 }, 'left')
-                ->groupBy('laboratories.id', 'testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
+                ->groupBy('testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
                 ->orderBy('testing_date')
                 ->get();
             return $results;
         }
     }
-    //end of dissagrgation by month, lab, kitlot
+    //end of dissagrgation by month, kitlot
 }
