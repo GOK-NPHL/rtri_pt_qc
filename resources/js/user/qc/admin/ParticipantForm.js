@@ -160,7 +160,7 @@ class ParticipantForm extends React.Component {
                 lab['phone_number'] = this.state.phoneNumber;
                 lab['is_active'] = this.state.isActive;
                 lab['mfl_code'] = this.state.mflCode;
-                lab['facility_level'] = this.state.phoneNumber;
+                lab['facility_level'] = this.state.facilityLevel;
                 lab['county'] = this.state.county;
                 lab['lab_name'] = this.state.labName;
 
