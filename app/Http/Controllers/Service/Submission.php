@@ -31,6 +31,7 @@ class Submission extends Controller
     {
         try {
             $submission = $request->submission;
+            Log::info("=========>> Submission data");
             Log::info($request->submission);
             $submissionModel = new SubmissionModel([
 
