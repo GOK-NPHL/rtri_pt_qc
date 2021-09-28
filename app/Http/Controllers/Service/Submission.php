@@ -41,7 +41,7 @@ class Submission extends Controller
                 "kit_expiry_date" => $submission["kitExpiryDate"],
                 "kit_lot_no" => $submission["kitLotNo"],
                 "name_of_test" => $submission["nameOfTest"],
-                "qc_lot_no" => $submission["kitLotNo"],
+                "qc_lot_no" => $submission["qcLotNumber"],
                 "lab_id" => $submission["labId"],
                 "user_id" => $submission["userId"],
                 "sample_reconstituion_date" => $submission["qcReconstituionDate"],

@@ -24,6 +24,8 @@ class AggregatorController extends Controller
         $invalids = $this->getInvalidsByMonthCountyFacility();
         $dissagrationOverallByMonthObj = new DissagrationOverallByMotnh();
         $dissagrationOverallByQCLot = new DissagrationOverallByQCLot();
+        $dissagrationOverallByRTRIKitLot = new DissagrationOverallByRTRIKitLot();
+
         return [
             'county_lab_kit_date' => [
                 'recent' => $correntRecents,
@@ -32,7 +34,8 @@ class AggregatorController extends Controller
                 'invalids' => $invalids
             ],
             'lab_kit_date' => $dissagrationOverallByMonthObj->getDissagrations(),
-            'kit_lot' => $dissagrationOverallByQCLot->getDissagrations()
+            'kit_lot' => $dissagrationOverallByQCLot->getDissagrations(),
+            'rtri_lot_no' =>  $dissagrationOverallByRTRIKitLot->getDissagrations()
         ];
     }
 
