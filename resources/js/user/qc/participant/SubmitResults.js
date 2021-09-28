@@ -45,7 +45,9 @@ class SubmitResults extends React.Component {
             negativeTestRepeats: [],
             recentTestRepeats: [],
             longtermTestRepeats: [],
-            edittableSubmission: {}
+            edittableSubmission: {},
+            testerName: ''
+
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
         this.onQcLotReceiceDateHandler = this.onQcLotReceiceDateHandler.bind(this);
@@ -83,6 +85,7 @@ class SubmitResults extends React.Component {
 
         this.repeatRecentTest = this.repeatRecentTest.bind(this);
         this.repeatLongtermTest = this.repeatLongtermTest.bind(this);
+        this.onTesternameChangeHandler = this.onTesternameChangeHandler.bind(this);
     }
 
     componentDidMount() {
@@ -135,6 +138,7 @@ class SubmitResults extends React.Component {
                     testJustification: edittableSubmission['data']['test_justification'],
                     kitReceivedDate: edittableSubmission['data']['kit_date_received'],
                     kitLotNo: edittableSubmission['data']['kit_lot_no'],
+                    testerName: edittableSubmission['data']['tester_name'],
                     nameOfTest: edittableSubmission['data']['name_of_test'],
                     qcLotNumber: edittableSubmission['data']['qc_lot_no'],
                     testingDate: edittableSubmission['data']['testing_date'],
@@ -196,6 +200,7 @@ class SubmitResults extends React.Component {
             this.state.kitReceivedDate.length == 0 ||
             this.state.kitLotNo.length == 0 ||
             this.state.nameOfTest.length == 0 ||
+            this.state.testerName.length == 0 ||
             this.state.qcLotNumber.length == 0 ||
             this.state.qcReconstituionDate.length == 0 ||
             this.state.testingDate.length == 0 ||
@@ -223,6 +228,7 @@ class SubmitResults extends React.Component {
             submission["resultRecent"] = this.state.resultRecent;
             submission["resultLongterm"] = this.state.resultLongterm;
             submission["nameOfTest"] = this.state.nameOfTest;
+            submission["testerName"] = this.state.testerName;
             submission["isQCTested"] = this.state.isQcDone;
             submission["testJustification"] = this.state.testJustification;
             submission["qcNotTestedReason"] = !this.state.isQcDone ? this.state.notTestedReason : "";
@@ -548,6 +554,12 @@ class SubmitResults extends React.Component {
         });
     }
 
+    onTesternameChangeHandler(event) {
+        this.setState({
+            testerName: event.target.value
+        });
+    }
+
     onSampleTypeHandler(event) {
         this.setState({
             sampleType: event.target.value
@@ -867,10 +879,10 @@ class SubmitResults extends React.Component {
                             </div>
 
                             <div style={boxLine} className="col-sm-3">
-                                <p><strong>Tester name:</strong></p>
+                                <p><strong>Tester name: *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <input className="form-control" type="text" />
+                                <input value={this.state.testerName} onChange={() => this.onTesternameChangeHandler(event)} className="form-control" type="text" />
                             </div>
 
                         </div>

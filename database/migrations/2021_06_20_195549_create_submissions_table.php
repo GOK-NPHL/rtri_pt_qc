@@ -34,7 +34,7 @@ class CreateSubmissionsTable extends Migration
             $table->integer("qc_tested");
             $table->string("not_test_reason")->nullable();;
             $table->string("other_not_tested_reason")->nullable();
-
+            $table->string("tester_name")->nullable();
         });
     }
 

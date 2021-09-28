@@ -45,7 +45,7 @@ class Submission extends Controller
                 "user_id" => $submission["userId"],
                 "sample_reconstituion_date" => $submission["qcReconstituionDate"],
                 "sample_type" => $submission["sampleType"],
-
+                "tester_name" => $submission["testerName"],
                 "test_justification" => $submission["testJustification"],
                 "qc_tested" => $submission["isQCTested"],
                 "not_test_reason" => $submission["qcNotTestedReason"],
@@ -215,6 +215,7 @@ class Submission extends Controller
                 'qcsubmissions.sample_reconstituion_date',
                 'qcsubmissions.user_id',
                 'qcsubmissions.sample_type',
+                'qcsubmissions.tester_name',
                 'qcsubmissions.test_justification',
                 'qcsubmissions.qc_tested',
                 'qcsubmissions.not_test_reason',
