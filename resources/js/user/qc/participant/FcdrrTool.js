@@ -25,7 +25,7 @@ class FcdrrTool extends React.Component {
             let edittableSubmission = null;
             let userDemographics = await FetchCurrentParticipantDemographics();
             edittableSubmission = await FetchSubmission(this.props.editId);
-
+            console.log(userDemographics);
             if (this.props.isEdit) {
                 this.setState({
                     labId: edittableSubmission['data']['lab_id'],
@@ -136,6 +136,23 @@ class FcdrrTool extends React.Component {
                                 <td>Losses (damages, expiries & unaccounted for) </td>
                                 <td>Losses (errors, invalid & undetermined) </td>
                                 <td>Positive</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>

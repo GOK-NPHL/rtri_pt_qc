@@ -71,8 +71,9 @@ class QCParticipantController extends Controller
                 'laboratories.phone_number',
                 'laboratories.mfl_code',
                 'laboratories.email',
-
+                'counties.name as county'
             )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
+                ->join('counties', 'laboratories.county', '=', 'counties.id')
                 ->where('users.id', '=', $user->id)
                 ->get();
             return $usersDemo;
