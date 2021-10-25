@@ -76,7 +76,6 @@ class FcdrrToolDashboard extends React.Component {
 
         (async () => {
             let response = await DeleteSubmissions(id);
-            console.log(response)
             this.setState({
                 message: response.data.Message,
             });
@@ -110,7 +109,6 @@ class FcdrrToolDashboard extends React.Component {
         let tableElem = [];
 
         if (this.state.data.length > 0) {
-            console.log(this.state.data);
             this.state.data.map((element, index) => {
                 tableElem.push(
 
@@ -204,7 +202,6 @@ class FcdrrToolDashboard extends React.Component {
                                     <input type="text"
                                         style={{ "width": "70%", "float": "right", "marginBottom": "5px" }}
                                         onChange={(event) => {
-                                            console.log(this.state.allTableElements);
                                             let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
                                                 elemnt['props']['children'][0]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
                                                 elemnt['props']['children'][1]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||

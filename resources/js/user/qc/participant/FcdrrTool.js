@@ -4,6 +4,8 @@ import { SaveSubmission, FetchCurrentParticipantDemographics, FetchSubmission } 
 import './Results.css';
 import { v4 as uuidv4 } from 'uuid';
 import './fcdrr.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class FcdrrTool extends React.Component {
 
@@ -18,7 +20,9 @@ class FcdrrTool extends React.Component {
             mflCode: '',
             userDemographics: [],
             edittableSubmission: {},
-            testerName: ''
+            testerName: '',
+            startDate: new Date(),
+            endDate: new Date(),
         }
     }
 
@@ -28,7 +32,6 @@ class FcdrrTool extends React.Component {
             let edittableSubmission = null;
             let userDemographics = await FetchCurrentParticipantDemographics();
             edittableSubmission = await FetchSubmission(this.props.editId);
-            console.log(userDemographics);
             if (this.props.isEdit) {
                 this.setState({
                     labId: edittableSubmission['data']['lab_id'],
@@ -57,6 +60,12 @@ class FcdrrTool extends React.Component {
     }
 
     submitForm() {
+
+        let element = this.refs.formData;
+        console.log(element.children.length)
+        for (let i = 0; i < element.children.length; i++) {
+            console.log(element.children[i].innerHTML);
+        }
 
         if (
             false
@@ -95,11 +104,23 @@ class FcdrrTool extends React.Component {
 
         let today = new Date().toLocaleDateString();
 
+        $("document").ready(function () {
+            $(".scroll1 div").width($("#select").width());
+
+            $(".scroll1").on("scroll", function () {
+                $(".scroll2").scrollLeft($(this).scrollLeft());
+            });
+
+            $(".scroll2").on("scroll", function () {
+                $(".scroll1").scrollLeft($(this).scrollLeft());
+            });
+        });
+        let data = '';
         return (
             <>
                 <div className="row">
-                    <div className="col-sm-12 text-center">
-                        <h3>CONSUMPTION DATA REPORT & REQUEST FOR ASANTE™ HIV-1 RAPID RECENCY® TEST KITS</h3>
+                    <div className="col-sm-12 text-left">
+                        <h4>CONSUMPTION DATA REPORT & REQUEST FOR ASANTE™ HIV-1 RAPID RECENCY® TEST KITS</h4>
                         <hr />
                     </div>
                 </div>
@@ -112,15 +133,40 @@ class FcdrrTool extends React.Component {
                                 <td><strong>County:</strong>  <u>{this.state.countyName}</u></td>
                             </tr>
                             <tr className="alignTdChildLeft">
-                                <td><strong>Report for month:</strong> ___________</td>
-                                <td><strong>Ending month:</strong> ___________</td>
+                                <td><strong>Report for month: </strong>
+                                    {/* <input type="month" /> */}
+                                    <DatePicker
+                                        dateFormat="yyyy/MM"
+                                        selected={this.state.startDate} onChange={(date) => {
+                                            this.setState({
+                                                startDate: date
+                                            })
+                                        }} />
+                                </td>
+                                <td><strong>Ending month: </strong>
+                                    <DatePicker
+                                        dateFormat="yyyy/MM"
+                                        selected={this.state.endDate} onChange={(date) => {
+                                            this.setState({
+                                                endDate: date
+                                            })
+                                        }} />
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <br />
-                <div className="row">
-                    <table className="unstrip">
+
+                {/* style="overflow-x: auto;"
+                 */}
+
+                <div className="scroll1" style={{ "overflowX": "auto", "marginLeft": "-7.5px", "marginRight": "-7.5px" }}>
+                    <div style={{ "height": "15px", "marginBottom": "3px" }}></div>
+                </div>
+
+                <div style={{ "overflowX": "auto" }} className="row scroll2">
+                    <table id="select" className="unstrip">
                         <tbody>
                             <tr className="boldTdChildText">
                                 <td rowSpan={2}>Commodity <br /> Name</td>
@@ -146,27 +192,31 @@ class FcdrrTool extends React.Component {
                                 <td>Losses (errors, invalid & undetermined) </td>
                                 <td>Positive</td>
                             </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            {
+                                Array(5).fill(null).map((value, index) => (
+                                    <tr key={uuidv4()} ref="formData">
+                                        <td><input type="text" /></td>
+                                        <td><input className="width120px" type="text" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                        <td><input className="width120px" type="number" /></td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                 </div>
-
+                <br />
                 <div className="row">
                     <div className="d-flex w-100 justify-content-center">
 
@@ -176,7 +226,7 @@ class FcdrrTool extends React.Component {
                         }} className="btn btn-danger float-left mx-2">Cancel</button>
                     </div>
                 </div>
-
+                <br />
                 {/* user persist alert box */}
                 <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog" aria-labelledby="messageModalTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">

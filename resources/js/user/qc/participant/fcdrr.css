@@ -17,6 +17,42 @@
 .boldTdChildText td {
     font-weight: bold;
 }
-/* tr:nth-child(even) {
-    background-color: #dddddd;
+
+.wrapper1, .wrapper2 {
+    /* width: 300px; */
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.wrapper1 {
+    height: 20px;
+}
+
+/* .wrapper2 {
+    height: 200px;
+} */
+
+.div1 {
+    width: 1000px;
+    /* height: 20px; */
+}
+
+.width120px {
+    width: 120px;
+}
+
+/* .div2 { */
+
+/* width: 1000px; */
+
+/* height: 100%; */
+
+/* background-color: #88FF88; */
+
+/* overflow: auto; */
+
+/* } */
+
+/* .div2:nth-child(even) {
+    background-color: ##88FF88;
   } */
