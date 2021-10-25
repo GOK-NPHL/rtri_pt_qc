@@ -13,6 +13,9 @@ class FcdrrTool extends React.Component {
             message: '',
             labId: '',
             userId: '',
+            labName: '',
+            countyName: '',
+            mflCode: '',
             userDemographics: [],
             edittableSubmission: {},
             testerName: ''
@@ -30,6 +33,9 @@ class FcdrrTool extends React.Component {
                 this.setState({
                     labId: edittableSubmission['data']['lab_id'],
                     userId: edittableSubmission['data']['user_id'],
+                    labName: edittableSubmission['data']['lab_name'],
+                    countyName: edittableSubmission['data']['county'],
+                    mflCode: edittableSubmission['data']['mfl'],
                     userDemographics: userDemographics,
                 });
             } else {
@@ -37,6 +43,9 @@ class FcdrrTool extends React.Component {
                     userDemographics: userDemographics,
                     labId: userDemographics[0].lab_id,
                     userId: userDemographics[0].user_id,
+                    labName: userDemographics[0].lab_name,
+                    countyName: userDemographics[0].county,
+                    mflCode: userDemographics[0].mfl_code,
                     edittableSubmission: edittableSubmission
                 });
             }
@@ -98,13 +107,13 @@ class FcdrrTool extends React.Component {
                     <table className="unstrip no-table-border">
                         <tbody>
                             <tr className="alignTdChildLeft">
-                                <td>Name of tesing facility: ___________</td>
-                                <td>Facility MFL Code: ___________</td>
-                                <td>County: ___________</td>
+                                <td><strong>Name of tesing facility:</strong> <u>{this.state.labName}</u></td>
+                                <td><strong>Facility MFL Code:</strong> <u>{this.state.mflCode}</u></td>
+                                <td><strong>County:</strong>  <u>{this.state.countyName}</u></td>
                             </tr>
                             <tr className="alignTdChildLeft">
-                                <td>Report for month: ___________</td>
-                                <td>Ending month: ___________</td>
+                                <td><strong>Report for month:</strong> ___________</td>
+                                <td><strong>Ending month:</strong> ___________</td>
                             </tr>
                         </tbody>
                     </table>
