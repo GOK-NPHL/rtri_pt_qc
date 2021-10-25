@@ -30,6 +30,8 @@ require('./user/pt/readiness/AddReadiness');
 require('./user/pt/readiness/EditReadiness');
 require('./user/pt/readiness/ListReadiness');
 
+require('./user/qc/participant/FcdrrToolDashboard');
+
 require('./user/general/Dashboard');
 //Intrface code
 require('./components/system/org-unit/OrgUnits');

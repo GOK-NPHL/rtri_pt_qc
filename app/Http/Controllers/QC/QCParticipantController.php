@@ -80,4 +80,13 @@ class QCParticipantController extends Controller
             return response()->json(['Message' => 'Could fetch users: ' . $ex->getMessage()], 500);
         }
     }
+
+    public function fcdrrToolHome()
+    {
+        if (Gate::allows('view_qc_component')) {
+            return view('user.qc.participant.fcdrr_tool_dashboard');
+        } else {
+            return view('user.general.dashboard');
+        }
+    }
 }

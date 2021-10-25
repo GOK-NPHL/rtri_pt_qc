@@ -1,0 +1,22 @@
+.unstrip tr:nth-child(2n) {
+    background-color: white;
+}
+
+.no-table-border tr, .no-table-border td {
+    border: none;
+}
+
+.tbBorder {
+    border: 1px solid #999 !important
+}
+
+.alignTdChildLeft td {
+    text-align: left;
+}
+
+.boldTdChildText td {
+    font-weight: bold;
+}
+/* tr:nth-child(even) {
+    background-color: #dddddd;
+  } */

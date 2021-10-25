@@ -88,6 +88,17 @@ use Illuminate\Support\Facades\Gate;
                             </li>
                         <?php } ?>
 
+                        <?php if (Gate::allows('view_qc_component')) { ?>
+                            <li class="nav-item has-treeview menu-open">
+                                <a href="{{ route('fcdrr-tool-home') }}" class="nav-link active">
+                                    <i class="nav-icon fas fa-boxes"></i>
+                                    <p>
+                                        FCDRR Tool
+                                    </p>
+                                </a>
+                            </li>
+                        <?php } ?>
+
                         <!-- <?php
                         if (Gate::allows('view_pt_component')) { ?>
                             <li class="nav-item has-treeview menu-open">
