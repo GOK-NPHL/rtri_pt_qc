@@ -23,7 +23,7 @@ class FcdrrTool extends React.Component {
             testerName: '',
             startDate: new Date(),
             endDate: new Date(),
-            rowsNumbers: 5,
+            rowsNumbers: 50,
         }
     }
 
@@ -158,7 +158,7 @@ class FcdrrTool extends React.Component {
             let currentRowLen = editRows.length;
             if (additionalRows > 0) {
                 Array(additionalRows).fill(null).map((value, index) => {
-                    editRows.push(<tr key={uuidv4()} ref={`formData${index}`}>
+                    editRows.push(<tr key={uuidv4()} ref={`formData${index + currentRowLen}`}>
                         <td>{index + currentRowLen + 1}</td>
                         <td><input type="text" /></td>
                         <td><input className="width120px" type="text" /></td>

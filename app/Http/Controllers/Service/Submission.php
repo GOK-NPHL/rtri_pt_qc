@@ -320,7 +320,7 @@ class Submission extends Controller
                 'laboratories.mfl_code',
             )->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
                 ->where('fcdrr_submissions.lab_id', '=', $user->laboratory_id)
-                ->orderBy('fcdrr_submissions.id')
+                ->orderBy('fcdrr_submissions.id','desc')
                 ->get();
             return $submissions;
             // return SubmissionModel::all();
