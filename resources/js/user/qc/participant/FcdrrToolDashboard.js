@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FcdrrTool from './FcdrrTool'
-import { FetchFcdrrSubmissions, DeleteSubmissions } from '../../../components/utils/Helpers';
+import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -72,7 +72,7 @@ class FcdrrToolDashboard extends React.Component {
     deleteSubmissionHandler(id) {
 
         (async () => {
-            let response = await DeleteSubmissions(id);
+            let response = await DeleteFcdrrSubmissions(id);
             this.setState({
                 message: response.data.Message,
             });

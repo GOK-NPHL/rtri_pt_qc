@@ -38,6 +38,7 @@ Route::get('/get_fcdrr_submissions', 'Service\Submission@getFcdrrSubmissions');
 Route::delete('/delete_submissions/{id}', 'Service\Submission@deleteSubmission');
 Route::get('/get_submission_by_id/{id}', [Submission::class, 'getSubmissionById']);
 Route::get('/get_fcdrr_submission_by_id/{id}', [Submission::class, 'getFcdrrSubmissionById']);
+Route::delete('/delete_fcdrr_submissions/{id}', 'Service\Submission@deleteFcdrrSubmission');
 
 Route::get('/get_admin_users', [QCAdminUsersController::class, 'getAdminUsers']);
 Route::get('/get_admin_user/{id}', [AdminAuthController::class, 'getAdminUser']);

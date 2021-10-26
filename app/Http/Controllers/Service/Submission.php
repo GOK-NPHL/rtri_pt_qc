@@ -251,7 +251,7 @@ class Submission extends Controller
         $user = Auth::user();
         try {
 
-            DB::table('qcsubmissions')->where('id', $request->id)->where('user_id', $user->id)->delete();
+            DB::table('qcsubmissions')->where('id', $request->id);
             DB::table('repeat_submissions')->where('qcsubmissions_id', $request->id)->delete();
             DB::table('qc_submission_results')->where('qcsubmission_id', $request->id)->delete();
             return response()->json(['Message' => 'Deleted Successfully'], 200);
@@ -320,7 +320,7 @@ class Submission extends Controller
                 'laboratories.mfl_code',
             )->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
                 ->where('fcdrr_submissions.lab_id', '=', $user->laboratory_id)
-                ->orderBy('fcdrr_submissions.id','desc')
+                ->orderBy('fcdrr_submissions.id', 'desc')
                 ->get();
             return $submissions;
             // return SubmissionModel::all();
@@ -360,6 +360,19 @@ class Submission extends Controller
             // return SubmissionModel::all();
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function deleteFcdrrSubmission(Request $request)
+    {
+        $user = Auth::user();
+        try {
+
+            DB::table('fcdrr_submissions')->where('id', $request->id)->delete();
+            DB::table('fcdrr_submission_results')->where('submission_id', $request->id)->delete();
+            return response()->json(['Message' => "Deleted Successfully $request->id"], 200);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error deleting submission: ' . $ex->getMessage()], 500);
         }
     }
 }

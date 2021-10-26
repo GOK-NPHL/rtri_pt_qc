@@ -548,6 +548,23 @@ export async function DeleteSubmissions(id) {
     }
 
 }
+export async function DeleteFcdrrSubmissions(id) {
+
+    try {
+        const response = await axios({
+            method: 'delete',
+            url: `${settings.serverBaseApi}/delete_fcdrr_submissions/` + id,
+            // data: {
+            //     user: user,
+            // }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
 
 export async function SaveAdminUser(user) {
     try {
