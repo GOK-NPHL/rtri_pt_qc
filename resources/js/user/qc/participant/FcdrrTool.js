@@ -23,6 +23,7 @@ class FcdrrTool extends React.Component {
             testerName: '',
             startDate: new Date(),
             endDate: new Date(),
+            rowsNumbers: 5,
         }
     }
 
@@ -61,12 +62,38 @@ class FcdrrTool extends React.Component {
 
     submitForm() {
 
-        let element = this.refs.formData;
-        console.log(element.children.length)
-        for (let i = 0; i < element.children.length; i++) {
-            console.log(element.children[i].innerHTML);
-        }
+        let count;
+        let elementsLength = 14;
+        console.log(this.state.startDate)
+        console.log(this.state.endDate)
+        let formData = [];
+        for (count = 0; count < this.state.rowsNumbers; count++) {
+            let refName = 'formData' + count;
+            let element = this.refs[refName];
+            console.log("===============");
+            console.log(element.children.length);
+            let rowRawData = [];
 
+            for (let i = 1; i < element.children.length; i++) {
+                try {
+                    if (element.children[i].children[0].value) {
+                        rowRawData.push(element.children[i].children[0].value);
+                    }
+
+                } catch (err) {
+
+                }
+            }
+
+            if (rowRawData.length != elementsLength) {
+                $('#returnedMessage').text("Kindly fill all elements in row " + (count + 1));
+                $('#messageModal').modal('toggle');
+                return;
+            }
+
+            formData.push(rowRawData);
+        }
+        console.log(formData);
         if (
             false
         ) {
@@ -84,7 +111,7 @@ class FcdrrTool extends React.Component {
                 // });
                 // $('#messageModal').modal('toggle');
                 // if (response.status == 200) {
-                this.props.toggleView();
+                // this.props.toggleView();
                 // }
             })();
         }
@@ -169,6 +196,7 @@ class FcdrrTool extends React.Component {
                     <table id="select" className="unstrip">
                         <tbody>
                             <tr className="boldTdChildText">
+                                <td rowSpan={2}>#</td>
                                 <td rowSpan={2}>Commodity <br /> Name</td>
                                 <td rowSpan={2}>Unit <br /> of issue</td>
                                 <td rowSpan={2}>Beggining <br /> balance</td>
@@ -194,7 +222,8 @@ class FcdrrTool extends React.Component {
                             </tr>
                             {
                                 Array(5).fill(null).map((value, index) => (
-                                    <tr key={uuidv4()} ref="formData">
+                                    <tr key={uuidv4()} ref={`formData${index}`}>
+                                        <td>{index + 1}</td>
                                         <td><input type="text" /></td>
                                         <td><input className="width120px" type="text" /></td>
                                         <td><input className="width120px" type="number" /></td>
