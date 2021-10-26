@@ -185,12 +185,12 @@ class FcdrrTool extends React.Component {
                             <tr className="boldTdChildText">
                                 <td>Quantity received  <br /> this month  <br /> from KEMSA</td>
                                 <td> Quantity received <br />  from other <br />  sources (e.g. local suppliers)</td>
-                                <td> Quantity received <br />  from other <br />  sources (e.g. local suppliers) </td>
                                 <td>Quantity used</td>
                                 <td>Number of<br /> Tests done <br />(include repeats, QA/QC)</td>
                                 <td>Losses (damages, expiries & unaccounted for) </td>
                                 <td>Losses (errors, invalid & undetermined) </td>
                                 <td>Positive</td>
+                                <td>Negative</td>
                             </tr>
                             {
                                 Array(5).fill(null).map((value, index) => (
