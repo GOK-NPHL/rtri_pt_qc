@@ -24,6 +24,11 @@
     overflow-y: hidden;
 }
 
+.scroll2 {
+    /* width: 300px; */
+    max-height: 400px;
+}
+
 .wrapper1 {
     height: 20px;
 }
