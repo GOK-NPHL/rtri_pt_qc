@@ -467,6 +467,18 @@ export async function FetchSubmission(id) {
     }
 }
 
+export async function FetchFcdrrSubmission(id) {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_fcdrr_submission_by_id/` + id);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
 export async function FetchCurrentParticipantDemographics() {
 
     try {

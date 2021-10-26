@@ -328,4 +328,38 @@ class Submission extends Controller
             return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
         }
     }
+
+    public function getFcdrrSubmissionById(Request $request)
+    {
+
+        $user = Auth::user();
+        try {
+            $submission = FcdrrSubmission::select(
+                'fcdrr_submissions.id',
+                'fcdrr_submissions.start_month',
+                'fcdrr_submissions.end_month',
+                'fcdrr_submissions.lab_id',
+                'fcdrr_submissions.user_id',
+                'laboratories.lab_name',
+                'laboratories.mfl_code',
+
+            )->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
+
+                ->where('fcdrr_submissions.lab_id', '=', $user->laboratory_id)
+                ->where('fcdrr_submissions.id', '=', $request->id)
+                ->get();
+
+            $submissionResults = DB::table('fcdrr_submission_results')
+                ->select('*')
+                ->where('submission_id', $request->id)
+                ->get();
+
+            $payload = ['data' => $submission[0], 'results' => $submissionResults];
+
+            return $payload;
+            // return SubmissionModel::all();
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
+        }
+    }
 }

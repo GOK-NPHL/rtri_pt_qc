@@ -1,6 +1,6 @@
 import React from 'react';
 import StatsLabel from '../../../components/utils/stats/StatsLabel';
-import { SaveFcdrrSubmission, FetchCurrentParticipantDemographics, FetchSubmission } from '../../../components/utils/Helpers';
+import { SaveFcdrrSubmission, FetchCurrentParticipantDemographics, FetchFcdrrSubmission } from '../../../components/utils/Helpers';
 import './Results.css';
 import { v4 as uuidv4 } from 'uuid';
 import './fcdrr.css';
@@ -34,7 +34,7 @@ class FcdrrTool extends React.Component {
             let userDemographics = await FetchCurrentParticipantDemographics();
 
             if (this.props.isEdit) {
-                edittableSubmission = await FetchSubmission(this.props.editId);
+                edittableSubmission = await FetchFcdrrSubmission(this.props.editId);
                 this.setState({
                     labId: edittableSubmission['data']['lab_id'],
                     userId: edittableSubmission['data']['user_id'],
