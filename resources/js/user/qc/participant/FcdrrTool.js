@@ -1,6 +1,6 @@
 import React from 'react';
 import StatsLabel from '../../../components/utils/stats/StatsLabel';
-import { SaveSubmission, FetchCurrentParticipantDemographics, FetchSubmission } from '../../../components/utils/Helpers';
+import { SaveFcdrrSubmission, FetchCurrentParticipantDemographics, FetchSubmission } from '../../../components/utils/Helpers';
 import './Results.css';
 import { v4 as uuidv4 } from 'uuid';
 import './fcdrr.css';
@@ -32,8 +32,9 @@ class FcdrrTool extends React.Component {
         (async () => {
             let edittableSubmission = null;
             let userDemographics = await FetchCurrentParticipantDemographics();
-            edittableSubmission = await FetchSubmission(this.props.editId);
+
             if (this.props.isEdit) {
+                edittableSubmission = await FetchSubmission(this.props.editId);
                 this.setState({
                     labId: edittableSubmission['data']['lab_id'],
                     userId: edittableSubmission['data']['user_id'],
@@ -64,14 +65,10 @@ class FcdrrTool extends React.Component {
 
         let count;
         let elementsLength = 14;
-        console.log(this.state.startDate)
-        console.log(this.state.endDate)
         let formData = [];
         for (count = 0; count < this.state.rowsNumbers; count++) {
             let refName = 'formData' + count;
             let element = this.refs[refName];
-            console.log("===============");
-            console.log(element.children.length);
             let rowRawData = [];
 
             for (let i = 1; i < element.children.length; i++) {
@@ -85,36 +82,46 @@ class FcdrrTool extends React.Component {
                 }
             }
 
-            if (rowRawData.length != elementsLength) {
+            if (rowRawData.length != elementsLength && rowRawData.length > 1) { //check if row has data
                 $('#returnedMessage').text("Kindly fill all elements in row " + (count + 1));
                 $('#messageModal').modal('toggle');
                 return;
             }
+            if (rowRawData.length > 1) {
+                formData.push(rowRawData);
+            }
 
-            formData.push(rowRawData);
         }
-        console.log(formData);
-        if (
-            false
-        ) {
-            this.setState({
-                message: "Fill in all the fields marked *"
-            })
+
+        if (formData.length == 0) {
+            $('#returnedMessage').text("Form is empty, kindly fill it ");
             $('#messageModal').modal('toggle');
-        } else {
-            let submission = {};
-
-            (async () => {
-                // let response = await SaveSubmission(submission);
-                // this.setState({
-                //     message: response.data.Message,
-                // });
-                // $('#messageModal').modal('toggle');
-                // if (response.status == 200) {
-                // this.props.toggleView();
-                // }
-            })();
+            return;
         }
+        let dateStart = (this.state.startDate.getUTCFullYear()) + "/" + (this.state.startDate.getMonth() + 1) + "/" + (this.state.startDate.getUTCDate());;
+        let dateEnd = (this.state.endDate.getUTCFullYear()) + "/" + (this.state.endDate.getMonth() + 1) + "/" + (this.state.endDate.getUTCDate());;
+
+        let payload = {
+            metadata: {
+                'user_id': this.state.userId,
+                'lab_id': this.state.labId,
+                'start_month': dateStart,
+                'end_month': dateEnd
+            },
+            'forData': formData
+        };
+
+        (async () => {
+            let response = await SaveFcdrrSubmission(payload);
+            this.setState({
+                message: response.data.Message,
+            });
+            $('#messageModal').modal('toggle');
+            if (response.status == 200) {
+                this.props.toggleView();
+            }
+        })();
+
     }
 
     render() {

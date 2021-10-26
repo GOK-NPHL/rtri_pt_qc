@@ -412,6 +412,22 @@ export async function SaveSubmission(submission) {
     }
 }
 
+export async function SaveFcdrrSubmission(submission) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/save_fcdrr_submission`,
+            data: {
+                submission: submission,
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+}
 
 export async function FetchSubmissions() {
 

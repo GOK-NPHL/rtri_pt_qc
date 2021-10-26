@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Service;
 
+use App\FcdrrSubmission;
+use App\FcdrrSubmissionResults;
 use App\Http\Controllers\Controller;
 use App\qcsubmission as SubmissionModel;
 use App\QcSubmissionResult;
@@ -31,8 +33,6 @@ class Submission extends Controller
     {
         try {
             $submission = $request->submission;
-            Log::info("=========>> Submission data");
-            Log::info($request->submission);
             $submissionModel = new SubmissionModel([
 
                 "testing_date" => $submission["testingDate"],
@@ -257,6 +257,64 @@ class Submission extends Controller
             return response()->json(['Message' => 'Deleted Successfully'], 200);
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error deleting submission: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function createFcdrrSubmission(Request $request)
+    {
+
+        // {
+        //     metadata: {
+        //         user_id: this.state.userId,
+        //         lab_id: this.state.labId,
+        //         start_month: this.state.startDate,
+        //         end_month: this.state.endDate,
+        //     },
+        //     forData: formData
+        // }
+
+        try {
+            $submission = $request->submission;
+            $submissionModel = new FcdrrSubmission([
+                "start_month" => $submission["metadata"]["start_month"],
+                "end_month" => $submission["metadata"]["end_month"],
+                "lab_id" => $submission["metadata"]["lab_id"],
+                "user_id" => $submission["metadata"]["user_id"],
+            ]);
+
+            $submissionModel->save();
+            $submissionId = $submissionModel->id;
+
+            for ($x = 0; $x < count($submission["forData"]); $x++) {
+
+                $submissionModel = new FcdrrSubmissionResults([
+                    "submission_id" => $submissionId,
+                    "comodity_name" => $submission["forData"][$x][0],
+                    "unit_of_issue" => $submission["forData"][$x][1],
+                    "beggining_balance" => $submission["forData"][$x][2],
+                    "qnty_received_kemsa" => $submission["forData"][$x][3],
+                    "qnty_received_other_sources" => $submission["forData"][$x][4],
+                    "qnty_used" => $submission["forData"][$x][5],
+                    "no_of_tests_done" => $submission["forData"][$x][6],
+                    "losses_damages" => $submission["forData"][$x][7],
+                    "losses_errors" => $submission["forData"][$x][8],
+                    "adjustments_positive" => $submission["forData"][$x][9],
+                    "adjustments_negative" => $submission["forData"][$x][10],
+                    "end_of_month_stock" => $submission["forData"][$x][11],
+                    "days_out_of_stock" => $submission["forData"][$x][12],
+                    "qnty_requested_resupply" => $submission["forData"][$x][13],
+
+                ]);
+
+                $submissionModel->save();
+            }
+
+
+
+            return response()->json(['Message' => 'Saved successfully'], 200);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            return response()->json(['Message' => 'Could not save sumbmission: ' . $ex->getMessage()], 500);
         }
     }
 }
