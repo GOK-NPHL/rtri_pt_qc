@@ -200,7 +200,7 @@ class FcdrrToolDashboard extends React.Component {
                                             let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
                                                 elemnt['props']['children'][0]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
                                                 elemnt['props']['children'][1]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
-                                                (elemnt['props']['children'][3]['props']['children'] + "").toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
+                                                (elemnt['props']['children'][2]['props']['children'] + "").toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
                                             );
                                             this.updatedSearchItem(currElementsTableEl);
                                         }}
