@@ -155,10 +155,11 @@ class FcdrrTool extends React.Component {
                 )
             });
             let additionalRows = 50 - editRows.length;
+            let currentRowLen = editRows.length;
             if (additionalRows > 0) {
                 Array(additionalRows).fill(null).map((value, index) => {
                     editRows.push(<tr key={uuidv4()} ref={`formData${index}`}>
-                        <td>{index + 1}</td>
+                        <td>{index + currentRowLen + 1}</td>
                         <td><input type="text" /></td>
                         <td><input className="width120px" type="text" /></td>
                         <td><input className="width120px" type="number" /></td>
