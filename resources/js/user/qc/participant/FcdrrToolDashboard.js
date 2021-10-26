@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LineGraph from '../../../components/utils/charts/LineGraph';
-import RTCard from '../../../components/utils/RTCard';
-import StackedHorizontal from '../../../components/utils/charts/StackedHorizontal'
 import FcdrrTool from './FcdrrTool'
-import { FetchSubmissions, DeleteSubmissions } from '../../../components/utils/Helpers';
+import { FetchFcdrrSubmissions, DeleteSubmissions } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -36,7 +33,7 @@ class FcdrrToolDashboard extends React.Component {
     componentDidMount() {
 
         (async () => {
-            let response = await FetchSubmissions();
+            let response = await FetchFcdrrSubmissions();
             this.setState({
                 data: response,
             })
@@ -88,7 +85,7 @@ class FcdrrToolDashboard extends React.Component {
 
     fetchSubmissions() {
         (async () => {
-            let response = await FetchSubmissions();
+            let response = await FetchFcdrrSubmissions();
             this.setState({
                 data: response,
                 allTableElements: [],
@@ -113,11 +110,9 @@ class FcdrrToolDashboard extends React.Component {
                 tableElem.push(
 
                     <tr key={uuidv4()}>
-                        <td>RIRI QC</td>
                         <td>{element['lab_name']}</td>
-                        <td>{element['kit_date_received']}</td>
-                        <td>{element['kit_lot_no']}</td>
-                        <td>{element['testing_date']}</td>
+                        <td>{element['start_month']}</td>
+                        <td>{element['end_month']}</td>
                         <td>
                             <a
                                 href="#"
@@ -217,11 +212,9 @@ class FcdrrToolDashboard extends React.Component {
                             <table className="table table-striped table-sm  table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Scheme</th>
                                         <th>Laboratory</th>
-                                        <th>Kit Date Received</th>
-                                        <th>Kit Lot No</th>
-                                        <th>Testing Date</th>
+                                        <th>Start month</th>
+                                        <th>End month</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

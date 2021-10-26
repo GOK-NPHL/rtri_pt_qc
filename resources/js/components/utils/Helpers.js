@@ -442,6 +442,19 @@ export async function FetchSubmissions() {
 
 }
 
+export async function FetchFcdrrSubmissions() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_fcdrr_submissions`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
+
 export async function FetchSubmission(id) {
 
     try {

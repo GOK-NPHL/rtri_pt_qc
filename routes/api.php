@@ -34,6 +34,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/save_submission', 'Service\Submission@createSubmission');
 Route::post('/save_fcdrr_submission', 'Service\Submission@createFcdrrSubmission');
 Route::get('/get_submissions', 'Service\Submission@getSubmissions');
+Route::get('/get_fcdrr_submissions', 'Service\Submission@getFcdrrSubmissions');
 Route::delete('/delete_submissions/{id}', 'Service\Submission@deleteSubmission');
 Route::get('/get_submission_by_id/{id}', [Submission::class, 'getSubmissionById']);
 
