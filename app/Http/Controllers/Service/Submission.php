@@ -341,10 +341,10 @@ class Submission extends Controller
                 'fcdrr_submissions.lab_id',
                 'fcdrr_submissions.user_id',
                 'laboratories.lab_name',
-                'laboratories.mfl_code',
-
+                'laboratories.mfl_code as mfl',
+                'counties.name as county'
             )->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
-
+                ->join('counties', 'laboratories.county', '=', 'counties.id')
                 ->where('fcdrr_submissions.lab_id', '=', $user->laboratory_id)
                 ->where('fcdrr_submissions.id', '=', $request->id)
                 ->get();

@@ -41,6 +41,9 @@ class FcdrrTool extends React.Component {
                     labName: edittableSubmission['data']['lab_name'],
                     countyName: edittableSubmission['data']['county'],
                     mflCode: edittableSubmission['data']['mfl'],
+                    startDate: new Date(edittableSubmission['data']['start_month']),
+                    endDate: new Date(edittableSubmission['data']['end_month']),
+                    edittableSubmission: edittableSubmission,
                     userDemographics: userDemographics,
                 });
             } else {
@@ -125,6 +128,49 @@ class FcdrrTool extends React.Component {
     }
 
     render() {
+        let editRows = [];
+
+        this.state.edittableSubmission && this.state.edittableSubmission['results'] ?
+            this.state.edittableSubmission['results'].map((value, index) => {
+                editRows.push(
+
+                    // "submission_id" => $submissionId,
+                    // "comodity_name" => $submission["forData"][$x][0],
+                    // "unit_of_issue" => $submission["forData"][$x][1],
+                    // "beggining_balance" => $submission["forData"][$x][2],
+                    // "qnty_received_kemsa" => $submission["forData"][$x][3],
+                    // "qnty_received_other_sources" => $submission["forData"][$x][4],
+                    // "qnty_used" => $submission["forData"][$x][5],
+                    // "no_of_tests_done" => $submission["forData"][$x][6],
+                    // "losses_damages" => $submission["forData"][$x][7],
+                    // "losses_errors" => $submission["forData"][$x][8],
+                    // "adjustments_positive" => $submission["forData"][$x][9],
+                    // "adjustments_negative" => $submission["forData"][$x][10],
+                    // "end_of_month_stock" => $submission["forData"][$x][11],
+                    // "days_out_of_stock" => $submission["forData"][$x][12],
+                    // "qnty_requested_resupply" => $submission["forData"][$x][13],
+
+                    <tr key={uuidv4()} ref={`formData${index}`}>
+                        <td>{index + 1}</td>
+                        <td><input type="text" defaultValue={value['comodity_name']} /></td>
+                        <td><input className="width120px" defaultValue={value['unit_of_issue']} type="text" /></td>
+                        <td><input className="width120px" defaultValue={value['beggining_balance']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['qnty_received_kemsa']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['qnty_received_other_sources']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['qnty_used']} type="number" /></td>
+                        <td></td>
+                        <td><input className="width120px" defaultValue={value['no_of_tests_done']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['losses_damages']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['losses_errors']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['adjustments_positive']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['adjustments_negative']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['end_of_month_stock']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['days_out_of_stock']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['qnty_requested_resupply']} type="number" /></td>
+                    </tr>
+                )
+            }) :
+            '';
 
         const labInfo = {
             backgroundColor: "#f9f9f9",
@@ -228,26 +274,30 @@ class FcdrrTool extends React.Component {
                                 <td>Negative</td>
                             </tr>
                             {
-                                Array(5).fill(null).map((value, index) => (
-                                    <tr key={uuidv4()} ref={`formData${index}`}>
-                                        <td>{index + 1}</td>
-                                        <td><input type="text" /></td>
-                                        <td><input className="width120px" type="text" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                        <td><input className="width120px" type="number" /></td>
-                                    </tr>
-                                ))
+
+                                this.props.isEdit ?
+                                    editRows
+                                    :
+                                    Array(5).fill(null).map((value, index) => (
+                                        <tr key={uuidv4()} ref={`formData${index}`}>
+                                            <td>{index + 1}</td>
+                                            <td><input type="text" /></td>
+                                            <td><input className="width120px" type="text" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                            <td><input className="width120px" type="number" /></td>
+                                        </tr>
+                                    ))
                             }
                         </tbody>
                     </table>
