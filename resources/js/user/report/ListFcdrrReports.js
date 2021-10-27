@@ -94,7 +94,7 @@ class ListFcdrrReports extends React.Component {
 
                                 onClick={
                                     () => {
-                                        window.location.assign('edit-admin-user/' + element.id)
+                                        window.location.assign('get-fcdrr-report/' + element.id)
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}

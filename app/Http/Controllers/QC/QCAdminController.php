@@ -77,4 +77,9 @@ class QCAdminController extends Controller
     {
         return view('report.list_fcdrr_report');
     }
+
+    public function fcdrrReport()
+    {
+        return view('report.fcdrr_report');
+    }
 }

@@ -69,3 +69,5 @@ Route::get('add-readiness', [PTAdminController::class, 'addReadiness'])->name('a
 Route::get('fcdrr-tool-home', [QCParticipantController::class, 'fcdrrToolHome'])->name('fcdrr-tool-home');
 
 Route::get('fcdrr-report', 'QC\QCAdminController@listFcdrrReports')->name('fcdrr-report');
+Route::get('get-fcdrr-report/{id}', 'QC\QCAdminController@fcdrrReport')->name('get-fcdrr-report');
+

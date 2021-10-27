@@ -31,7 +31,7 @@ class FcdrrTool extends React.Component {
 
         (async () => {
             let edittableSubmission = null;
-            let userDemographics = await FetchCurrentParticipantDemographics();
+            let userDemographics = null;
 
             if (this.props.isEdit) {
                 edittableSubmission = await FetchFcdrrSubmission(this.props.editId);
@@ -47,6 +47,7 @@ class FcdrrTool extends React.Component {
                     userDemographics: userDemographics,
                 });
             } else {
+                userDemographics = await FetchCurrentParticipantDemographics();
                 this.setState({
                     userDemographics: userDemographics,
                     labId: userDemographics[0].lab_id,
