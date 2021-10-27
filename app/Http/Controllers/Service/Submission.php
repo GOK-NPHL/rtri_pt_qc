@@ -262,18 +262,30 @@ class Submission extends Controller
 
     public function createFcdrrSubmission(Request $request)
     {
-
         try {
             $submission = $request->submission;
-            $submissionModel = new FcdrrSubmission([
-                "start_month" => $submission["metadata"]["start_month"],
-                "end_month" => $submission["metadata"]["end_month"],
-                "lab_id" => $submission["metadata"]["lab_id"],
-                "user_id" => $submission["metadata"]["user_id"],
-            ]);
 
-            $submissionModel->save();
+            $submissionModel = FcdrrSubmission::updateOrCreate(
+                [
+                    'id' => $submission["metadata"]["id"],
+                ],
+                [
+                    "start_month" => $submission["metadata"]["start_month"],
+                    "end_month" => $submission["metadata"]["end_month"],
+                    "lab_id" => $submission["metadata"]["lab_id"],
+                    "user_id" => $submission["metadata"]["user_id"],
+                ]
+
+            );
+
+            // $submissionModel->save();
             $submissionId = $submissionModel->id;
+
+            try {
+                DB::table('fcdrr_submission_results')->where('submission_id', $submission["metadata"]["id"])->delete();
+            } catch (Exception $ex) {
+                //
+            }
 
             for ($x = 0; $x < count($submission["forData"]); $x++) {
 

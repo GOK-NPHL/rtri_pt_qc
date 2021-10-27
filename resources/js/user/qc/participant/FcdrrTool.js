@@ -24,6 +24,8 @@ class FcdrrTool extends React.Component {
             startDate: new Date(),
             endDate: new Date(),
             rowsNumbers: 50,
+            submissionId: null,
+            dataRows: []
         }
     }
 
@@ -45,8 +47,12 @@ class FcdrrTool extends React.Component {
                     endDate: new Date(edittableSubmission['data']['end_month']),
                     edittableSubmission: edittableSubmission,
                     userDemographics: userDemographics,
+                    submissionId: this.props.editId
                 });
             } else {
+
+
+
                 userDemographics = await FetchCurrentParticipantDemographics();
                 this.setState({
                     userDemographics: userDemographics,
@@ -55,7 +61,7 @@ class FcdrrTool extends React.Component {
                     labName: userDemographics[0].lab_name,
                     countyName: userDemographics[0].county,
                     mflCode: userDemographics[0].mfl_code,
-                    edittableSubmission: edittableSubmission
+                    edittableSubmission: edittableSubmission,
                 });
             }
         })();
@@ -107,6 +113,7 @@ class FcdrrTool extends React.Component {
 
         let payload = {
             metadata: {
+                'id': this.state.submissionId,
                 'user_id': this.state.userId,
                 'lab_id': this.state.labId,
                 'start_month': dateStart,
@@ -180,6 +187,34 @@ class FcdrrTool extends React.Component {
                 })
             }
 
+        } else {
+
+            if (this.state.dataRows.length == 0) {
+                let dataRows = [];
+                Array(50).fill(null).map((value, index) => {
+                    dataRows.push(<tr key={uuidv4()} ref={`formData${index}`}>
+                        <td>{index + 1}</td>
+                        <td><input type="text" /></td>
+                        <td><input className="width120px" type="text" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                        <td><input className="width120px" type="number" /></td>
+                    </tr>);
+                });
+                this.setState({
+                    dataRows: dataRows
+                });
+            }
         }
 
 
@@ -316,26 +351,7 @@ class FcdrrTool extends React.Component {
                                 this.props.isEdit ?
                                     editRows
                                     :
-                                    Array(50).fill(null).map((value, index) => (
-                                        <tr key={uuidv4()} ref={`formData${index}`}>
-                                            <td>{index + 1}</td>
-                                            <td><input type="text" /></td>
-                                            <td><input className="width120px" type="text" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                            <td><input className="width120px" type="number" /></td>
-                                        </tr>
-                                    ))
+                                    this.state.dataRows
                             }
                         </tbody>
                     </table>
