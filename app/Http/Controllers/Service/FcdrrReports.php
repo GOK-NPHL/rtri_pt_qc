@@ -14,7 +14,7 @@ class FcdrrReports extends Controller
     public function __construct()
     {
         // $this->middleware('guest:admin', ['except' => ['signOut']]);
-        $this->middleware('auth:admin', ['except' => ['signOut', 'adminLogin', 'doLogin']]);
+        // $this->middleware('auth:admin', ['except' => ['signOut', 'adminLogin', 'doLogin']]);
     }
 
     public function getAllFcdrrSubmissions()
