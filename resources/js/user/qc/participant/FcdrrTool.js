@@ -316,11 +316,28 @@ class FcdrrTool extends React.Component {
                 <br />
                 <div className="row">
                     <div className="d-flex w-100 justify-content-center">
+                        {
+                            this.props.isAdmin ?
+                                ''
+                                :
+                                <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
+                        }
+                        {
+                            this.props.isAdmin ?
+                                <button type="button"
+                                    onClick={
+                                        () => {
+                                            window.location.assign('/fcdrr-report')
+                                        }
+                                    } className="btn btn-danger float-left mx-2">Exit
+                                </button>
+                                :
+                                <button type="button" onClick={() => {
+                                    this.props.toggleView();
+                                }} className="btn btn-danger float-left mx-2">Cancel
+                                </button>
+                        }
 
-                        <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
-                        <button type="button" onClick={() => {
-                            this.props.toggleView();
-                        }} className="btn btn-danger float-left mx-2">Cancel</button>
                     </div>
                 </div>
                 <br />

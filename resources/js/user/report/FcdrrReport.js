@@ -37,7 +37,7 @@ class FcdrrReport extends React.Component {
         return (
             <React.Fragment>
                 {this.state.reportId ?
-                    <FcdrrTool isEdit={true} editId={this.state.reportId} toggleView={() => { }} />
+                    <FcdrrTool isAdmin={true} isEdit={true} editId={this.state.reportId} toggleView={() => { }} />
                     :
                     ''
                 }
