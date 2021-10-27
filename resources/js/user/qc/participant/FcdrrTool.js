@@ -211,7 +211,34 @@ class FcdrrTool extends React.Component {
             <>
                 <div className="row">
                     <div className="col-sm-12 text-left">
-                        <h4>CONSUMPTION DATA REPORT & REQUEST FOR ASANTE™ HIV-1 RAPID RECENCY® TEST KITS</h4>
+
+                        {
+                            this.props.isAdmin ?
+                                <div className="row">
+                                    <div className="col-sm-10">
+                                        <h4 className="float-left">
+                                            CONSUMPTION DATA REPORT & REQUEST FOR ASANTE™ HIV-1 RAPID RECENCY® TEST KITS
+                                        </h4>
+                                    </div>
+                                    <div className="col-sm-2">
+                                        <button className="float-right" type="button"
+                                            onClick={
+                                                () => {
+                                                    window.location.assign('/fcdrr-report')
+                                                }
+                                            } className="btn btn-primary float-left mx-2">
+                                            <i class="fas fa-arrow-left"></i> Back
+                                        </button>
+                                    </div>
+
+                                </div>
+                                :
+                                <>
+                                    <h4>CONSUMPTION DATA REPORT & REQUEST FOR ASANTE™ HIV-1 RAPID RECENCY® TEST KITS</h4>
+                                    <hr />
+                                </>
+                        }
+                        <br />
                         <hr />
                     </div>
                 </div>
