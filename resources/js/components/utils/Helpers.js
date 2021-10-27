@@ -517,6 +517,18 @@ export async function FetchAdminUsers() {
     }
 
 }
+export async function FetchAllFcdrrReports() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_all_fcdrr_submissions`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
 
 export async function FetchAdminUser(userId) {
 

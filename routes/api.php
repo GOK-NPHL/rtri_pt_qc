@@ -8,6 +8,7 @@ use App\Http\Controllers\QC\QCAdminUsersController;
 use App\Http\Controllers\QC\QCParticipantController;
 use App\Http\Controllers\Service\AggregatorController;
 use App\Http\Controllers\Service\CommonsController;
+use App\Http\Controllers\Service\FcdrrReports;
 use App\Http\Controllers\Service\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,8 @@ Route::post('/save_submission', 'Service\Submission@createSubmission');
 Route::post('/save_fcdrr_submission', 'Service\Submission@createFcdrrSubmission');
 Route::get('/get_submissions', 'Service\Submission@getSubmissions');
 Route::get('/get_fcdrr_submissions', 'Service\Submission@getFcdrrSubmissions');
+Route::get('/get_all_fcdrr_submissions',  [FcdrrReports::class, 'getAllFcdrrSubmissions']);
+
 Route::delete('/delete_submissions/{id}', 'Service\Submission@deleteSubmission');
 Route::get('/get_submission_by_id/{id}', [Submission::class, 'getSubmissionById']);
 Route::get('/get_fcdrr_submission_by_id/{id}', [Submission::class, 'getFcdrrSubmissionById']);
