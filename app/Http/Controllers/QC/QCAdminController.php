@@ -72,4 +72,9 @@ class QCAdminController extends Controller
     {
         return view('user.qc.admin.list_personel');
     }
+
+    public function listFcdrrReports()
+    {
+        return view('report.list_fcdrr_report');
+    }
 }

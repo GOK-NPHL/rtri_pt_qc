@@ -91,26 +91,20 @@ use Illuminate\Support\Facades\Gate;
                                 </div>
                             </li>
 
-                            <!-- <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Manage
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{route('list-readiness')}}">Readiness Checklists</a>
-                                    <a class="dropdown-item" href="{{route('pt-shipment')}}">PT Shipment</a>
-                                </div>
-                            </li> -->
-
-                            <!-- <li class="nav-item dropdown">
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Reports
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    
-                                    <a class="dropdown-item" href="#">QC Indicator Reports</a>
+                                    <a class="dropdown-item" href="{{route('fcdrr-report')}}">FCDRR Reports</a>
+                                    <!-- <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{route('list-lab')}}">QC Laboratories</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{route('list-personel')}}">QC Lab Personel</a> -->
 
+                                    <!--    <a class="dropdown-item" href="#">Something else here</a> -->
                                 </div>
-                            </li> -->
+                            </li>
 
                         </ul>
 
