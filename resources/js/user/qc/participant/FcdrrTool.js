@@ -363,7 +363,9 @@ class FcdrrTool extends React.Component {
                             this.props.isAdmin ?
                                 ''
                                 :
-                                <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
+                                this.props.isEdit ?
+                                    <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Update</button> :
+                                    <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
                         }
                         {
                             this.props.isAdmin ?
