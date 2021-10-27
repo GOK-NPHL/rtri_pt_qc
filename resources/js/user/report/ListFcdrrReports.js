@@ -99,7 +99,7 @@ class ListFcdrrReports extends React.Component {
                                 }
                                 style={{ 'marginRight': '5px' }}
                                 className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
-                                <i className="fas fa-user-edit"></i>
+                                <i className="fas fa-file-alt"></i> View
                             </a>
                             {/* <a
                                 onClick={() => {
