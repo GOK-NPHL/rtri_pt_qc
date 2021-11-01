@@ -321,8 +321,8 @@ class FcdrrTool extends React.Component {
                             <tr className="boldTdChildText">
                                 <td rowSpan={2}>#</td>
                                 <td rowSpan={2}>Commodity <br /> Name</td>
-                                <td rowSpan={2}>Unit <br /> of issue</td>
-                                <td rowSpan={2}>Beggining <br /> balance</td>
+                                <td rowSpan={2}>Unit <br /> of issue/<br />Pack size</td>
+                                <td rowSpan={2}>Beginning <br /> balance</td>
                                 <td colSpan={4}>Quantity used</td>
                                 {/* losses and wastages */}
                                 <td rowSpan={2}></td>
@@ -334,7 +334,7 @@ class FcdrrTool extends React.Component {
                             </tr>
 
                             <tr className="boldTdChildText">
-                                <td>Quantity received  <br /> this month  <br /> from KEMSA</td>
+                                <td>Quantity received<br /> from central<br /> stores this month</td>
                                 <td> Quantity received <br />  from other <br />  sources (e.g. local suppliers)</td>
                                 <td>Quantity used</td>
                                 <td>Number of<br /> Tests done <br />(include repeats, QA/QC)</td>
