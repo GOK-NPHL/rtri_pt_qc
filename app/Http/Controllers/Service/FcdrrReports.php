@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Service;
 
 use App\FcdrrSubmission;
 use App\Http\Controllers\Controller;
+use App\Service\FcdrrSetting;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FcdrrReports extends Controller
 {
@@ -55,6 +57,38 @@ class FcdrrReports extends Controller
             // return SubmissionModel::all();
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
+        }
+    }
+
+
+
+    public function saveFcdrrSetting(Request $request)
+    {
+        try {
+            $fcdrrSetting = FcdrrSetting::updateOrCreate(
+                [
+                    'name' => $request->name,
+                ],
+                [
+                    "name" =>  $request->name,
+                    "value" =>  $request->value,
+                ]
+
+            );
+
+            return response()->json(['Message' => 'Saved successfully'], 200);
+        } catch (Exception $ex) {
+            Log::error($ex);
+            return response()->json(['Message' => 'Could not save setting: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function getAllFcdrrSettings()
+    {
+        try {
+            return  FcdrrSetting::all();
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error getting Settings: ' . $ex->getMessage()], 500);
         }
     }
 }

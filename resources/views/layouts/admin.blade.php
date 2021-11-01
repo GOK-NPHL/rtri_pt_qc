@@ -86,8 +86,8 @@ use Illuminate\Support\Facades\Gate;
                                     <a class="dropdown-item" href="{{route('list-lab')}}">QC Laboratories</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{route('list-personel')}}">QC Lab Personel</a>
-
-                                    <!--    <a class="dropdown-item" href="#">Something else here</a> -->
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{route('fcdrr-settings')}}">Fcdrr Settings</a>
                                 </div>
                             </li>
 

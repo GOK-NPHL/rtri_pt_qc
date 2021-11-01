@@ -38,6 +38,9 @@ Route::get('/get_submissions', 'Service\Submission@getSubmissions');
 Route::get('/get_fcdrr_submissions', 'Service\Submission@getFcdrrSubmissions');
 Route::get('/get_all_fcdrr_submissions',  [FcdrrReports::class, 'getAllFcdrrSubmissions']);
 Route::get('/get_fcdrr_submission_by_id/{id}', [FcdrrReports::class, 'getFcdrrSubmissionById']);
+Route::post('/save_fcdrr_setting', [FcdrrReports::class, 'saveFcdrrSetting']);
+Route::get('/get_all_fcdrr_settings',  [FcdrrReports::class, 'getAllFcdrrSettings']);
+
 
 Route::delete('/delete_submissions/{id}', 'Service\Submission@deleteSubmission');
 Route::get('/get_submission_by_id/{id}', [Submission::class, 'getSubmissionById']);

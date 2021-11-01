@@ -884,3 +884,35 @@ export async function FetchShipments() {
         return err.response
     }
 }
+
+export async function GetAllFcdrrSettings() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_all_fcdrr_settings`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
+export async function SaveFcdrrSetting(value, name) {
+    console.log(value, name)
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/save_fcdrr_setting`,
+            data: {
+
+                name: name,
+                value: value
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+}
