@@ -113,11 +113,17 @@ class FcdrrToolDashboard extends React.Component {
 
     fetchSubmissions() {
         (async () => {
+            let settings = await GetAllFcdrrSettings();
+
+            let windowPeriod = 5;
             let response = await FetchFcdrrSubmissions();
             this.setState({
                 data: response,
                 allTableElements: [],
-                currElementsTableEl: []
+                currElementsTableEl: [],
+                settings: settings,
+                windowPeriod: windowPeriod,
+                latestDate: response[0] ? response[0].latest_date : '',
             })
         })();
     }
@@ -244,7 +250,8 @@ class FcdrrToolDashboard extends React.Component {
             </div>
 
         </div>
-
+        console.log("canSubmit")
+        console.log(canSubmit)
         let dashboardTable =
             <div key={2} className="row">
                 <div className="col-sm-12">
