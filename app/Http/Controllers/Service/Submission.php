@@ -270,8 +270,7 @@ class Submission extends Controller
                     'id' => $submission["metadata"]["id"],
                 ],
                 [
-                    "start_month" => $submission["metadata"]["start_month"],
-                    "end_month" => $submission["metadata"]["end_month"],
+                    "report_date" => $submission["metadata"]["report_date"],
                     "lab_id" => $submission["metadata"]["lab_id"],
                     "user_id" => $submission["metadata"]["user_id"],
                 ]

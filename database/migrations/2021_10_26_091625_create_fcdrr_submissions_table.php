@@ -17,8 +17,7 @@ class CreateFcdrrSubmissionsTable extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->date("start_month");
-            $table->date("end_month");
+            $table->date("report_date");
             $table->integer("lab_id");
             $table->integer("user_id");
         });

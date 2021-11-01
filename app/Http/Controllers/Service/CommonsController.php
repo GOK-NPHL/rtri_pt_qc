@@ -30,8 +30,7 @@ class CommonsController extends Controller
         try {
             $submissions = FcdrrSubmission::select(
                 'fcdrr_submissions.id',
-                'fcdrr_submissions.start_month',
-                'fcdrr_submissions.end_month',
+                'fcdrr_submissions.report_date',
                 'laboratories.lab_name',
                 'laboratories.mfl_code',
                 'counties.name as county'

@@ -111,8 +111,8 @@ class FcdrrToolDashboard extends React.Component {
 
                     <tr key={uuidv4()}>
                         <td>{element['lab_name']}</td>
-                        <td>{element['start_month']}</td>
-                        <td>{element['end_month']}</td>
+                        <td>{element['report_date']}</td>
+                        <td>{element['report_date']}</td>
                         <td>
                             <a
                                 href="#"

@@ -33,8 +33,7 @@ class FcdrrReports extends Controller
         try {
             $submission = FcdrrSubmission::select(
                 'fcdrr_submissions.id',
-                'fcdrr_submissions.start_month',
-                'fcdrr_submissions.end_month',
+                'fcdrr_submissions.report_date',
                 'fcdrr_submissions.lab_id',
                 'fcdrr_submissions.user_id',
                 'laboratories.lab_name',

@@ -21,8 +21,7 @@ class FcdrrTool extends React.Component {
             userDemographics: [],
             edittableSubmission: {},
             testerName: '',
-            startDate: new Date(),
-            endDate: new Date(),
+            reportDate: new Date(),
             rowsNumbers: 50,
             submissionId: null,
             dataRows: []
@@ -43,8 +42,7 @@ class FcdrrTool extends React.Component {
                     labName: edittableSubmission['data']['lab_name'],
                     countyName: edittableSubmission['data']['county'],
                     mflCode: edittableSubmission['data']['mfl'],
-                    startDate: new Date(edittableSubmission['data']['start_month']),
-                    endDate: new Date(edittableSubmission['data']['end_month']),
+                    reportDate: new Date(edittableSubmission['data']['report_date']),
                     edittableSubmission: edittableSubmission,
                     userDemographics: userDemographics,
                     submissionId: this.props.editId
@@ -108,16 +106,15 @@ class FcdrrTool extends React.Component {
             $('#messageModal').modal('toggle');
             return;
         }
-        let dateStart = (this.state.startDate.getUTCFullYear()) + "/" + (this.state.startDate.getMonth() + 1) + "/" + (this.state.startDate.getUTCDate());;
-        let dateEnd = (this.state.endDate.getUTCFullYear()) + "/" + (this.state.endDate.getMonth() + 1) + "/" + (this.state.endDate.getUTCDate());;
+        let dateStart = (this.state.reportDate.getUTCFullYear()) + "/" + (this.state.reportDate.getMonth() + 1) + "/" + (this.state.reportDate.getUTCDate());;
+        // let dateEnd = (this.state.reportDate.getUTCFullYear()) + "/" + (this.state.reportDate.getMonth() + 1) + "/" + (this.state.reportDate.getUTCDate());;
 
         let payload = {
             metadata: {
                 'id': this.state.submissionId,
                 'user_id': this.state.userId,
                 'lab_id': this.state.labId,
-                'start_month': dateStart,
-                'end_month': dateEnd
+                'report_date': dateStart,
             },
             'forData': formData
         };
@@ -290,18 +287,18 @@ class FcdrrTool extends React.Component {
                                     {/* <input type="month" /> */}
                                     <DatePicker
                                         dateFormat="yyyy/MM"
-                                        selected={this.state.startDate} onChange={(date) => {
+                                        selected={this.state.reportDate} onChange={(date) => {
                                             this.setState({
-                                                startDate: date
+                                                reportDate: date
                                             })
                                         }} />
                                 </td>
                                 <td><strong>Ending month: </strong>
                                     <DatePicker
                                         dateFormat="yyyy/MM"
-                                        selected={this.state.endDate} onChange={(date) => {
+                                        selected={this.state.reportDate} onChange={(date) => {
                                             this.setState({
-                                                endDate: date
+                                                reportDate: date
                                             })
                                         }} />
                                 </td>

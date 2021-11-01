@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FcdrrSubmission extends Model
 {
     protected $fillable = [
-        "start_month",
-        "end_month",
+        "report_date",
         "lab_id",
         "user_id",
     ];

@@ -84,8 +84,8 @@ class ListFcdrrReports extends React.Component {
                     <th scope="row">{index + 1}</th>
                     <td>{element.county}</td>
                     <td>{element.lab_name}</td>
-                    <td>{element.start_month}</td>
-                    <td>{element.end_month}</td>
+                    <td>{element.report_date}</td>
+                    <td>{element.report_date}</td>
                     {
 
                         <td>
