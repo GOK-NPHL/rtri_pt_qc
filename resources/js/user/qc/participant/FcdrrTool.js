@@ -48,9 +48,13 @@ class FcdrrTool extends React.Component {
                     submissionId: this.props.editId
                 });
             } else {
-
                 let reportDate = new Date();
-                reportDate.setMonth(reportDate.getMonth() - 1);
+                let currDay = 30;
+                let currYear = reportDate.getUTCFullYear();
+                let currYMonth = reportDate.getUTCMonth()
+                let dt = currYear + "-" + currYMonth + "-" + currDay;
+                reportDate = new Date(dt)
+                // reportDate.setMonth(reportDate.getMonth() - 1);
 
                 userDemographics = await FetchCurrentParticipantDemographics();
                 this.setState({

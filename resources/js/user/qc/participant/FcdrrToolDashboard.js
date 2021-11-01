@@ -59,7 +59,7 @@ class FcdrrToolDashboard extends React.Component {
             } else {
                 this.setState({
                     data: response,
-                    latestDate: response[0].latest_date,
+                    latestDate: response[0] ? response[0].latest_date : '',
                     settings: settings,
                     windowPeriod: windowPeriod
                 })
@@ -139,7 +139,7 @@ class FcdrrToolDashboard extends React.Component {
 
         // Calculate the difference in milliseconds
         var difference_ms = date2_ms - date1_ms;
-
+        console.log(Math.round(difference_ms / one_day))
         // Convert back to days and return
         return Math.round(difference_ms / one_day);
     }
@@ -150,9 +150,10 @@ class FcdrrToolDashboard extends React.Component {
         let toDayDate = new Date();
         let currDay = toDayDate.getDate();
         let currYear = toDayDate.getUTCFullYear();
-        let currYMonth = toDayDate.getUTCMonth()
+        let currYMonth = toDayDate.getUTCMonth();
         let canSubmit = true;
         let isPastWindowPeriod = currDay > this.state.windowPeriod;
+
         if (this.state.latestDate) { //check if has last months submission
             let lastReportDate = new Date(this.state.latestDate);
             if (
@@ -178,8 +179,6 @@ class FcdrrToolDashboard extends React.Component {
             ) {
                 canSubmit = false
             }
-        } else {
-            canSubmit = false;
         }
 
 
