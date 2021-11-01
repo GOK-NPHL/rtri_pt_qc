@@ -84,8 +84,8 @@ class ListFcdrrReports extends React.Component {
                     <th scope="row">{index + 1}</th>
                     <td>{element.county}</td>
                     <td>{element.lab_name}</td>
-                    <td>{element.report_date}</td>
-                    <td>{element.report_date}</td>
+                    <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
+                    <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
                     {
 
                         <td>
