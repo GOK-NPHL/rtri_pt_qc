@@ -24,7 +24,8 @@ class FcdrrToolDashboard extends React.Component {
             isEdit: false,
             editId: null,
             settings: [],
-            latestDate: null
+            latestDate: null,
+            windowPeriod: 5
         }
         this.toggleView = this.toggleView.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
@@ -37,6 +38,17 @@ class FcdrrToolDashboard extends React.Component {
         (async () => {
             let settings = await GetAllFcdrrSettings();
             let response = await FetchFcdrrSubmissions();
+
+            let windowPeriod = 5;
+
+            if (settings.status != 500) {
+                settings.map((setting) => {
+                    if (setting.name == 'window_period') {
+                        windowPeriod = setting.value
+                    }
+                })
+            }
+
             if (response.status == 500) {
                 this.setState({
                     message: editData.data.Message,
@@ -46,7 +58,8 @@ class FcdrrToolDashboard extends React.Component {
                 this.setState({
                     data: response,
                     latestDate: response[0].latest_date,
-                    settings: settings
+                    settings: settings,
+                    windowPeriod: windowPeriod
                 })
             }
 
@@ -117,27 +130,38 @@ class FcdrrToolDashboard extends React.Component {
     render() {
 
         let tableElem = [];
-
-        let currYear = new Date().getUTCFullYear();
-        let currYMonth = new Date().getUTCMonth()
+        let toDayDate = new Date();
+        let currDay = toDayDate.getDate();
+        let currYear = toDayDate.getUTCFullYear();
+        let currYMonth = toDayDate.getUTCMonth()
         let canSubmit = true;
-
+        let isPastWindowPeriod = currDay > this.state.windowPeriod;
         if (this.state.latestDate) { //check if has last months submission
             let lastReportDate = new Date(this.state.latestDate);
             if (
-                currYear == lastReportDate.getUTCFullYear()
-                && (
-                    (currYMonth - lastReportDate.getUTCMonth()) == 1
+                (
+                    currYear == lastReportDate.getUTCFullYear()
+                    && (
+                        (currYMonth - lastReportDate.getUTCMonth()) == 1
+                    )
                 )
+
+                ||
+
+                isPastWindowPeriod
             ) {
                 canSubmit = false
             }
 
             if ( //for new year and old comparision
-                (currYear - lastReportDate.getUTCFullYear()) == 1
-                && (
-                    (lastReportDate.getUTCMonth() - currYMonth) == 11
+                (
+                    (currYear - lastReportDate.getUTCFullYear()) == 1
+                    && (
+                        (lastReportDate.getUTCMonth() - currYMonth) == 11
+                    )
                 )
+                ||
+                isPastWindowPeriod
             ) {
                 canSubmit = false
             }
