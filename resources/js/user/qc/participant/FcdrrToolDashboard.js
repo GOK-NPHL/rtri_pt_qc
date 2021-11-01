@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FcdrrTool from './FcdrrTool'
-import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions } from '../../../components/utils/Helpers';
+import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -22,7 +22,9 @@ class FcdrrToolDashboard extends React.Component {
             endeTableData: 10,
             activePage: 1,
             isEdit: false,
-            editId: null
+            editId: null,
+            settings: [],
+            latestDate: null
         }
         this.toggleView = this.toggleView.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
@@ -33,10 +35,21 @@ class FcdrrToolDashboard extends React.Component {
     componentDidMount() {
 
         (async () => {
+            let settings = await GetAllFcdrrSettings();
             let response = await FetchFcdrrSubmissions();
-            this.setState({
-                data: response,
-            })
+            if (response.status == 500) {
+                this.setState({
+                    message: editData.data.Message,
+                });
+                $('#messageModal').modal('toggle');
+            } else {
+                this.setState({
+                    data: response,
+                    latestDate: response[0].latest_date,
+                    settings: settings
+                })
+            }
+
         })();
 
     }
@@ -105,14 +118,42 @@ class FcdrrToolDashboard extends React.Component {
 
         let tableElem = [];
 
+        let currYear = new Date().getUTCFullYear();
+        let currYMonth = new Date().getUTCMonth()
+        let canSubmit = true;
+
+        if (this.state.latestDate) { //check if has last months submission
+            let lastReportDate = new Date(this.state.latestDate);
+            if (
+                currYear == lastReportDate.getUTCFullYear()
+                && (
+                    (currYMonth - lastReportDate.getUTCMonth()) == 1
+                )
+            ) {
+                canSubmit = false
+            }
+
+            if ( //for new year and old comparision
+                (currYear - lastReportDate.getUTCFullYear()) == 1
+                && (
+                    (lastReportDate.getUTCMonth() - currYMonth) == 11
+                )
+            ) {
+                canSubmit = false
+            }
+        } else {
+            canSubmit = false;
+        }
+
+
         if (this.state.data.length > 0) {
             this.state.data.map((element, index) => {
                 tableElem.push(
 
                     <tr key={uuidv4()}>
                         <td>{element['lab_name']}</td>
-                        <td>{new Date(element['report_date']).getUTCFullYear() +'-'+ (new Date(element['report_date']).getUTCMonth() + 1)}</td>
-                        <td>{new Date(element['report_date']).getUTCFullYear() +'-'+ (new Date(element['report_date']).getUTCMonth() + 1)}</td>
+                        <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
+                        <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
                         <td>
                             <a
                                 href="#"
@@ -167,12 +208,17 @@ class FcdrrToolDashboard extends React.Component {
                     <div className="col-sm-12 mb-5">
                         <h3 className="float-left">All Submissions</h3>
                         <div className="float-right">
-                            <button onClick={() => {
-                                this.setState({
-                                    isSubmitResult: true,
-                                    isEdit: false
-                                })
-                            }} type="button" className="btn btn-info">Submit result</button>
+                            {canSubmit ?
+                                <button onClick={() => {
+                                    this.setState({
+                                        isSubmitResult: true,
+                                        isEdit: false
+                                    })
+                                }} type="button" className="btn btn-info">
+                                    Submit result
+                                </button> :
+                                ''
+                            }
                         </div>
                     </div>
 

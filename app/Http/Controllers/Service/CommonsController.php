@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CommonsController extends Controller
@@ -33,7 +34,8 @@ class CommonsController extends Controller
                 'fcdrr_submissions.report_date',
                 'laboratories.lab_name',
                 'laboratories.mfl_code',
-                'counties.name as county'
+                'counties.name as county',
+                DB::raw('max(report_date) as latest_date')
             )->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
                 ->join('counties', 'laboratories.county', '=', 'counties.id');
 
@@ -41,7 +43,15 @@ class CommonsController extends Controller
                 $submissions = $submissions
                     ->where('fcdrr_submissions.lab_id', '=', $user->laboratory_id);
             }
-            $submissions = $submissions->orderBy('fcdrr_submissions.id', 'desc')->get();
+            $submissions = $submissions
+                ->groupBy(
+                    'fcdrr_submissions.id',
+                    'fcdrr_submissions.report_date',
+                    'laboratories.lab_name',
+                    'laboratories.mfl_code',
+                    'counties.name'
+                )
+                ->orderBy('fcdrr_submissions.id', 'desc')->get();
 
             return $submissions;
             // return SubmissionModel::all();
