@@ -21,7 +21,7 @@ class FcdrrTool extends React.Component {
             userDemographics: [],
             edittableSubmission: {},
             testerName: '',
-            reportDate: new Date(),
+            reportDate: null,
             rowsNumbers: 50,
             submissionId: null,
             dataRows: []
@@ -49,7 +49,8 @@ class FcdrrTool extends React.Component {
                 });
             } else {
 
-
+                let reportDate = new Date();
+                reportDate.setMonth(reportDate.getMonth() - 1);
 
                 userDemographics = await FetchCurrentParticipantDemographics();
                 this.setState({
@@ -59,6 +60,7 @@ class FcdrrTool extends React.Component {
                     labName: userDemographics[0].lab_name,
                     countyName: userDemographics[0].county,
                     mflCode: userDemographics[0].mfl_code,
+                    reportDate: reportDate,
                     edittableSubmission: edittableSubmission,
                 });
             }
@@ -290,20 +292,24 @@ class FcdrrTool extends React.Component {
                                     {/* <input type="month" /> */}
                                     <DatePicker
                                         dateFormat="yyyy/MM"
-                                        selected={this.state.reportDate} onChange={(date) => {
-                                            this.setState({
-                                                reportDate: date
-                                            })
-                                        }} />
+                                        selected={this.state.reportDate}
+                                    // onChange={(date) => {
+                                    //     this.setState({
+                                    //         reportDate: date
+                                    //     })
+                                    // }}
+                                    />
                                 </td>
                                 <td><strong>Ending month: </strong>
                                     <DatePicker
                                         dateFormat="yyyy/MM"
-                                        selected={this.state.reportDate} onChange={(date) => {
-                                            this.setState({
-                                                reportDate: date
-                                            })
-                                        }} />
+                                        selected={this.state.reportDate}
+                                    // onChange={(date) => {
+                                    //     this.setState({
+                                    //         reportDate: date
+                                    //     })
+                                    // }} 
+                                    />
                                 </td>
                             </tr>
                         </tbody>
