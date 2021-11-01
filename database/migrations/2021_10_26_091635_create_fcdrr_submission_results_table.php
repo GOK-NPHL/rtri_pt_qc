@@ -34,6 +34,8 @@ class CreateFcdrrSubmissionResultsTable extends Migration
             $table->integer("end_of_month_stock");
             $table->integer("days_out_of_stock");
             $table->integer("qnty_requested_resupply");
+            $table->integer("qnty_expiry_six_months");
+            
         });
     }
 

@@ -72,7 +72,7 @@ class FcdrrTool extends React.Component {
     submitForm() {
 
         let count;
-        let elementsLength = 14;
+        let elementsLength = 15;
         let formData = [];
         for (count = 0; count < this.state.rowsNumbers; count++) {
             let refName = 'formData' + count;
@@ -156,6 +156,7 @@ class FcdrrTool extends React.Component {
                         <td><input className="width120px" defaultValue={value['end_of_month_stock']} type="number" /></td>
                         <td><input className="width120px" defaultValue={value['days_out_of_stock']} type="number" /></td>
                         <td><input className="width120px" defaultValue={value['qnty_requested_resupply']} type="number" /></td>
+                        <td><input className="width120px" defaultValue={value['qnty_expiry_six_months']} type="number" /></td>
                     </tr>
                 )
             });
@@ -173,6 +174,7 @@ class FcdrrTool extends React.Component {
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td></td>
+                        <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -199,6 +201,7 @@ class FcdrrTool extends React.Component {
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td></td>
+                        <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -331,6 +334,7 @@ class FcdrrTool extends React.Component {
                                 <td rowSpan={2}>End of Month (Physical Stock Count)  </td>
                                 <td rowSpan={2}> Days out of Stock this month  </td>
                                 <td rowSpan={2}>Quantity Requested for Re-supply  </td>
+                                <td rowSpan={2}>Quantity expiring in 6 months  </td>
                             </tr>
 
                             <tr className="boldTdChildText">

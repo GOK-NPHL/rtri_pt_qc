@@ -304,6 +304,7 @@ class Submission extends Controller
                     "end_of_month_stock" => $submission["forData"][$x][11],
                     "days_out_of_stock" => $submission["forData"][$x][12],
                     "qnty_requested_resupply" => $submission["forData"][$x][13],
+                    "qnty_expiry_six_months" => $submission["forData"][$x][14],
 
                 ]);
 

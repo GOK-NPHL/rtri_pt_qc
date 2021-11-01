@@ -22,5 +22,6 @@ class FcdrrSubmissionResults extends Model
         "end_of_month_stock",
         "days_out_of_stock",
         "qnty_requested_resupply",
+        "qnty_expiry_six_months"
     ];
 }
