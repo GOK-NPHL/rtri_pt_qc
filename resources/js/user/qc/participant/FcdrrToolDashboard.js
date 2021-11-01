@@ -111,8 +111,8 @@ class FcdrrToolDashboard extends React.Component {
 
                     <tr key={uuidv4()}>
                         <td>{element['lab_name']}</td>
-                        <td>{element['report_date']}</td>
-                        <td>{element['report_date']}</td>
+                        <td>{new Date(element['report_date']).getUTCFullYear() +'-'+ (new Date(element['report_date']).getUTCMonth() + 1)}</td>
+                        <td>{new Date(element['report_date']).getUTCFullYear() +'-'+ (new Date(element['report_date']).getUTCMonth() + 1)}</td>
                         <td>
                             <a
                                 href="#"
