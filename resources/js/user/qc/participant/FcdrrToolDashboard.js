@@ -53,7 +53,7 @@ class FcdrrToolDashboard extends React.Component {
 
             if (response.status == 500) {
                 this.setState({
-                    message: editData.data.Message,
+                    message: response.data.Message,
                 });
                 $('#messageModal').modal('toggle');
             } else {
