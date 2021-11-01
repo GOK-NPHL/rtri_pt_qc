@@ -95,7 +95,7 @@ class FcdrrSetting extends React.Component {
                             <ul className="list-group list-group-flush">
                                 <li className="list-group-item">
                                     <h6>Reporting days window period</h6>
-                                    <label htmlFor="window_period">Role name</label>
+                                    <label htmlFor="window_period">Length</label>
                                     <input type="number" onChange={
                                         (event) => this.windowPeriodhandler(event.target.value, "window_period")
                                     }
