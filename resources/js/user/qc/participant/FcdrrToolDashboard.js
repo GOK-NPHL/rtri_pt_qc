@@ -31,6 +31,8 @@ class FcdrrToolDashboard extends React.Component {
         this.handlePageChange = this.handlePageChange.bind(this);
         this.deleteSubmissionHandler = this.deleteSubmissionHandler.bind(this);
         this.fetchSubmissions = this.fetchSubmissions.bind(this);
+        this.daysBetween = this.daysBetween.bind(this);
+
     }
 
     componentDidMount() {
@@ -127,6 +129,21 @@ class FcdrrToolDashboard extends React.Component {
         })
     }
 
+    daysBetween(date1, date2) {
+        //Get 1 day in milliseconds
+        var one_day = 1000 * 60 * 60 * 24;
+
+        // Convert both dates to milliseconds
+        var date1_ms = date1.getTime();
+        var date2_ms = date2.getTime();
+
+        // Calculate the difference in milliseconds
+        var difference_ms = date2_ms - date1_ms;
+
+        // Convert back to days and return
+        return Math.round(difference_ms / one_day);
+    }
+
     render() {
 
         let tableElem = [];
@@ -141,13 +158,10 @@ class FcdrrToolDashboard extends React.Component {
             if (
                 (
                     currYear == lastReportDate.getUTCFullYear()
-                    && (
-                        (currYMonth - lastReportDate.getUTCMonth()) == 1
-                    )
+                    &&
+                    (currYMonth - lastReportDate.getUTCMonth()) == 1
                 )
-
                 ||
-
                 isPastWindowPeriod
             ) {
                 canSubmit = false
@@ -156,9 +170,8 @@ class FcdrrToolDashboard extends React.Component {
             if ( //for new year and old comparision
                 (
                     (currYear - lastReportDate.getUTCFullYear()) == 1
-                    && (
-                        (lastReportDate.getUTCMonth() - currYMonth) == 11
-                    )
+                    &&
+                    (lastReportDate.getUTCMonth() - currYMonth) == 11
                 )
                 ||
                 isPastWindowPeriod
@@ -179,19 +192,26 @@ class FcdrrToolDashboard extends React.Component {
                         <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
                         <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
                         <td>
-                            <a
-                                href="#"
-                                onClick={() => {
-                                    this.setState({
-                                        isSubmitResult: true,
-                                        isEdit: true,
-                                        editId: element['id']
-                                    })
-                                }}
-                                style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
-                                <i className="fas fa-user-edit"></i>
-                            </a>
+
+                            {
+                                (this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
+                                    ?
+                                    '' :
+                                    <a
+                                        href="#"
+                                        onClick={() => {
+                                            this.setState({
+                                                isSubmitResult: true,
+                                                isEdit: true,
+                                                editId: element['id']
+                                            })
+                                        }}
+                                        style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                        className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+                                        <i className="fas fa-user-edit"></i>
+                                    </a>
+                            }
+
                             <a
                                 onClick={() => this.deleteSubmissionHandler(element['id'])}
                                 style={{ "display": "inlineBlock" }}
