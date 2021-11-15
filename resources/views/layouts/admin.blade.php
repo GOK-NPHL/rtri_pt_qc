@@ -96,10 +96,10 @@ use Illuminate\Support\Facades\Gate;
                                     Reports
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{route('fcdrr-report')}}">FCDRR Reports</a>
-                                    <!-- <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{route('list-lab')}}">QC Laboratories</a>
+                                    <a class="dropdown-item" href="{{route('fcdrr-report')}}">FCDRR Submissions</a>
                                     <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{route('fcdrr-indicators')}}">FCDRR Indicators</a>
+                                    <!-- <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{route('list-personel')}}">QC Lab Personel</a> -->
 
                                     <!--    <a class="dropdown-item" href="#">Something else here</a> -->

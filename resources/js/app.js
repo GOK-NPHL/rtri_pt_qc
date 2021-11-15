@@ -33,6 +33,8 @@ require('./user/pt/readiness/ListReadiness');
 require('./user/qc/participant/FcdrrToolDashboard');
 require('./user/report/ListFcdrrReports');
 require('./user/report/FcdrrReport');
+require('./user/report/FcdrrIndicators');
+
 require('./user/settings/FcdrrSetting');
 
 require('./user/general/Dashboard');

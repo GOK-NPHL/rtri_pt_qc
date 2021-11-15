@@ -88,4 +88,8 @@ class QCAdminController extends Controller
         return view('settings.fcdrr_settings');
     }
     
+    public function fcdrrIndicators()
+    {
+        return view('report.fcdrr_indicators');
+    }
 }

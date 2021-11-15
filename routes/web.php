@@ -70,4 +70,7 @@ Route::get('fcdrr-tool-home', [QCParticipantController::class, 'fcdrrToolHome'])
 
 Route::get('fcdrr-report', 'QC\QCAdminController@listFcdrrReports')->name('fcdrr-report');
 Route::get('get-fcdrr-report/{id}', 'QC\QCAdminController@fcdrrReport')->name('get-fcdrr-report');
+
+Route::get('fcdrr-indicators', 'QC\QCAdminController@fcdrrIndicators')->name('fcdrr-indicators');
+
 Route::get('fcdrr-settings', 'QC\QCAdminController@fcdrrSettings')->name('fcdrr-settings');
