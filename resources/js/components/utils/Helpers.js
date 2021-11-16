@@ -916,3 +916,17 @@ export async function SaveFcdrrSetting(value, name) {
         return err.response
     }
 }
+
+
+export async function GetFcdrrReportRates() {
+
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/get_fcdrr_reporting_rates`);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { matchPath } from "react-router";
 import FcdrrTool from '../qc/participant/FcdrrTool';
+import ReportingRate from './indicators/ReportingRate';
 
 class FcdrrIndicators extends React.Component {
 
@@ -36,7 +37,12 @@ class FcdrrIndicators extends React.Component {
 
         return (
             <React.Fragment>
-                fine
+
+                <div className="row">
+
+                    <ReportingRate />
+
+                </div>
             </React.Fragment>
         );
     }

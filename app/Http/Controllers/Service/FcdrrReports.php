@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Service;
 
 use App\FcdrrSubmission;
 use App\Http\Controllers\Controller;
+use App\Laboratory;
 use App\Service\FcdrrSetting;
 use Exception;
 use Illuminate\Http\Request;
@@ -87,6 +88,38 @@ class FcdrrReports extends Controller
     {
         try {
             return  FcdrrSetting::all();
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error getting Settings: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function getFcdrrReportingRates()
+    {
+        try {
+
+            $prevMonth = date('Y-m-d', strtotime(date('Y-m') . " -1 month"));
+            $month = date("m", strtotime($prevMonth));
+            $year = date("Y", strtotime($prevMonth));
+
+            $submissions = FcdrrSubmission::select(
+                DB::raw('count(*) as report_rates')
+            )
+                ->whereYear('report_date', '=', $year)
+                ->whereMonth('report_date', '=', $month)
+                // ->where('submission_id', $request->id)
+                ->get();
+
+            $totalLabs = Laboratory::select(
+                DB::raw('count(*) as total_labs')
+            )
+                ->get();
+
+            $period = $year . "-" . $month;
+            return [
+                "report_rates" => ($submissions[0]['report_rates'] / $totalLabs[0]['total_labs']) * 100,
+                "Period" => $period
+
+            ];
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error getting Settings: ' . $ex->getMessage()], 500);
         }
