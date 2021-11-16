@@ -117,8 +117,8 @@ class FcdrrReports extends Controller
             $period = $year . "-" . $month;
             return [
                 "report_rates" => ($submissions[0]['report_rates'] / $totalLabs[0]['total_labs']) * 100,
-                "period" => $period
-
+                "period" => $period,
+                "total_labs" => $totalLabs[0]['total_labs']
             ];
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error getting Settings: ' . $ex->getMessage()], 500);

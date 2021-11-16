@@ -9,7 +9,8 @@ class ReportingRate extends React.Component {
         super(props);
         this.state = {
             reportingRate: 0,
-            month: ''
+            month: '',
+            total_labs: ''
         }
     }
 
@@ -20,6 +21,7 @@ class ReportingRate extends React.Component {
             this.setState({
                 reportingRate: response['report_rates'],
                 month: response['period'],
+                total_labs: response['total_labs']
             });
         })();
     }
@@ -41,6 +43,8 @@ class ReportingRate extends React.Component {
                         <u><h4>Reporting Rates.</h4></u>
                         <p>Rate: <span>{this.state.reportingRate}%</span></p>
                         <p>period: <span>{this.state.month}</span></p>
+                        <p>total labs: <span>{this.state.total_labs}</span></p>
+
                     </div>
                 </div>
             </div>
