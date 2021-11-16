@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDatePicker from 'react-datepicker';
 import ReactDOM from 'react-dom';
 import { matchPath } from "react-router";
 import FcdrrTool from '../qc/participant/FcdrrTool';
@@ -10,7 +11,9 @@ class FcdrrIndicators extends React.Component {
         super(props);
         this.state = {
             reportId: '',
+            reportDate: ''
         }
+        this.setCurrentPeriod = this.setCurrentPeriod.bind(this);
     }
 
     componentDidMount() {
@@ -26,6 +29,12 @@ class FcdrrIndicators extends React.Component {
 
     }
 
+    setCurrentPeriod(period) {
+        this.setState({
+            reportDate: period
+        })
+    }
+
     render() {
         const imgStyle = {
             width: "100%"
@@ -35,13 +44,28 @@ class FcdrrIndicators extends React.Component {
             marginBottom: "5px"
         };
 
+
+
         return (
             <React.Fragment>
+                <div className="row mb-4">
+                    <strong>Report period: </strong>
+                    {/* <input type="month" /> */}
+                    <ReactDatePicker
+                        dateFormat="yyyy/MM"
+                        selected={this.state.reportDate}
+                        onChange={(date) => {
+                            this.setState({
+                                reportDate: date
+                            })
+                        }}
+                    />
+                </div>
 
                 <div className="row">
-
-                    <ReportingRate />
-
+                    <div className="col-sm-4" data-toggle="tooltip" data-placement="bottom" title="percentage of number of facilities that have reported out of total">
+                        <ReportingRate period={this.state.reportDate} setCurrentPeriod={this.setCurrentPeriod}/>
+                    </div>
                 </div>
             </React.Fragment>
         );

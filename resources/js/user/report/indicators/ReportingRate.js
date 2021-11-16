@@ -23,6 +23,7 @@ class ReportingRate extends React.Component {
                 month: response['period'],
                 total_labs: response['total_labs']
             });
+            this.props.setCurrentPeriod(new Date(response['period']));
         })();
     }
 
@@ -37,15 +38,13 @@ class ReportingRate extends React.Component {
 
         return (
 
-            <div className="col-sm-4" data-toggle="tooltip" data-placement="bottom" title="percentage of number of facilities that have reported out of total">
-                <div className="card">
-                    <div style={borderLeftGreen} className="card-body">
-                        <u><h4>Reporting Rates.</h4></u>
-                        <p>Rate: <span>{this.state.reportingRate}%</span></p>
-                        <p>period: <span>{this.state.month}</span></p>
-                        <p>total labs: <span>{this.state.total_labs}</span></p>
+            <div className="card">
+                <div style={borderLeftGreen} className="card-body">
+                    <u><h4>Reporting Rates.</h4></u>
+                    <p>Rate: <span>{this.state.reportingRate}%</span></p>
+                    <p>period: <span>{this.state.month}</span></p>
+                    <p>total labs: <span>{this.state.total_labs}</span></p>
 
-                    </div>
                 </div>
             </div>
 
