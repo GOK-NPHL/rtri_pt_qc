@@ -117,7 +117,7 @@ class FcdrrReports extends Controller
             $period = $year . "-" . $month;
             return [
                 "report_rates" => ($submissions[0]['report_rates'] / $totalLabs[0]['total_labs']) * 100,
-                "Period" => $period
+                "period" => $period
 
             ];
         } catch (Exception $ex) {
