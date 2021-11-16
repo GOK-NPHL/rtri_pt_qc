@@ -81,4 +81,4 @@ Route::get('/get_counties', [CommonsController::class, 'getCounties']);
 Route::get('/get_qc_by_month_county_facility', [AggregatorController::class, 'getQcByMonthCountyFacility']);
 
 
-Route::get('/get_fcdrr_reporting_rates', [FcdrrReports::class, 'getFcdrrReportingRates']);
+Route::get('/get_fcdrr_reporting_rates/{period}', [FcdrrReports::class, 'getFcdrrReportingRates']);

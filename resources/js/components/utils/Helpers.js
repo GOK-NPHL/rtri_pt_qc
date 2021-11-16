@@ -918,10 +918,17 @@ export async function SaveFcdrrSetting(value, name) {
 }
 
 
-export async function GetFcdrrReportRates() {
+export async function GetFcdrrReportRates(period) {
 
     try {
-        const response = await axios.get(`${settings.serverBaseApi}/get_fcdrr_reporting_rates`);
+        if (period != '' && period != null) {
+            console.log(period);
+            period = new Date(period);
+            period = period.getFullYear() + '-' + (period.getMonth()+1) + '-' + period.getDay();
+            console.log(period);
+        }
+        
+        const response = await axios.get(`${settings.serverBaseApi}/get_fcdrr_reporting_rates/` + period);
         const responseData = response.data;
         return responseData;
     } catch (err) {

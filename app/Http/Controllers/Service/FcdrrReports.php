@@ -93,21 +93,35 @@ class FcdrrReports extends Controller
         }
     }
 
-    public function getFcdrrReportingRates()
+    public function getFcdrrReportingRates(Request $request)
     {
         try {
+            $prevMonth = null;
+            $month = null;
+            $year = null;
 
-            $prevMonth = date('Y-m-d', strtotime(date('Y-m') . " -1 month"));
-            $month = date("m", strtotime($prevMonth));
-            $year = date("Y", strtotime($prevMonth));
+            if (empty($request->period) || !isset($request->period) || $request->period == 'null') {
+                $prevMonth = date('Y-m-d', strtotime(date('Y-m') . " -1 month"));
+                $month = date("m", strtotime($prevMonth));
+                $year = date("Y", strtotime($prevMonth));
+            } else {
+                $prevMonth = date('Y-m-d', strtotime($request->period));
+                $month = date("m", strtotime($prevMonth));
+                $year = date("Y", strtotime($prevMonth));
+            }
 
+            Log::info("$prevMonth");
+            Log::info("$month");
+            Log::info("$year");
             $submissions = FcdrrSubmission::select(
                 DB::raw('count(*) as report_rates')
             )
                 ->whereYear('report_date', '=', $year)
-                ->whereMonth('report_date', '=', $month)
+                ->whereMonth('report_date', '=', $month);
                 // ->where('submission_id', $request->id)
-                ->get();
+
+                Log::info($submissions->toSql());
+                $submissions =$submissions->get();
 
             $totalLabs = Laboratory::select(
                 DB::raw('count(*) as total_labs')

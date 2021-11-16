@@ -12,12 +12,13 @@ class ReportingRate extends React.Component {
             month: '',
             total_labs: ''
         }
+        this.getReportRates = this.getReportRates.bind(this);
     }
 
     componentDidMount() {
 
         (async () => {
-            let response = await GetFcdrrReportRates();
+            let response = await GetFcdrrReportRates(null);
             this.setState({
                 reportingRate: response['report_rates'],
                 month: response['period'],
@@ -25,6 +26,24 @@ class ReportingRate extends React.Component {
             });
             this.props.setCurrentPeriod(new Date(response['period']));
         })();
+
+    }
+
+    getReportRates(period) {
+        (async () => {
+            let response = await GetFcdrrReportRates(period);
+            this.setState({
+                reportingRate: response['report_rates'],
+                month: response['period'],
+                total_labs: response['total_labs']
+            });
+        })();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.period != this.props.period) {
+            this.getReportRates(this.props.period);
+        }
     }
 
     render() {
