@@ -6,6 +6,7 @@ import LongtermKit from './LongtermKit';
 import NegativeKit from './NegativeKit';
 import RecentKit from './RecentKit';
 import { v4 as uuidv4 } from 'uuid';
+import DatePicker from "react-datepicker";
 
 class SubmitResults extends React.Component {
 
@@ -133,16 +134,16 @@ class SubmitResults extends React.Component {
                 });
 
                 this.setState({
-                    qcLotReceivedDate: edittableSubmission['data']['lot_date_received'],
-                    qcReconstituionDate: edittableSubmission['data']['sample_reconstituion_date'],
-                    kitExpiryDate: edittableSubmission['data']['kit_expiry_date'],
+                    qcLotReceivedDate: new Date(edittableSubmission['data']['lot_date_received']),
+                    qcReconstituionDate: new Date(edittableSubmission['data']['sample_reconstituion_date']),
+                    kitExpiryDate: new Date(edittableSubmission['data']['kit_expiry_date']),
                     testJustification: edittableSubmission['data']['test_justification'],
-                    kitReceivedDate: edittableSubmission['data']['kit_date_received'],
+                    kitReceivedDate: new Date(edittableSubmission['data']['kit_date_received']),
                     kitLotNo: edittableSubmission['data']['kit_lot_no'],
                     testerName: edittableSubmission['data']['tester_name'],
                     nameOfTest: edittableSubmission['data']['name_of_test'],
                     qcLotNumber: edittableSubmission['data']['qc_lot_no'],
-                    testingDate: edittableSubmission['data']['testing_date'],
+                    testingDate: new Date(edittableSubmission['data']['testing_date']),
                     sampleType: edittableSubmission['data']['sample_type'],
                     labId: edittableSubmission['data']['lab_id'],
                     userId: edittableSubmission['data']['user_id'],
@@ -195,6 +196,12 @@ class SubmitResults extends React.Component {
 
     submitForm() {
 
+        //validate dates
+        if (!this.validateTestingAndRecivedDate()) return;
+        if (!this.validateTestingDateAndCurrentDate()) return;
+        if (!this.validateTestingAndReconstituionDate()) return;
+        if (!this.validateTestingAndQCLotRecivedDate()) return;
+
         if (
             this.state.qcLotReceivedDate.length == 0 ||
             this.state.kitExpiryDate.length == 0 ||
@@ -205,9 +212,9 @@ class SubmitResults extends React.Component {
             this.state.qcLotNumber.length == 0 ||
             this.state.qcReconstituionDate.length == 0 ||
             this.state.testingDate.length == 0 ||
-            (this.state.qcNegativeIntepreation.length == 0 && this.state.isQcDone) ||
-            (this.state.qcRecentIntepreation.length == 0 && this.state.isQcDone) ||
-            (this.state.qcLongtermIntepreation.length == 0 && this.state.isQcDone)
+            (this.state.isQcDone  && this.state.qcNegativeIntepreation.length == 0 ) ||
+            (this.state.isQcDone  && this.state.qcRecentIntepreation.length == 0 ) ||
+            (this.state.isQcDone  && this.state.qcLongtermIntepreation.length == 0)
         ) {
             this.setState({
                 message: "Fill in all the fields marked *"
@@ -215,12 +222,12 @@ class SubmitResults extends React.Component {
             $('#messageModal').modal('toggle');
         } else {
             let submission = {};
-            submission["qcLotReceivedDate"] = this.state.qcLotReceivedDate;
-            submission["kitExpiryDate"] = this.state.kitExpiryDate;
-            submission["kitReceivedDate"] = this.state.kitReceivedDate;
+            submission["qcLotReceivedDate"] = new Date(this.state.qcLotReceivedDate).toISOString().split('T')[0];
+            submission["kitExpiryDate"] = new Date(this.state.kitExpiryDate).toISOString().split('T')[0];
+            submission["kitReceivedDate"] = new Date(this.state.kitReceivedDate).toISOString().split('T')[0];
             submission["kitLotNo"] = this.state.kitLotNo;
-            submission["qcReconstituionDate"] = this.state.qcReconstituionDate;
-            submission["testingDate"] = this.state.testingDate;
+            submission["qcReconstituionDate"] = new Date(this.state.qcReconstituionDate).toISOString().split('T')[0];
+            submission["testingDate"] = new Date(this.state.testingDate).toISOString().split('T')[0];
             submission["qcLotNumber"] = this.state.qcLotNumber;
             submission["qcNegativeIntepreation"] = this.state.qcNegativeIntepreation;
             submission["qcRecentIntepreation"] = this.state.qcRecentIntepreation;
@@ -277,6 +284,7 @@ class SubmitResults extends React.Component {
         }
 
     }
+
     qcInterpretationRecent(event, type, index) {
         if (type == 'repeat') {
             let qcRecentIntepreationRepeat = this.state.qcRecentIntepreationRepeat;
@@ -539,14 +547,10 @@ class SubmitResults extends React.Component {
         }
 
     }
-    onQcLotReceiceDateHandler(event) {
-        let isValid = this.validateTestingAndQCLotRecivedDate(this.state.testingDate, event.target.value);
-
-        if (isValid) {
-            this.setState({
-                qcLotReceivedDate: event.target.value
-            });
-        }
+    onQcLotReceiceDateHandler(date) {
+        this.setState({
+            qcLotReceivedDate: date
+        });
     }
 
     onQcLotNumberHandler(event) {
@@ -572,18 +576,16 @@ class SubmitResults extends React.Component {
         });
     }
 
-    onKitExpiryDateHandler(event) {
+    onKitExpiryDateHandler(date) {
         this.setState({
-            kitExpiryDate: event.target.value
+            kitExpiryDate: date
         });
     }
-    onKitReceivedDateHandler(event) {
-        let isValid = this.validateTestingAndRecivedDate(this.state.testingDate, event.target.value);
-        if (isValid) {
-            this.setState({
-                kitReceivedDate: event.target.value
-            });
-        }
+    onKitReceivedDateHandler(date) {
+
+        this.setState({
+            kitReceivedDate: date
+        });
 
     }
     onKitLotHandler(event) {
@@ -591,14 +593,10 @@ class SubmitResults extends React.Component {
             kitLotNo: event.target.value
         });
     }
-    onTestingDateHandler(event) {
+    onTestingDateHandler(date) {
         this.setState({
-            testingDate: event.target.value
+            testingDate: date
         });
-        this.validateTestingDateAndCurrentDate(event.target.value);
-        this.validateTestingAndRecivedDate(event.target.value, this.state.kitReceivedDate);
-        this.validateTestingAndQCLotRecivedDate(event.target.value, this.state.qcLotReceivedDate);
-        this.validateTestingAndReconstituionDate(this.state.qcReconstituionDate, event.target.value)
     }
 
     onNameOfTestHandler(event) {
@@ -607,22 +605,20 @@ class SubmitResults extends React.Component {
         });
     }
 
-    onReconstitutionDateHandler(event) {
+    onReconstitutionDateHandler(date) {
 
-        let isValid = this.validateTestingAndReconstituionDate(event.target.value, this.state.testingDate);
-        if (isValid) {
-            this.setState({
-                qcReconstituionDate: event.target.value
-            });
-        }
+        this.setState({
+            qcReconstituionDate: date
+        });
+
     }
 
-    validateTestingAndRecivedDate(testingDate, receiveData) {
-        if (testingDate < receiveData && (testingDate && receiveData)) {
+    validateTestingAndRecivedDate() {
+        if (this.state.testingDate < this.state.testingDate.kitReceivedDate && (this.state.testingDate && this.state.testingDate.kitReceivedDate)) {
             this.setState({
                 message: "QC lot Date received cannot be greater than testing date",
-                testingDate: '',
-                kitReceivedDate: ''
+                // testingDate: '',
+                // kitReceivedDate: ''
             })
             $('#messageModal').modal('show');
             return false;
@@ -631,14 +627,14 @@ class SubmitResults extends React.Component {
         }
     }
 
-    validateTestingDateAndCurrentDate(sampleTestingDate) {
+    validateTestingDateAndCurrentDate() {
 
         let today = new Date();
-        let testingDate = new Date(sampleTestingDate);
+        let testingDate = new Date(this.state.testingDate);
         if (testingDate > today) {
             this.setState({
                 message: "Testing date cannot be greater than todays date",
-                testingDate: '',
+                // testingDate: '',
             })
             $('#messageModal').modal('show');
             return false;
@@ -647,12 +643,12 @@ class SubmitResults extends React.Component {
         }
     }
 
-    validateTestingAndReconstituionDate(reconstituionDate, testingDate) {
-        if (testingDate < reconstituionDate && (reconstituionDate && testingDate)) {
+    validateTestingAndReconstituionDate() {
+        if (this.state.testingDate < this.state.qcReconstituionDate && (this.state.qcReconstituionDate && this.state.testingDate)) {
             this.setState({
-                message: "Kit testing Date cannot be greater than reconstitution date",
-                testingDate: '',
-                qcReconstituionDate: ''
+                message: "Kit testing Date cannot be less than reconstitution date",
+                // testingDate: '',
+                // qcReconstituionDate: ''
             })
             $('#messageModal').modal('show');
             return false;
@@ -661,12 +657,12 @@ class SubmitResults extends React.Component {
         }
     }
 
-    validateTestingAndQCLotRecivedDate(testingDate, receiveDate) {
-        if (testingDate < receiveDate && (testingDate && receiveDate)) {
+    validateTestingAndQCLotRecivedDate() {
+        if (this.state.testingDate < this.state.qcLotReceivedDate && (this.state.testingDate && this.state.qcLotReceivedDate)) {
             this.setState({
                 message: "QC lot Date received cannot be greater than testing date",
-                testingDate: '',
-                qcLotReceivedDate: ''
+                // testingDate: '',
+                // qcLotReceivedDate: ''
             })
             $('#messageModal').modal('show');
             return false;
@@ -788,7 +784,10 @@ class SubmitResults extends React.Component {
                                 <p><strong>Testing Date *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <input value={this.state.testingDate} onChange={() => this.onTestingDateHandler(event)} className="form-control" type="date" />
+                                <DatePicker dateFormat="dd/MM/yyyy"
+                                    selected={this.state.testingDate}
+                                    onChange={(date) => this.onTestingDateHandler(date)} />
+                                {/* <input value={this.state.testingDate} onChange={() => this.onTestingDateHandler(event)} className="form-control" type="date" /> */}
                             </div>
 
                         </div>
@@ -829,16 +828,19 @@ class SubmitResults extends React.Component {
                                 <p><strong>RTRI Kit Date Received *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-
-                                <input value={this.state.kitReceivedDate} onChange={() => this.onKitReceivedDateHandler(event)} className="form-control" type="date" />
-
+                                <DatePicker dateFormat="dd/MM/yyyy"
+                                    selected={this.state.kitReceivedDate}
+                                    onChange={(date) => this.onKitReceivedDateHandler(date)} />
                             </div>
                             <div style={boxLine} className="col-sm-3">
                                 <p><strong>RTRI Kit Expiry Date *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
 
-                                <input value={this.state.kitExpiryDate} onChange={() => this.onKitExpiryDateHandler(event)} className="form-control" type="date" />
+                                <DatePicker dateFormat="dd/MM/yyyy"
+                                    selected={this.state.kitExpiryDate}
+                                    onChange={(date) => this.onKitExpiryDateHandler(date)} />
+
                             </div>
                         </div>
                         {/* end  kit info  */}
@@ -866,7 +868,9 @@ class SubmitResults extends React.Component {
                                 <p><strong>QC Lot Date Received *</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <input value={this.state.qcLotReceivedDate} onChange={() => this.onQcLotReceiceDateHandler(event)} className="form-control" type="date" />
+                                <DatePicker dateFormat="dd/MM/yyyy"
+                                    selected={this.state.qcLotReceivedDate}
+                                    onChange={(date) => this.onQcLotReceiceDateHandler(date)} />
                             </div>
 
                         </div>
@@ -876,7 +880,9 @@ class SubmitResults extends React.Component {
                                 <p><strong>Date QC Samples Reconstituted:</strong></p>
                             </div>
                             <div style={boxLine} className="col-sm-3">
-                                <input value={this.state.qcReconstituionDate} onChange={() => this.onReconstitutionDateHandler(event)} className="form-control" type="date" />
+                                <DatePicker dateFormat="dd/MM/yyyy"
+                                    selected={this.state.qcReconstituionDate}
+                                    onChange={(date) => this.onReconstitutionDateHandler(date)} />
                             </div>
 
                             <div style={boxLine} className="col-sm-3">
