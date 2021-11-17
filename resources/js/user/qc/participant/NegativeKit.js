@@ -69,7 +69,7 @@ class NegativeKit extends React.Component {
                 name={`negative-radio-${this.props.radioId}`} id="result_neg" />
 
         if (this.props.isEdit && this.props.qcNegativeIntepreationEditResults == 'neg') {
-            invalidLt = <input className="form-check-input" type="radio" value="neg"
+            negLt = <input className="form-check-input" type="radio" value="neg"
                 name={`negative-radio-${this.props.radioId}`} id="result_neg" checked />
         }
 

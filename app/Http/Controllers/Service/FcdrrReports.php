@@ -110,18 +110,13 @@ class FcdrrReports extends Controller
                 $year = date("Y", strtotime($prevMonth));
             }
 
-            Log::info("$prevMonth");
-            Log::info("$month");
-            Log::info("$year");
             $submissions = FcdrrSubmission::select(
                 DB::raw('count(*) as report_rates')
             )
                 ->whereYear('report_date', '=', $year)
                 ->whereMonth('report_date', '=', $month);
-                // ->where('submission_id', $request->id)
 
-                Log::info($submissions->toSql());
-                $submissions =$submissions->get();
+            $submissions = $submissions->get();
 
             $totalLabs = Laboratory::select(
                 DB::raw('count(*) as total_labs')
