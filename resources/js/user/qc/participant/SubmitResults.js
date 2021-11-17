@@ -212,9 +212,9 @@ class SubmitResults extends React.Component {
             this.state.qcLotNumber.length == 0 ||
             this.state.qcReconstituionDate.length == 0 ||
             this.state.testingDate.length == 0 ||
-            (this.state.isQcDone  && this.state.qcNegativeIntepreation.length == 0 ) ||
-            (this.state.isQcDone  && this.state.qcRecentIntepreation.length == 0 ) ||
-            (this.state.isQcDone  && this.state.qcLongtermIntepreation.length == 0)
+            (this.state.isQcDone && this.state.qcNegativeIntepreation.length == 0) ||
+            (this.state.isQcDone && this.state.qcRecentIntepreation.length == 0) ||
+            (this.state.isQcDone && this.state.qcLongtermIntepreation.length == 0)
         ) {
             this.setState({
                 message: "Fill in all the fields marked *"
@@ -937,7 +937,7 @@ class SubmitResults extends React.Component {
                         <div className="form-check text-center">
                             <input
                                 className="form-check-input"
-                                onClick={() => {
+                                onChange={() => {
                                     $("#qc-test-results").toggle();
                                     $("#test-not-done-section").toggle();
                                     this.setState({
@@ -945,7 +945,7 @@ class SubmitResults extends React.Component {
                                     })
                                 }}
                                 type="checkbox"
-                                value="" id="qcTestDone" />
+                                value="" id="qcTestDone" checked={!this.state.isQcDone} />
                             <label className="form-check-label" htmlFor="qcTestDone">
                                 <strong>Click here if QC test was not done?</strong>
                             </label>
@@ -954,7 +954,7 @@ class SubmitResults extends React.Component {
 
                     </div>
 
-                    <div id="test-not-done-section" style={{ "display": "none" }} className="col-sm-12 mb-4 ">
+                    <div id="test-not-done-section" style={{ "display": !this.state.isQcDone ? '' : 'none' }} className="col-sm-12 mb-4 ">
                         {/* why test not done */}
                         <form style={{ "paddingRight": "20%", "paddingLeft": "20%" }}>
                             <div className="form-group" >
@@ -974,7 +974,7 @@ class SubmitResults extends React.Component {
 
                     </div>
 
-                    <div id='qc-test-results' className="col-sm-12 ">
+                    <div id='qc-test-results' style={{ "display": this.state.isQcDone ? '' : 'none' }} className="col-sm-12 ">
 
                         {/* QC Test results fields */}
                         <div className="row ml-5 mr-5">
