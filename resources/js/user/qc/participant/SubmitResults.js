@@ -46,7 +46,8 @@ class SubmitResults extends React.Component {
             recentTestRepeats: [],
             longtermTestRepeats: [],
             edittableSubmission: {},
-            testerName: ''
+            testerName: '',
+            formId: null
 
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
@@ -171,7 +172,7 @@ class SubmitResults extends React.Component {
                     userDemographics: userDemographics,
                     otherComments: edittableSubmission['data']['not_test_reason'] ? edittableSubmission['data']['not_test_reason'] : '',
                     notTestedReason: edittableSubmission['data']['other_not_tested_reason'] ? edittableSubmission['data']['other_not_tested_reason'] : 'Issue with sample',
-
+                    formId: this.props.editId
                 });
 
             } else {
@@ -245,7 +246,7 @@ class SubmitResults extends React.Component {
 
             submission["resultLongtermRepeat"] = this.state.resultLongtermRepeat;
             submission["qcLongtermIntepreationRepeat"] = this.state.qcLongtermIntepreationRepeat;
-
+            submission["formId"] = this.state.formId;
 
             (async () => {
                 let response = await SaveSubmission(submission);
@@ -1052,10 +1053,11 @@ class SubmitResults extends React.Component {
 
                     </div>
                     <div className="d-flex w-100 justify-content-center">
-                        {!this.props.isEdit ?
-                            <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
-                            : ''
-                        }
+
+                        <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">
+                            {this.props.isEdit ? 'Update' : 'Submit'}
+                        </button>
+
                         <button type="button" onClick={() => {
                             this.props.toggleView();
                         }} className="btn btn-danger float-left mx-2">Cancel</button>

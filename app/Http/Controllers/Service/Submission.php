@@ -33,61 +33,87 @@ class Submission extends Controller
     {
         try {
             $submission = $request->submission;
-            $submissionModel = new SubmissionModel([
 
-                "testing_date" => $submission["testingDate"],
-                "kit_date_received" => $submission["kitReceivedDate"],
-                "lot_date_received" => $submission["qcLotReceivedDate"],
-                "kit_expiry_date" => $submission["kitExpiryDate"],
-                "kit_lot_no" => $submission["kitLotNo"],
-                "name_of_test" => $submission["nameOfTest"],
-                "qc_lot_no" => $submission["qcLotNumber"],
-                "lab_id" => $submission["labId"],
-                "user_id" => $submission["userId"],
-                "sample_reconstituion_date" => $submission["qcReconstituionDate"],
-                "sample_type" => $submission["sampleType"],
-                "tester_name" => $submission["testerName"],
-                "test_justification" => $submission["testJustification"],
-                "qc_tested" => $submission["isQCTested"],
-                "not_test_reason" => $submission["qcNotTestedReason"],
-                "other_not_tested_reason" => $submission["qcNotTestedOtherReason"],
+            $submissionModel = SubmissionModel::updateOrCreate(
+                [
+                    'id' => $submission["formId"],
+                ],
+                [
+                    "testing_date" => $submission["testingDate"],
+                    "kit_date_received" => $submission["kitReceivedDate"],
+                    "lot_date_received" => $submission["qcLotReceivedDate"],
+                    "kit_expiry_date" => $submission["kitExpiryDate"],
+                    "kit_lot_no" => $submission["kitLotNo"],
+                    "name_of_test" => $submission["nameOfTest"],
+                    "qc_lot_no" => $submission["qcLotNumber"],
+                    "lab_id" => $submission["labId"],
+                    "user_id" => $submission["userId"],
+                    "sample_reconstituion_date" => $submission["qcReconstituionDate"],
+                    "sample_type" => $submission["sampleType"],
+                    "tester_name" => $submission["testerName"],
+                    "test_justification" => $submission["testJustification"],
+                    "qc_tested" => $submission["isQCTested"],
+                    "not_test_reason" => $submission["qcNotTestedReason"],
+                    "other_not_tested_reason" => $submission["qcNotTestedOtherReason"],
+                ]
 
-            ]);
+            );
 
-            $submissionModel->save();
+
+            // $submissionModel->save();
             $submissionId = $submissionModel->id;
 
-            $qcLtResult = new QcSubmissionResult([
-                "control_line" => $submission["resultLongterm"]["c"],
-                "verification_line" => $submission["resultLongterm"]["v"],
-                "interpretation" => $submission["qcLongtermIntepreation"],
-                "longterm_line" => $submission["resultLongterm"]["lt"],
-                "qcsubmission_id" => $submissionId,
-                "type" => "longterm"
-            ]);
-            $qcLtResult->save();
 
-            $qcNegativeResult = new QcSubmissionResult([
-                "control_line" => $submission["resultNegative"]["c"],
-                "verification_line" => $submission["resultNegative"]["v"],
-                "interpretation" => $submission["qcNegativeIntepreation"],
-                "longterm_line" => $submission["resultNegative"]["lt"],
-                "qcsubmission_id" => $submissionId,
-                "type" => "negative"
+            $qcLtResult = QcSubmissionResult::updateOrCreate(
+                [
+                    "qcsubmission_id" => $submissionId,
+                    "type" => "longterm"
+                ],
+                [
+                    "control_line" => $submission["resultLongterm"]["c"],
+                    "verification_line" => $submission["resultLongterm"]["v"],
+                    "interpretation" => $submission["qcLongtermIntepreation"],
+                    "longterm_line" => $submission["resultLongterm"]["lt"],
+                    "qcsubmission_id" => $submissionId,
+                    "type" => "longterm"
+                ]
 
-            ]);
-            $qcNegativeResult->save();
+            );
 
-            $qcRecentResult = new QcSubmissionResult([
+            $qcNegativeResult = QcSubmissionResult::updateOrCreate(
+                [
+                    "qcsubmission_id" => $submissionId,
+                    "type" => "negative"
+                ],
+                [
+                    "control_line" => $submission["resultNegative"]["c"],
+                    "verification_line" => $submission["resultNegative"]["v"],
+                    "interpretation" => $submission["qcNegativeIntepreation"],
+                    "longterm_line" => $submission["resultNegative"]["lt"],
+                    "qcsubmission_id" => $submissionId,
+                    "type" => "negative"
+                ]
 
-                "control_line" => $submission["resultRecent"]["c"],
-                "verification_line" => $submission["resultRecent"]["v"],
-                "interpretation" => $submission["qcRecentIntepreation"],
-                "longterm_line" => $submission["resultRecent"]["lt"],
-                "qcsubmission_id" => $submissionId,
-                "type" => "recent"
-            ]);
-            $qcRecentResult->save();
+            );
+
+            $qcRecentResult = QcSubmissionResult::updateOrCreate(
+                [
+                    "qcsubmission_id" => $submissionId,
+                    "type" => "recent"
+                ],
+                [
+                    "control_line" => $submission["resultRecent"]["c"],
+                    "verification_line" => $submission["resultRecent"]["v"],
+                    "interpretation" => $submission["qcRecentIntepreation"],
+                    "longterm_line" => $submission["resultRecent"]["lt"],
+                    "qcsubmission_id" => $submissionId,
+                    "type" => "recent"
+                ]
+
+            );
+
+            //delte if existis and save again if an update
+            DB::table('repeat_submissions')->where('qcsubmissions_id', $submissionId)->delete();
 
             $this->saveNegativeRepeats($submission, $submissionId);
             $this->saveRecentRepeats($submission, $submissionId);
