@@ -251,7 +251,7 @@ class Submission extends Controller
         $user = Auth::user();
         try {
 
-            DB::table('qcsubmissions')->where('id', $request->id);
+            DB::table('qcsubmissions')->where('id', $request->id)->delete();
             DB::table('repeat_submissions')->where('qcsubmissions_id', $request->id)->delete();
             DB::table('qc_submission_results')->where('qcsubmission_id', $request->id)->delete();
             return response()->json(['Message' => 'Deleted Successfully'], 200);
