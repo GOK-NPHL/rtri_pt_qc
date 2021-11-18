@@ -115,7 +115,7 @@ class Dashboard extends React.Component {
                 tableElem.push(
 
                     <tr key={uuidv4()}>
-                        <td>RIRI QC</td>
+                        <td>RTRI QC</td>
                         <td>{element['lab_name']}</td>
                         <td>{element['kit_date_received']}</td>
                         <td>{element['kit_lot_no']}</td>
