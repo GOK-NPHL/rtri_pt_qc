@@ -224,7 +224,6 @@ class PersonelForm extends React.Component {
                         this.setState({
                             message: response.data.Message,
                             email: '',
-                            facility: '',
                             firstName: '',
                             secondName: '',
                             phoneNumber: '',
