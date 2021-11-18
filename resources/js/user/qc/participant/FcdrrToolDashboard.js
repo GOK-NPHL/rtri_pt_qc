@@ -25,7 +25,8 @@ class FcdrrToolDashboard extends React.Component {
             editId: null,
             settings: [],
             latestDate: null,
-            windowPeriod: 5
+            windowPeriod: 5,
+            actionElement: null
         }
         this.toggleView = this.toggleView.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
@@ -198,31 +199,33 @@ class FcdrrToolDashboard extends React.Component {
                         <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
                         <td>
 
+                            <a
+                                href="#"
+                                onClick={() => {
+                                    this.setState({
+                                        isSubmitResult: true,
+                                        isEdit: true,
+                                        editId: element['id'],
+                                        actionElement: element
+                                    })
+                                }}
+                                style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
+                                <i className="fas fa-user-edit"></i>
+                            </a>
+
                             {
                                 (this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
                                     ?
                                     '' :
                                     <a
-                                        href="#"
-                                        onClick={() => {
-                                            this.setState({
-                                                isSubmitResult: true,
-                                                isEdit: true,
-                                                editId: element['id']
-                                            })
-                                        }}
-                                        style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                        className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
-                                        <i className="fas fa-user-edit"></i>
+                                        onClick={() => this.deleteSubmissionHandler(element['id'])}
+                                        style={{ "display": "inlineBlock" }}
+                                        className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">
+                                        <i className="fas fa-user-times"></i>
                                     </a>
                             }
 
-                            <a
-                                onClick={() => this.deleteSubmissionHandler(element['id'])}
-                                style={{ "display": "inlineBlock" }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">
-                                <i className="fas fa-user-times"></i>
-                            </a>
                         </td>
 
                     </tr>
@@ -337,7 +340,11 @@ class FcdrrToolDashboard extends React.Component {
 
         let dashboardContent = [dashboardHeader, dashboardTable];
         if (this.state.isSubmitResult) {
-            dashboardContent = <FcdrrTool isEdit={this.state.isEdit} editId={this.state.editId} toggleView={this.toggleView} />
+            dashboardContent = <FcdrrTool
+                canUpdate={!(this.daysBetween(new Date(this.state.actionElement['report_date']), new Date()) > this.state.windowPeriod)}
+                isEdit={this.state.isEdit}
+                editId={this.state.editId}
+                toggleView={this.toggleView} />
         }
 
         return (

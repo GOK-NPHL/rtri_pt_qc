@@ -29,7 +29,7 @@ class FcdrrTool extends React.Component {
     }
 
     componentDidMount() {
-
+        
         (async () => {
             let edittableSubmission = null;
             let userDemographics = null;
@@ -375,7 +375,11 @@ class FcdrrTool extends React.Component {
                                 ''
                                 :
                                 this.props.isEdit ?
-                                    <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Update</button> :
+                                    this.props.canUpdate ?
+                                        <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Update</button>
+                                        :
+                                        ''
+                                    :
                                     <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
                         }
                         {
