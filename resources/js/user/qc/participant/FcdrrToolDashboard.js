@@ -25,7 +25,7 @@ class FcdrrToolDashboard extends React.Component {
             editId: null,
             settings: [],
             latestDate: null,
-            windowPeriod: 5,
+            windowPeriod: 1000000,
             actionElement: null
         }
         this.toggleView = this.toggleView.bind(this);
@@ -42,7 +42,7 @@ class FcdrrToolDashboard extends React.Component {
             let settings = await GetAllFcdrrSettings();
             let response = await FetchFcdrrSubmissions();
 
-            let windowPeriod = 5;
+            let windowPeriod = null;
 
             if (settings.status != 500) {
                 settings.map((setting) => {
@@ -154,7 +154,7 @@ class FcdrrToolDashboard extends React.Component {
         let currDay = toDayDate.getDate();
         let currYear = toDayDate.getUTCFullYear();
         let currYMonth = toDayDate.getUTCMonth();
-        let canSubmit = true;
+        let canSubmit = false;
         let isPastWindowPeriod = currDay > this.state.windowPeriod;
 
         if (this.state.latestDate) { //check if has last months submission
@@ -182,8 +182,9 @@ class FcdrrToolDashboard extends React.Component {
             ) {
                 canSubmit = false
             }
+        } else {
+            canSubmit = !isPastWindowPeriod;
         }
-
 
         if (this.state.data.length > 0) {
             this.state.data.map((element, index) => {
@@ -265,7 +266,7 @@ class FcdrrToolDashboard extends React.Component {
                                 }} type="button" className="btn btn-info">
                                     Submit result
                                 </button> :
-                                ''
+                                <p style={{ "backgroundColor": "green", "color": "white" }}>New submission closed</p>
                             }
                         </div>
                     </div>
@@ -336,11 +337,17 @@ class FcdrrToolDashboard extends React.Component {
         let dashboardContent = [dashboardHeader, dashboardTable];
 
         if (this.state.isSubmitResult) {
-            dashboardContent = <FcdrrTool
-                canUpdate={!(this.daysBetween(new Date(this.state.actionElement['report_date']), new Date()) > this.state.windowPeriod)}
-                isEdit={this.state.isEdit}
-                editId={this.state.editId}
-                toggleView={this.toggleView} />
+
+            dashboardContent =
+
+                <FcdrrTool
+                    canUpdate={
+                        this.state.isEdit &&
+                        !(this.daysBetween(new Date(this.state.actionElement['report_date']), new Date()) > this.state.windowPeriod)
+                    }
+                    isEdit={this.state.isEdit}
+                    editId={this.state.editId}
+                    toggleView={this.toggleView} />
         }
 
         return (
