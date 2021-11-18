@@ -47,6 +47,7 @@ class DissagrationOverallByRTRIKitLot extends Controller
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 1)
             ->where('qc_submission_results.type', 'recent')
+            ->where('qcsubmissions.qc_tested', 1)
             // ->groupBy('testing_date', 'qcsubmissions.kit_lot_no');
             ->groupBy('qcsubmissions.kit_lot_no');
 
@@ -72,6 +73,7 @@ class DissagrationOverallByRTRIKitLot extends Controller
             ->where('qc_submission_results.longterm_line', 1)
             ->where('qc_submission_results.verification_line', 1)
             ->where('qc_submission_results.type', 'longterm')
+            ->where('qcsubmissions.qc_tested', 1)
             // ->groupBy('testing_date', 'qcsubmissions.kit_lot_no');
             ->groupBy('qcsubmissions.kit_lot_no');
 
@@ -98,7 +100,7 @@ class DissagrationOverallByRTRIKitLot extends Controller
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 0)
             ->where('qc_submission_results.type', 'negative')
-
+            ->where('qcsubmissions.qc_tested', 1)
             // ->groupBy('testing_date', 'qcsubmissions.kit_lot_no');
             ->groupBy('qcsubmissions.kit_lot_no');
         $results = $this->joinToTotalTested($correctCounts, 'negative');
@@ -130,6 +132,7 @@ class DissagrationOverallByRTRIKitLot extends Controller
                             ->where('qc_submission_results.type', 'longterm');
                     });
             })
+            ->where('qcsubmissions.qc_tested', 1)
             // ->groupBy('testing_date', 'qcsubmissions.kit_lot_no');
             ->groupBy('qcsubmissions.kit_lot_no');
         $results = $this->joinToTotalTested($correctCounts, 'invalids');
@@ -148,6 +151,7 @@ class DissagrationOverallByRTRIKitLot extends Controller
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
                     $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');
                 }, 'left')->where('qc_submission_results.type', $type)
+                ->where('qcsubmissions.qc_tested', 1)
                 // ->groupBy('testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
                 ->groupBy('qcsubmissions.kit_lot_no', 'correct_count')
                 ->get();
@@ -162,6 +166,7 @@ class DissagrationOverallByRTRIKitLot extends Controller
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
                     $join->on('qcsubmissions.kit_lot_no', '=', 'recentsCount.kit_lot_no');
                 }, 'left')
+                ->where('qcsubmissions.qc_tested', 1)
                 // ->groupBy('testing_date', 'qcsubmissions.kit_lot_no', 'correct_count')
                 ->groupBy('qcsubmissions.kit_lot_no', 'correct_count')
                 ->get();

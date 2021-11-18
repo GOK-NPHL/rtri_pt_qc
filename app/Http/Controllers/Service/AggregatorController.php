@@ -55,6 +55,7 @@ class AggregatorController extends Controller
             ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
             ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
+            ->where('qcsubmissions.qc_tested', 1)
             ->where('qc_submission_results.control_line', 1)
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 1)
@@ -81,6 +82,7 @@ class AggregatorController extends Controller
             ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
             ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
+            ->where('qcsubmissions.qc_tested', 1)
             ->where('qc_submission_results.control_line', 1)
             ->where('qc_submission_results.longterm_line', 1)
             ->where('qc_submission_results.verification_line', 1)
@@ -108,6 +110,7 @@ class AggregatorController extends Controller
             ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
             ->where('qc_submission_results.control_line', 1)
+            ->where('qcsubmissions.qc_tested', 1)
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 0)
             ->where('qc_submission_results.type', 'negative')
@@ -134,6 +137,7 @@ class AggregatorController extends Controller
             ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
             ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
+            ->where('qcsubmissions.qc_tested', 1)
             ->where(function ($q) {
                 $q->where('qc_submission_results.control_line', 0)
                     ->orWhere(function ($q) {
@@ -161,6 +165,7 @@ class AggregatorController extends Controller
             qcsubmissions.qc_lot_no, laboratories.id as lab_id, COALESCE(recentsCount.correct_count,0) as correct_count')
                 ->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
                 ->join('counties', 'counties.id', '=', 'laboratories.county')
+                ->where('qcsubmissions.qc_tested', 1)
                 ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
                 ->leftjoinSub($recentsCount, 'recentsCount', function ($join) {
                     $join->on('counties.name', '=', 'recentsCount.county_name');
@@ -192,7 +197,9 @@ class AggregatorController extends Controller
                         '=',
                         'recentsCount.testing_date'
                     );
-                }, 'left')->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no', 'correct_count')
+                }, 'left')
+                ->where('qcsubmissions.qc_tested', 1)
+                ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no', 'correct_count')
                 ->orderBy('testing_date')
                 ->get();
         }

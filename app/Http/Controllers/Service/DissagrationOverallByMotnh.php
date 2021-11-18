@@ -40,6 +40,7 @@ class DissagrationOverallByMotnh extends Controller
             '
         )
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
+            ->where('qcsubmissions.qc_tested', 1)
             ->where('qc_submission_results.control_line', 1)
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 1)
@@ -67,6 +68,7 @@ class DissagrationOverallByMotnh extends Controller
             ->where('qc_submission_results.longterm_line', 1)
             ->where('qc_submission_results.verification_line', 1)
             ->where('qc_submission_results.type', 'longterm')
+            ->where('qcsubmissions.qc_tested', 1)
             ->groupBy('testing_date', 'qcsubmissions.qc_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'longterm');
@@ -89,6 +91,7 @@ class DissagrationOverallByMotnh extends Controller
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 0)
             ->where('qc_submission_results.type', 'negative')
+            ->where('qcsubmissions.qc_tested', 1)
             ->groupBy('testing_date', 'qcsubmissions.qc_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'negative');
@@ -117,6 +120,7 @@ class DissagrationOverallByMotnh extends Controller
                             ->where('qc_submission_results.type', 'longterm');
                     });
             })
+            ->where('qcsubmissions.qc_tested', 1)
             ->groupBy('testing_date', 'qcsubmissions.qc_lot_no');
         $results = $this->joinToTotalTested($correctCounts, 'invalids');
 
@@ -140,6 +144,7 @@ class DissagrationOverallByMotnh extends Controller
                         'recentsCount.testing_date'
                     );
                 }, 'left')->where('qc_submission_results.type', $type)
+                ->where('qcsubmissions.qc_tested', 1)
                 ->groupBy('testing_date', 'qcsubmissions.qc_lot_no', 'correct_count')
                 ->orderBy('testing_date')
                 ->get();
@@ -158,6 +163,7 @@ class DissagrationOverallByMotnh extends Controller
                         'recentsCount.testing_date'
                     );
                 }, 'left')
+                ->where('qcsubmissions.qc_tested', 1)
                 ->groupBy('testing_date', 'qcsubmissions.qc_lot_no', 'correct_count')
                 ->orderBy('testing_date')
                 ->get();
