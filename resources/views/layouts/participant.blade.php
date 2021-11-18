@@ -55,7 +55,7 @@ use Illuminate\Support\Facades\Gate;
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" style="padding: 2.4px; background-color: #3c8dbc;" class="brand-link">
+            <a href="{{ route('participant-home') }}" style="padding: 2.4px; background-color: #3c8dbc;" class="brand-link">
                 <img style="max-width: 20%" src="{{URL('/images/coat.png')}}" alt="">
                 <span class="brand-text" style="font-weight: 300; 
                                                 font-size: 20px;
