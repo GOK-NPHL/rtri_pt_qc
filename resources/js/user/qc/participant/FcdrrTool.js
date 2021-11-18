@@ -29,7 +29,7 @@ class FcdrrTool extends React.Component {
     }
 
     componentDidMount() {
-        
+
         (async () => {
             let edittableSubmission = null;
             let userDemographics = null;
@@ -139,6 +139,7 @@ class FcdrrTool extends React.Component {
     }
 
     render() {
+        
         let editRows = [];
 
         if (this.state.edittableSubmission && this.state.edittableSubmission['results']) {
@@ -277,6 +278,14 @@ class FcdrrTool extends React.Component {
                                 <>
                                     <h4>CONSUMPTION DATA REPORT & REQUEST FOR ASANTE™ HIV-1 RAPID RECENCY® TEST KITS</h4>
                                     <hr />
+                                    {
+                                        this.props.isEdit && !this.props.canUpdate ?
+                                            <p style={{ "backgroundColor": "red" }}>
+                                                Alter not allowed as date is not within reporting period
+                                            </p>
+                                            :
+                                            ''
+                                    }
                                 </>
                         }
                         <br />

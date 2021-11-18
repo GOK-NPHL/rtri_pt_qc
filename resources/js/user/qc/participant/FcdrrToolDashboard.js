@@ -13,7 +13,7 @@ class FcdrrToolDashboard extends React.Component {
             submissions: [],
             isSubmitResult: false,
             dtObject: null,
-            message: "ff",
+            message: "",
             data: [],
             currElementsTableEl: [],
             allTableElements: [],
@@ -80,7 +80,6 @@ class FcdrrToolDashboard extends React.Component {
     }
 
     handlePageChange(pageNumber) {
-        console.log(`active page is ${pageNumber}`);
         let pgNumber = pageNumber * 10 + 1;
         this.setState({
             startTableData: pgNumber - 11,
@@ -116,14 +115,12 @@ class FcdrrToolDashboard extends React.Component {
         (async () => {
             let settings = await GetAllFcdrrSettings();
 
-            let windowPeriod = 5;
             let response = await FetchFcdrrSubmissions();
             this.setState({
                 data: response,
                 allTableElements: [],
                 currElementsTableEl: [],
                 settings: settings,
-                windowPeriod: windowPeriod,
                 latestDate: response[0] ? response[0].latest_date : '',
             })
         })();
@@ -138,15 +135,14 @@ class FcdrrToolDashboard extends React.Component {
 
     daysBetween(date1, date2) {
         //Get 1 day in milliseconds
-        var one_day = 1000 * 60 * 60 * 24;
+        let one_day = 1000 * 60 * 60 * 24;
 
         // Convert both dates to milliseconds
-        var date1_ms = date1.getTime();
-        var date2_ms = date2.getTime();
+        let date1_ms = date1.getTime();
+        let date2_ms = date2.getTime();
 
         // Calculate the difference in milliseconds
-        var difference_ms = date2_ms - date1_ms;
-        console.log(Math.round(difference_ms / one_day))
+        let difference_ms = date2_ms - date1_ms;
         // Convert back to days and return
         return Math.round(difference_ms / one_day);
     }
@@ -253,8 +249,7 @@ class FcdrrToolDashboard extends React.Component {
             </div>
 
         </div>
-        console.log("canSubmit")
-        console.log(canSubmit)
+
         let dashboardTable =
             <div key={2} className="row">
                 <div className="col-sm-12">
@@ -339,6 +334,7 @@ class FcdrrToolDashboard extends React.Component {
             </div>;
 
         let dashboardContent = [dashboardHeader, dashboardTable];
+
         if (this.state.isSubmitResult) {
             dashboardContent = <FcdrrTool
                 canUpdate={!(this.daysBetween(new Date(this.state.actionElement['report_date']), new Date()) > this.state.windowPeriod)}
