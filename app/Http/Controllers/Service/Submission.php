@@ -263,7 +263,13 @@ class Submission extends Controller
                 ->where('qcsubmission_id', $request->id)
                 ->get();
 
-            $payload = ['data' => $submission[0], 'test_results' => $submissionResults];
+            $submissionRepeatResults = DB::table('repeat_submissions')
+                ->select('test_type as type', 'result_control_line as control_line', 
+                'result_verification_line as verification_line', 'result_longterm_line as longterm_line', 'interpretation')
+                ->where('qcsubmissions_id', $request->id)
+                ->get();
+
+            $payload = ['data' => $submission[0], 'test_results' => $submissionResults, 'repeats_results' => $submissionRepeatResults];
 
             return $payload;
             // return SubmissionModel::all();
