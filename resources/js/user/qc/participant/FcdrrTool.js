@@ -139,7 +139,7 @@ class FcdrrTool extends React.Component {
     }
 
     render() {
-        
+
         let editRows = [];
 
         if (this.state.edittableSubmission && this.state.edittableSubmission['results']) {
@@ -281,7 +281,7 @@ class FcdrrTool extends React.Component {
                                     {
                                         this.props.isEdit && !this.props.canUpdate ?
                                             <p style={{ "backgroundColor": "red" }}>
-                                                Alter not allowed as date is not within reporting period
+                                                Alter not allowed as date is past reporting period
                                             </p>
                                             :
                                             ''

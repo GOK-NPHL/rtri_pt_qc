@@ -134,6 +134,7 @@ class FcdrrToolDashboard extends React.Component {
     }
 
     daysBetween(date1, date2) {
+        console.log(date1, date2)
         //Get 1 day in milliseconds
         let one_day = 1000 * 60 * 60 * 24;
 
@@ -144,7 +145,8 @@ class FcdrrToolDashboard extends React.Component {
         // Calculate the difference in milliseconds
         let difference_ms = date2_ms - date1_ms;
         // Convert back to days and return
-        return Math.round(difference_ms / one_day);
+        let diff =Math.round(difference_ms / one_day);
+        return diff-1;
     }
 
     render() {
