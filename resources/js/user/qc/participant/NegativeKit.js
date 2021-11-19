@@ -15,7 +15,13 @@ class NegativeKit extends React.Component {
     }
 
     componentDidMount() {
-
+        if (this.props.isEdit) {
+            this.setState({
+                hasNegativeControl: this.props.resultNegativeEditResults['c'] == 1 ? true : false,
+                hasNegativeVerification: this.props.resultNegativeEditResults['v'] == 1 ? true : false,
+                hasNegativeLongterm: this.props.resultNegativeEditResults['lt'] == 1 ? true : false
+            })
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -48,9 +54,18 @@ class NegativeKit extends React.Component {
     }
 
     render() {
+
+        let radioVal = 'invalid';
+        if (this.props.isEdit && this.props.isRepeat) {
+            radioVal = this.props.qcNegativeIntepreationEditResults[this.props.index];
+        } else if (this.props.isEdit && !this.props.isRepeat) {
+            radioVal = this.props.qcNegativeIntepreationEditResults;
+        }
+
+
         let ltRadio = <input className="form-check-input" type="radio" value="lt"
             name={`negative-radio-${this.props.radioId}`} id="result_lt" />
-        if (this.props.isEdit && this.props.qcNegativeIntepreationEditResults == 'lt') {
+        if (this.props.isEdit && radioVal == 'lt') {
             ltRadio = <input className="form-check-input" type="radio" value="lt"
                 name={`negative-radio-${this.props.radioId}`} id="result_lt" checked />
         }
@@ -58,7 +73,7 @@ class NegativeKit extends React.Component {
 
         let invalidLt = <input className="form-check-input" value="invalid"
             type="radio" name={`negative-radio-${this.props.radioId}`} id="result_invalid" />
-        if (this.props.isEdit && this.props.qcNegativeIntepreationEditResults == 'invalid') {
+        if (this.props.isEdit && radioVal == 'invalid') {
             invalidLt = <input className="form-check-input" value="invalid"
                 type="radio" name={`negative-radio-${this.props.radioId}`} id="result_invalid" checked />
         }
@@ -68,7 +83,7 @@ class NegativeKit extends React.Component {
             <input className="form-check-input" type="radio" value="neg"
                 name={`negative-radio-${this.props.radioId}`} id="result_neg" />
 
-        if (this.props.isEdit && this.props.qcNegativeIntepreationEditResults == 'neg') {
+        if (this.props.isEdit && radioVal == 'neg') {
             negLt = <input className="form-check-input" type="radio" value="neg"
                 name={`negative-radio-${this.props.radioId}`} id="result_neg" checked />
         }
@@ -76,7 +91,7 @@ class NegativeKit extends React.Component {
 
         let recentLt = <input className="form-check-input" type="radio" value="recent"
             name={`negative-radio-${this.props.radioId}`} id="result_recent" />
-        if (this.props.isEdit && this.props.qcNegativeIntepreationEditResults == 'recent') {
+        if (this.props.isEdit && radioVal == 'recent') {
             recentLt = <input className="form-check-input" type="radio" value="recent"
                 name={`negative-radio-${this.props.radioId}`} id="result_recent" checked />
 

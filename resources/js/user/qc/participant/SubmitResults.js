@@ -198,7 +198,7 @@ class SubmitResults extends React.Component {
 
                     isQcDone: edittableSubmission['data']['qc_tested'] == 1 ? true : false,
 
-                    // resultNegativeRepeat: resultRepeatNegativeArr,
+                    resultNegativeRepeat: resultRepeatNegativeArr,
                     // resultRecentRepeat: resultRepeatRecentArr,
                     resultLongtermRepeat: resultRepeatLongtermArr,
 
@@ -206,7 +206,7 @@ class SubmitResults extends React.Component {
                     // recentTestRepeats: [],
                     // longtermTestRepeats: [],
 
-                    // qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat,
+                    qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat,
                     // qcRecentIntepreationRepeat: qcRecentIntepreationRepeat,
                     qcLongtermIntepreationRepeat: qcLongtermIntepreationRepeat,
 
@@ -227,6 +227,11 @@ class SubmitResults extends React.Component {
                 resultRepeatLongtermArr.map((currElement, index) => {
                     this.repeatLongtermTest(null, true, index)
                 })
+
+                resultRepeatNegativeArr.map((currElement, index) => {
+                    this.repeatNegativeTest(null, true, index)
+                })
+
             } else {
                 this.setState({
                     userDemographics: userDemographics,
@@ -369,36 +374,63 @@ class SubmitResults extends React.Component {
 
     }
 
-    repeatNegativeTest(event) {
+    repeatNegativeTest(event, edit, index) {
+
         let repeats = this.state.negativeTestRepeats;
         let uuid4 = uuidv4();
         let repeatLen = repeats.length;
-        let resultNegativeRepeat = this.state.resultNegativeRepeat;
-        resultNegativeRepeat.push({ c: 0, v: 0, lt: 0 });
 
-        let qcNegativeIntepreationRepeat = this.state.qcNegativeIntepreationRepeat;
-        qcNegativeIntepreationRepeat.push('invalid');
+        if (edit) {
 
-        repeats.push(
-            <NegativeKit key={uuid4}
-                radioId={uuid4}
-                isRepeat={true}
-                // isShowNegativeRepeat={false}
-                repeatNegativeTest={this.repeatNegativeTest}
-                resultNegative={this.resultNegative}
-                qcInterpretationNegative={this.qcInterpretationNegative}
-                kitPositionInForm={repeatLen}
-                deleteRepeatkit={this.deleteRepeatkit}
-            />
-        );
+            repeats.push(
+                <NegativeKit key={uuid4}
+                    radioId={uuid4}
+                    isRepeat={true}
+                    isEdit={this.props.isEdit}
+                    repeatNegativeTest={this.repeatNegativeTest}
+                    resultNegative={this.resultNegative}
+                    qcInterpretationNegative={this.qcInterpretationNegative}
+                    kitPositionInForm={repeatLen}
+                    deleteRepeatkit={this.deleteRepeatkit}
+                    resultNegativeEditResults={this.state.resultNegativeRepeat[index]}
+                    index={index}
+                    qcNegativeIntepreationEditResults={this.state.qcNegativeIntepreationRepeat}
+                />
+            );
 
-        this.setState({
-            // isShowNegativeRepeat: !this.state.isShowNegativeRepeat,
-            negativeTestRepeats: repeats,
-            resultNegativeRepeat: resultNegativeRepeat,
-            qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat
+            this.setState({
+                negativeTestRepeats: repeats,
+            });
+        } else {
+            let resultNegativeRepeat = this.state.resultNegativeRepeat;
+            resultNegativeRepeat.push({ c: 0, v: 0, lt: 0 });
 
-        });
+            let qcNegativeIntepreationRepeat = this.state.qcNegativeIntepreationRepeat;
+            qcNegativeIntepreationRepeat.push('invalid');
+
+            repeats.push(
+                <NegativeKit key={uuid4}
+                    radioId={uuid4}
+                    isRepeat={true}
+                    // isShowNegativeRepeat={false}
+                    repeatNegativeTest={this.repeatNegativeTest}
+                    resultNegative={this.resultNegative}
+                    qcInterpretationNegative={this.qcInterpretationNegative}
+                    kitPositionInForm={repeatLen}
+                    deleteRepeatkit={this.deleteRepeatkit}
+                />
+            );
+
+            this.setState({
+                // isShowNegativeRepeat: !this.state.isShowNegativeRepeat,
+                negativeTestRepeats: repeats,
+                resultNegativeRepeat: resultNegativeRepeat,
+                qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat
+
+            });
+        }
+
+
     }
 
     repeatRecentTest(event) {
