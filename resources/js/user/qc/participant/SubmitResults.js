@@ -96,10 +96,8 @@ class SubmitResults extends React.Component {
             let edittableSubmission = null;
             let userDemographics = await FetchCurrentParticipantDemographics();
             if (this.props.isEdit) {
-                console.log("editable");
                 edittableSubmission = await FetchSubmission(this.props.editId);
-                console.log(edittableSubmission);
-                console.log("editable ==>");
+
             }
 
             if (this.props.isEdit) {
@@ -133,6 +131,56 @@ class SubmitResults extends React.Component {
                     }
                 });
 
+                let resultRepeatLongtermArr = []
+                let resultRepeatRecentArr = []
+                let resultRepeatNegativeArr = []
+
+                let qcNegativeIntepreationRepeat = [];
+                let qcRecentIntepreationRepeat = [];
+                let qcLongtermIntepreationRepeat = [];
+
+
+                edittableSubmission['repeats_results'].map((result) => {
+                    if (result.type == 'longterm') {
+                        let resultRepeatLongterm = { c: 0, v: 0, lt: 0 };
+                        let qcLongtermRepeatIntepreation = '';
+
+                        resultRepeatLongterm['c'] = result.control_line;
+                        resultRepeatLongterm['lt'] = result.longterm_line;
+                        resultRepeatLongterm['v'] = result.verification_line;
+                        qcLongtermRepeatIntepreation = result.interpretation;
+
+                        qcLongtermIntepreationRepeat.push(qcLongtermRepeatIntepreation);
+                        resultRepeatLongtermArr.push(resultRepeatLongterm);
+
+                    }
+                    if (result.type == 'negative') {
+                        let resultRepeatNegative = { c: 0, v: 0, lt: 0 };
+                        let qcNegativeRepeatIntepreation = '';
+
+                        resultRepeatNegative['c'] = result.control_line;
+                        resultRepeatNegative['lt'] = result.longterm_line;
+                        resultRepeatNegative['v'] = result.verification_line;
+                        qcNegativeRepeatIntepreation = result.interpretation;
+
+                        qcNegativeIntepreationRepeat.push(qcNegativeRepeatIntepreation);
+                        resultRepeatNegativeArr.push(resultRepeatNegative);
+                    }
+                    if (result.type == 'recent') {
+                        let resultRepeatRecent = { c: 0, v: 0, lt: 0 };
+                        let qcRecentRepeatIntepreation = '';
+
+                        resultRepeatRecent['c'] = result.control_line;
+                        resultRepeatRecent['lt'] = result.longterm_line;
+                        resultRepeatRecent['v'] = result.verification_line;
+                        qcRecentRepeatIntepreation = result.interpretation;
+
+                        qcRecentIntepreationRepeat.push(qcRecentRepeatIntepreation);
+                        resultRepeatRecentArr.push(resultRepeatRecent);
+                    }
+
+                });
+
                 this.setState({
                     qcLotReceivedDate: new Date(edittableSubmission['data']['lot_date_received']),
                     qcReconstituionDate: new Date(edittableSubmission['data']['sample_reconstituion_date']),
@@ -150,17 +198,17 @@ class SubmitResults extends React.Component {
 
                     isQcDone: edittableSubmission['data']['qc_tested'] == 1 ? true : false,
 
-                    resultNegativeRepeat: [],
-                    resultRecentRepeat: [],
-                    resultLongtermRepeat: [],
+                    // resultNegativeRepeat: resultRepeatNegativeArr,
+                    // resultRecentRepeat: resultRepeatRecentArr,
+                    resultLongtermRepeat: resultRepeatLongtermArr,
 
-                    negativeTestRepeats: [],
-                    recentTestRepeats: [],
-                    longtermTestRepeats: [],
+                    // negativeTestRepeats: [],
+                    // recentTestRepeats: [],
+                    // longtermTestRepeats: [],
 
-                    qcNegativeIntepreationRepeat: [],
-                    qcRecentIntepreationRepeat: [],
-                    qcLongtermIntepreationRepeat: [],
+                    // qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat,
+                    // qcRecentIntepreationRepeat: qcRecentIntepreationRepeat,
+                    qcLongtermIntepreationRepeat: qcLongtermIntepreationRepeat,
 
                     resultNegative: resultNegative,
                     resultRecent: resultRecent,
@@ -176,6 +224,9 @@ class SubmitResults extends React.Component {
                     formId: this.props.editId
                 });
 
+                resultRepeatLongtermArr.map((currElement, index) => {
+                    this.repeatLongtermTest(null, true, index)
+                })
             } else {
                 this.setState({
                     userDemographics: userDemographics,
@@ -317,6 +368,7 @@ class SubmitResults extends React.Component {
         }
 
     }
+
     repeatNegativeTest(event) {
         let repeats = this.state.negativeTestRepeats;
         let uuid4 = uuidv4();
@@ -380,35 +432,61 @@ class SubmitResults extends React.Component {
         });
     }
 
-    repeatLongtermTest(event) {
+    repeatLongtermTest(event, edit, index) {
 
         let repeats = this.state.longtermTestRepeats;
         let uuid4 = uuidv4();
         let repeatLen = repeats.length;
-        let resultLongtermRepeat = this.state.resultLongtermRepeat;
-        resultLongtermRepeat.push({ c: 0, v: 0, lt: 0 });
 
-        let qcLongtermIntepreationRepeat = this.state.qcLongtermIntepreationRepeat;
-        qcLongtermIntepreationRepeat.push('invalid');
+        if (edit) {
 
-        repeats.push(
-            <LongtermKit key={uuid4}
-                radioId={uuid4}
-                isRepeat={true}
-                repeatLongtermTest={this.repeatLongtermTest}
-                resultLongterm={this.resultLongterm}
-                qcInterpretationLongterm={this.qcInterpretationLongterm}
-                kitPositionInForm={repeatLen}
-                deleteRepeatkit={this.deleteRepeatkit}
-            />
-        );
+            repeats.push(
+                <LongtermKit key={uuid4}
+                    radioId={uuid4}
+                    isRepeat={true}
+                    isEdit={this.props.isEdit}
+                    repeatLongtermTest={this.repeatLongtermTest}
+                    resultLongterm={this.resultLongterm}
+                    qcInterpretationLongterm={this.qcInterpretationLongterm}
+                    kitPositionInForm={repeatLen}
+                    deleteRepeatkit={this.deleteRepeatkit}
+                    resultLongtermEditResults={this.state.resultLongtermRepeat[index]}
+                    index={index}
+                    qcLongtermIntepreationEditResults={this.state.qcLongtermIntepreationRepeat}
+                />
+            );
 
-        this.setState({
-            tongtermTestRepeats: repeats,
-            resultLongtermRepeat: resultLongtermRepeat,
-            qcLongtermIntepreationRepeat: qcLongtermIntepreationRepeat
+            this.setState({
+                longtermTestRepeats: repeats,
+            });
+        } else {
 
-        });
+            let resultLongtermRepeat = this.state.resultLongtermRepeat;
+            let qcLongtermIntepreationRepeat = this.state.qcLongtermIntepreationRepeat;
+
+            resultLongtermRepeat.push({ c: 0, v: 0, lt: 0 });
+            qcLongtermIntepreationRepeat.push('invalid');
+
+            repeats.push(
+                <LongtermKit key={uuid4}
+                    radioId={uuid4}
+                    isRepeat={true}
+                    repeatLongtermTest={this.repeatLongtermTest}
+                    resultLongterm={this.resultLongterm}
+                    qcInterpretationLongterm={this.qcInterpretationLongterm}
+                    kitPositionInForm={repeatLen}
+                    deleteRepeatkit={this.deleteRepeatkit}
+                />
+            );
+
+            this.setState({
+                longtermTestRepeats: repeats,
+                resultLongtermRepeat: resultLongtermRepeat,
+                qcLongtermIntepreationRepeat: qcLongtermIntepreationRepeat
+
+            });
+        }
+
     }
 
     deleteRepeatkit(kitPositionInForm, type) {

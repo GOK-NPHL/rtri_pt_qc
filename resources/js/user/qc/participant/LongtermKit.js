@@ -16,6 +16,13 @@ class LongtermKit extends React.Component {
     }
 
     componentDidMount() {
+        if (this.props.isEdit) {
+            this.setState({
+                hasLongtermControl: this.props.resultLongtermEditResults['c'] == 1 ? true : false,
+                hasLongtermVerification: this.props.resultLongtermEditResults['v'] == 1 ? true : false,
+                hasLongtermLongterm: this.props.resultLongtermEditResults['lt'] == 1 ? true : false
+            })
+        }
 
     }
 
@@ -25,6 +32,7 @@ class LongtermKit extends React.Component {
                 isLongtermTestHasRepeats: this.props.isReaptsEmpty,
             })
         }
+
         if (prevProps.resultLongtermEditResults != this.props.resultLongtermEditResults) {
             this.setState({
                 hasLongtermControl: this.props.resultLongtermEditResults['c'] == 1 ? true : false,
@@ -38,10 +46,20 @@ class LongtermKit extends React.Component {
     }
 
     render() {
+
+        let radioVal = 'invalid';
+        if (this.props.isEdit && this.props.isRepeat) {
+            radioVal = this.props.qcLongtermIntepreationEditResults[this.props.index];
+        } else if (this.props.isEdit && !this.props.isRepeat) {
+            radioVal = this.props.qcLongtermIntepreationEditResults;
+        }
+
         let ltRadio = <input className="form-check-input" type="radio" value="lt"
             name={`long-term-radio-${this.props.radioId}`} id="result_lt"
         />
-        if (this.props.isEdit && this.props.qcLongtermIntepreationEditResults == 'lt') {
+
+
+        if (this.props.isEdit && radioVal == 'lt') {
             ltRadio = <input className="form-check-input" type="radio" value="lt"
                 name={`long-term-radio-${this.props.radioId}`} id="result_lt"
                 checked
@@ -50,16 +68,15 @@ class LongtermKit extends React.Component {
 
         let invalidLt = <input className="form-check-input" type="radio" value="invalid"
             name={`long-term-radio-${this.props.radioId}`} id="result_invalid" />
-        if (this.props.isEdit && this.props.qcLongtermIntepreationEditResults == 'invalid') {
+        if (this.props.isEdit && radioVal == 'invalid') {
             invalidLt = <input className="form-check-input" type="radio" value="invalid"
                 name={`long-term-radio-${this.props.radioId}`} id="result_invalid"
                 checked />
         }
 
-
         let negLt = <input className="form-check-input" type="radio" value="neg"
             name={`long-term-radio-${this.props.radioId}`} id="result_neg" />
-        if (this.props.isEdit && this.props.qcLongtermIntepreationEditResults == 'neg') {
+        if (this.props.isEdit && radioVal == 'neg') {
             negLt = <input className="form-check-input" type="radio" value="neg"
                 name={`long-term-radio-${this.props.radioId}`} id="result_neg" checked />
         }
@@ -67,7 +84,7 @@ class LongtermKit extends React.Component {
 
         let recentLt = <input className="form-check-input" type="radio" value="recent"
             name={`long-term-radio-${this.props.radioId}`} id="result_recent" />
-        if (this.props.isEdit && this.props.qcLongtermIntepreationEditResults == 'recent') {
+        if (this.props.isEdit && radioVal == 'recent') {
             recentLt = <input className="form-check-input" type="radio" value="recent"
                 name={`long-term-radio-${this.props.radioId}`} id="result_recent" checked />
         }
