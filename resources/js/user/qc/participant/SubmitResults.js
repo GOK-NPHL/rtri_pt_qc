@@ -199,7 +199,7 @@ class SubmitResults extends React.Component {
                     isQcDone: edittableSubmission['data']['qc_tested'] == 1 ? true : false,
 
                     resultNegativeRepeat: resultRepeatNegativeArr,
-                    // resultRecentRepeat: resultRepeatRecentArr,
+                    resultRecentRepeat: resultRepeatRecentArr,
                     resultLongtermRepeat: resultRepeatLongtermArr,
 
                     // negativeTestRepeats: [],
@@ -207,7 +207,7 @@ class SubmitResults extends React.Component {
                     // longtermTestRepeats: [],
 
                     qcNegativeIntepreationRepeat: qcNegativeIntepreationRepeat,
-                    // qcRecentIntepreationRepeat: qcRecentIntepreationRepeat,
+                    qcRecentIntepreationRepeat: qcRecentIntepreationRepeat,
                     qcLongtermIntepreationRepeat: qcLongtermIntepreationRepeat,
 
                     resultNegative: resultNegative,
@@ -230,6 +230,10 @@ class SubmitResults extends React.Component {
 
                 resultRepeatNegativeArr.map((currElement, index) => {
                     this.repeatNegativeTest(null, true, index)
+                })
+
+                resultRepeatRecentArr.map((currElement, index) => {
+                    this.repeatRecentTest(null, true, index)
                 })
 
             } else {
@@ -433,35 +437,59 @@ class SubmitResults extends React.Component {
 
     }
 
-    repeatRecentTest(event) {
+    repeatRecentTest(event, edit, index) {
 
         let repeats = this.state.recentTestRepeats;
         let uuid4 = uuidv4();
         let repeatLen = repeats.length;
-        let resultRecentRepeat = this.state.resultRecentRepeat;
-        resultRecentRepeat.push({ c: 0, v: 0, lt: 0 });
 
-        let qcRecentIntepreationRepeat = this.state.qcRecentIntepreationRepeat;
-        qcRecentIntepreationRepeat.push('invalid');
+        if (edit) {
 
-        repeats.push(
-            <RecentKit key={uuid4}
-                radioId={uuid4}
-                isRepeat={true}
-                repeatRecentTest={this.repeatRecentTest}
-                resultRecent={this.resultRecent}
-                qcInterpretationRecent={this.qcInterpretationRecent}
-                kitPositionInForm={repeatLen}
-                deleteRepeatkit={this.deleteRepeatkit}
-            />
-        );
+            repeats.push(
+                <RecentKit key={uuid4}
+                    radioId={uuid4}
+                    isRepeat={true}
+                    isEdit={this.props.isEdit}
+                    repeatRecentTest={this.repeatRecentTest}
+                    resultRecent={this.resultRecent}
+                    qcInterpretationRecent={this.qcInterpretationRecent}
+                    kitPositionInForm={repeatLen}
+                    deleteRepeatkit={this.deleteRepeatkit}
+                    index={index}
+                    resultRecentEditResults={this.state.resultRecentRepeat[index]}
+                    qcRecentIntepreationEditResults={this.state.qcRecentIntepreationRepeat}
+                />
+            );
 
-        this.setState({
-            recentTestRepeats: repeats,
-            resultRecentRepeat: resultRecentRepeat,
-            qcRecentIntepreationRepeat: qcRecentIntepreationRepeat
+            this.setState({
+                recentTestRepeats: repeats,
+            });
+        } else {
+            let resultRecentRepeat = this.state.resultRecentRepeat;
+            resultRecentRepeat.push({ c: 0, v: 0, lt: 0 });
 
-        });
+            let qcRecentIntepreationRepeat = this.state.qcRecentIntepreationRepeat;
+            qcRecentIntepreationRepeat.push('invalid');
+
+            repeats.push(
+                <RecentKit key={uuid4}
+                    radioId={uuid4}
+                    isRepeat={true}
+                    repeatRecentTest={this.repeatRecentTest}
+                    resultRecent={this.resultRecent}
+                    qcInterpretationRecent={this.qcInterpretationRecent}
+                    kitPositionInForm={repeatLen}
+                    deleteRepeatkit={this.deleteRepeatkit}
+                />
+            );
+            this.setState({
+                recentTestRepeats: repeats,
+                resultRecentRepeat: resultRecentRepeat,
+                qcRecentIntepreationRepeat: qcRecentIntepreationRepeat
+
+            });
+        }
+
     }
 
     repeatLongtermTest(event, edit, index) {

@@ -16,7 +16,13 @@ class RecentKit extends React.Component {
     }
 
     componentDidMount() {
-
+        if (this.props.isEdit) {
+            this.setState({
+                hasRecentControl: this.props.resultRecentEditResults['c'] == 1 ? true : false,
+                hasRecentVerification: this.props.resultRecentEditResults['v'] == 1 ? true : false,
+                hasRecentLongterm: this.props.resultRecentEditResults['lt'] == 1 ? true : false
+            })
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -36,9 +42,17 @@ class RecentKit extends React.Component {
 
     render() {
 
+        let radioVal = 'invalid';
+        if (this.props.isEdit && this.props.isRepeat) {
+            radioVal = this.props.qcRecentIntepreationEditResults[this.props.index];
+        } else if (this.props.isEdit && !this.props.isRepeat) {
+            radioVal = this.props.qcRecentIntepreationEditResults;
+        }
+
+
         let ltRadio = <input className="form-check-input" type="radio" value="lt"
             name={`recent-radio-${this.props.radioId}`} id="result_lt" />
-        if (this.props.isEdit && this.props.qcRecentIntepreationEditResults == 'lt') {
+        if (this.props.isEdit && radioVal == 'lt') {
             ltRadio = <input className="form-check-input" type="radio" value="lt"
                 name={`recent-radio-${this.props.radioId}`} id="result_lt" checked />
         }
@@ -46,7 +60,7 @@ class RecentKit extends React.Component {
 
         let invalidLt = <input className="form-check-input" type="radio" value="invalid"
             name={`recent-radio-${this.props.radioId}`} id="result_invalid_recent" />
-        if (this.props.isEdit && this.props.qcRecentIntepreationEditResults == 'invalid') {
+        if (this.props.isEdit && radioVal == 'invalid') {
             invalidLt = <input className="form-check-input" type="radio" value="invalid"
                 name={`recent-radio-${this.props.radioId}`} id="result_invalid_recent" checked />
         }
@@ -55,7 +69,7 @@ class RecentKit extends React.Component {
             <input className="form-check-input" type="radio" value="neg"
                 name={`recent-radio-${this.props.radioId}`} id="result_neg" />
 
-        if (this.props.isEdit && this.props.qcRecentIntepreationEditResults == 'neg') {
+        if (this.props.isEdit && radioVal == 'neg') {
             negLt = <input className="form-check-input" type="radio" value="neg"
                 name={`recent-radio-${this.props.radioId}`} id="result_neg" checked />
         }
@@ -63,7 +77,7 @@ class RecentKit extends React.Component {
 
         let recentLt = <input className="form-check-input" type="radio" value="recent"
             name={`recent-radio-${this.props.radioId}`} id="result_recent" />
-        if (this.props.isEdit && this.props.qcRecentIntepreationEditResults == 'recent') {
+        if (this.props.isEdit && radioVal == 'recent') {
             recentLt = <input className="form-check-input" type="radio" value="recent"
                 name={`recent-radio-${this.props.radioId}`} id="result_recent" checked />
 
