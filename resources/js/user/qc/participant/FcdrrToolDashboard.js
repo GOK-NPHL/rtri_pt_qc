@@ -156,10 +156,11 @@ class FcdrrToolDashboard extends React.Component {
         let currDay = toDayDate.getDate();
         let currYear = toDayDate.getUTCFullYear();
         let currYMonth = toDayDate.getUTCMonth();
-        let canSubmit = false;
+        let canSubmit = true;
         let isPastWindowPeriod = currDay > this.state.windowPeriod;
 
         if (this.state.latestDate) { //check if has last months submission
+            console.log("one");
             let lastReportDate = new Date(this.state.latestDate);
             if (
                 (
@@ -185,6 +186,7 @@ class FcdrrToolDashboard extends React.Component {
                 canSubmit = false
             }
         } else {
+            console.log("one 4");
             canSubmit = !isPastWindowPeriod;
         }
 
