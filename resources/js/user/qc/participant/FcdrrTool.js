@@ -21,7 +21,7 @@ class FcdrrTool extends React.Component {
             userDemographics: [],
             edittableSubmission: {},
             testerName: '',
-            reportDate: null,
+            reportDate: new Date(),
             rowsNumbers: 50,
             submissionId: null,
             dataRows: []
@@ -48,14 +48,15 @@ class FcdrrTool extends React.Component {
                     submissionId: this.props.editId
                 });
             } else {
+                
                 let reportDate = new Date();
                 let currDay = 30;
                 let currYear = reportDate.getUTCFullYear();
-                let currYMonth = reportDate.getUTCMonth()
+                let currYMonth = reportDate.getUTCMonth()+1
                 let dt = currYear + "-" + currYMonth + "-" + currDay;
                 reportDate = new Date(dt)
                 // reportDate.setMonth(reportDate.getMonth() - 1);
-
+                
                 userDemographics = await FetchCurrentParticipantDemographics();
                 this.setState({
                     userDemographics: userDemographics,
@@ -139,7 +140,7 @@ class FcdrrTool extends React.Component {
     }
 
     render() {
-
+       
         let editRows = [];
 
         if (this.state.edittableSubmission && this.state.edittableSubmission['results']) {
@@ -223,7 +224,6 @@ class FcdrrTool extends React.Component {
                 });
             }
         }
-
 
         const labInfo = {
             backgroundColor: "#f9f9f9",

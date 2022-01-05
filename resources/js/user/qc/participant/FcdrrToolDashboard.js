@@ -145,8 +145,8 @@ class FcdrrToolDashboard extends React.Component {
         // Calculate the difference in milliseconds
         let difference_ms = date2_ms - date1_ms;
         // Convert back to days and return
-        let diff =Math.round(difference_ms / one_day);
-        return diff-1;
+        let diff = Math.round(difference_ms / one_day);
+        return diff - 1;
     }
 
     render() {
@@ -341,13 +341,19 @@ class FcdrrToolDashboard extends React.Component {
         let dashboardContent = [dashboardHeader, dashboardTable];
 
         if (this.state.isSubmitResult) {
+            let repDate = new Date();
+            try {
+                repDate = this.state.actionElement['report_date'];
+            } catch (err) {
+                // console.log(err);
+            }
 
             dashboardContent =
 
                 <FcdrrTool
                     canUpdate={
                         this.state.isEdit &&
-                        !(this.daysBetween(new Date(this.state.actionElement['report_date']), new Date()) > this.state.windowPeriod)
+                        !(this.daysBetween(new Date(repDate), new Date()) > this.state.windowPeriod)
                     }
                     isEdit={this.state.isEdit}
                     editId={this.state.editId}
