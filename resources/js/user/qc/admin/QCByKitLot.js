@@ -157,6 +157,7 @@ class QCByKitLot extends React.Component {
                         bordered
                         small
                         data={data}
+                        exportToCSV={true}
                     />
                 </div>
                 {/* <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div> */}

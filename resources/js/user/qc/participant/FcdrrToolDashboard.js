@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FcdrrTool from './FcdrrTool'
-import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings } from '../../../components/utils/Helpers';
+import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -276,12 +276,12 @@ class FcdrrToolDashboard extends React.Component {
                     </div>
 
 
-                    <div id='user_table' className='row'>
+                    <div id='user_table' className='row p-3 ' style={{backgroundColor: '#f6f6f2', border: '1px solid #d6d6d2', borderRadius: '4px'}}>
                         {this.props.isShowNewShipmentPage ? <div className="col-sm-12 mb-3 mt-3"><h3 className="float-left">All Shipments</h3> </div> : ''}
                         <div className='col-sm-12 col-md-12'>
 
                             <div className="row">
-                                <div className="col-sm-6">
+                                <div className="col-sm-5">
                                     <Pagination
                                         itemClass="page-item"
                                         linkClass="page-link"
@@ -292,7 +292,7 @@ class FcdrrToolDashboard extends React.Component {
                                         onChange={this.handlePageChange.bind(this)}
                                     />
                                 </div>
-                                <div className="col-sm-6">
+                                <div className="col-sm-5">
                                     <input type="text"
                                         style={{ "width": "70%", "float": "right", "marginBottom": "5px" }}
                                         onChange={(event) => {
@@ -305,10 +305,17 @@ class FcdrrToolDashboard extends React.Component {
                                         }}
                                         className="form-control" placeholder="search submission"></input>
                                 </div>
-
+                                <div className='col-sm-2 text-right'>
+                                    <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
+                                        exportToExcel(this.state.data, 'all-submissions')
+                                    }}>
+                                        <i className='fa fa-download'></i>&nbsp;
+                                        Excel/CSV
+                                    </button>
+                                </div>
                             </div>
 
-                            <table className="table table-striped table-sm  table-hover">
+                            <table className="table table-striped table-sm bg-white table-hover">
                                 <thead>
                                     <tr>
                                         <th>Laboratory</th>

@@ -183,6 +183,15 @@ class QCByMonthByCountyAndFacility extends React.Component {
                 </li> */}
             </ul>
             <div className="tab-content mt-3" id="myTabContent">
+                {/* <div className='col-sm-2 text-right'>
+                    <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
+                        // exportToExcel(this.state.data, 'all-submissions')
+                        console.log(this.state.data['county_lab_kit_date']);
+                    }}>
+                        <i className='fa fa-download'></i>&nbsp;
+                        Excel/CSV
+                    </button>
+                </div> */}
                 <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <MDBDataTable
                         striped
