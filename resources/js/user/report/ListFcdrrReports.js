@@ -132,18 +132,42 @@ class ListFcdrrReports extends React.Component {
                 <h3 className="float-left">Fcdrr Submissions</h3>
             </div>
             <div className='col-sm-12 col-md-12'>
-                <div className="form-group mb-2">
-                    <input type="text"
-                        onChange={(event) => {
-                            let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
-                                elemnt['props']['children'][1]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
-                                elemnt['props']['children'][2]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
-                                elemnt['props']['children'][3]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
-                                elemnt['props']['children'][4]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
-                            );
-                            this.updatedSearchItem(currElementsTableEl);
-                        }}
-                        className="form-control" placeholder="Search FCDRR Submission"></input>
+                <div className='row'>
+                    <div className="col-md-10 form-group mb-2">
+                        <input type="text"
+                            style={{ maxWidth: '300px' }}
+                            onChange={(event) => {
+                                let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
+                                    elemnt['props']['children'][1]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
+                                    elemnt['props']['children'][2]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
+                                    elemnt['props']['children'][3]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
+                                    elemnt['props']['children'][4]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
+                                );
+                                this.updatedSearchItem(currElementsTableEl);
+                            }}
+                            className="form-control" placeholder="Search"></input>
+                    </div>
+                    <div className='col-md-2 text-right'>
+                        <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
+                            if(this.state.data && this.state.data.length > 0){
+                                let final_data = this.state.data.map(element => {
+                                    return {
+                                        'County': element.county,
+                                        'Lab/Facility': element.lab_name,
+                                        'Start month': new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1),
+                                        'End month': new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)
+                                    }
+                                })
+                                exportToExcel(final_data, 'Users');
+                            }else{
+                                console.error('No data to export');
+                                alert('No data to export')
+                            }
+                        }}>
+                            <i className='fa fa-download'></i>&nbsp;
+                            Excel/CSV
+                        </button>
+                    </div>
                 </div>
 
                 <table className="table table-striped table-sm  table-hover">

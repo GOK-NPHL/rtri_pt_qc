@@ -99,13 +99,29 @@ class FcdrrToolDashboard extends React.Component {
 
     deleteSubmissionHandler(id) {
 
-        (async () => {
-            let response = await DeleteFcdrrSubmissions(id);
-            this.setState({
-                message: response.data.Message,
-            });
-            $('#messageModal').modal('toggle');
+        // (async () => {
+        //     let response = await DeleteFcdrrSubmissions(id);
+        //     this.setState({
+        //         message: response.data.Message,
+        //     });
+        //     $('#messageModal').modal('toggle');
 
+        // })();
+
+        (async () => {
+            if (window && window.confirm("Are you sure you want to delete this submission?")) {
+                let response = await DeleteFcdrrSubmissions(id);
+                this.setState({
+                    message: response?.data?.Message || response?.message || 'Deleted successfully'
+                })
+                $('#messageModal').modal('toggle');
+            }else if(!window || !window.confirm || window == undefined){
+                let response = await DeleteFcdrrSubmissions(id);
+                this.setState({
+                    message: response?.data?.Message || response?.message || 'Deleted successfully'
+                })
+                $('#messageModal').modal('toggle');
+            }
         })();
 
         this.fetchSubmissions();
@@ -211,8 +227,8 @@ class FcdrrToolDashboard extends React.Component {
                                     })
                                 }}
                                 style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
-                                <i className="fas fa-user-edit"></i>
+                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
+                                <i className="fas fa-edit"></i> Edit
                             </a>
 
                             {
@@ -222,8 +238,8 @@ class FcdrrToolDashboard extends React.Component {
                                     <a
                                         onClick={() => this.deleteSubmissionHandler(element['id'])}
                                         style={{ "display": "inlineBlock" }}
-                                        className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">
-                                        <i className="fas fa-user-times"></i>
+                                        className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
+                                        <i className="fas fa-trash"></i> Delete
                                     </a>
                             }
 
@@ -307,7 +323,11 @@ class FcdrrToolDashboard extends React.Component {
                                 </div>
                                 <div className='col-sm-2 text-right'>
                                     <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
-                                        exportToExcel(this.state.data, 'all-submissions')
+                                        let final_data = this.state.data.map(element => {
+                                            delete element['id'];
+                                            return element;
+                                        });
+                                        exportToExcel(final_data, 'all-submissions')
                                     }}>
                                         <i className='fa fa-download'></i>&nbsp;
                                         Excel/CSV

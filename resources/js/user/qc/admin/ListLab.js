@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
-import { FetchParticipantList } from '../../../components/utils/Helpers';
+import { FetchParticipantList, exportToExcel } from '../../../components/utils/Helpers';
 
 
 class ListLab extends React.Component {
@@ -87,8 +87,8 @@ class ListLab extends React.Component {
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
-                                <i className="fas fa-user-edit"></i>
+                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
+                                <i className="fas fa-edit"></i> Edit
                             </a>
                             {/* <a
                                 onClick={() => {
@@ -122,18 +122,42 @@ class ListLab extends React.Component {
                 <a style={{ "color": "white" }} type="button" href="add-lab" className="btn btn-info float-right">Add Participant</a>
             </div>
             <div className='col-sm-12 col-md-12'>
-                <div className="form-group mb-2">
-                    <input type="text"
-                        onChange={(event) => {
-                            console.log(this.state.allTableElements);
-                            let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
-                                elemnt['props']['children'][1]['props']['children'].toString().toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
-                                elemnt['props']['children'][2]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
-                                elemnt['props']['children'][3]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
-                            );
-                            this.updatedSearchItem(currElementsTableEl);
-                        }}
-                        className="form-control" placeholder="search participant"></input>
+                <div className='row'>
+                    <div className="col-md-10 form-group mb-2">
+                        <input type="text"
+                            style={{ maxWidth: '300px' }}
+                            onChange={(event) => {
+                                console.log(this.state.allTableElements);
+                                let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
+                                    elemnt['props']['children'][1]['props']['children'].toString().toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
+                                    elemnt['props']['children'][2]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
+                                    elemnt['props']['children'][3]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
+                                );
+                                this.updatedSearchItem(currElementsTableEl);
+                            }}
+                            className="form-control" placeholder="Search"></input>
+                    </div>
+                    <div className='col-md-2 text-right'>
+                        <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
+                            if (this.state.data && this.state.data.length > 0) {
+                                let final_data = this.state.data.map(element => {
+                                    return {
+                                        'MFL code': element.mfl_code,
+                                        'lab/facility name': element.lab_name,
+                                        email: element.email,
+                                        status: element.is_active==1 ? 'Active' : 'Inactive'
+                                    }
+                                })
+                                exportToExcel(final_data, 'Labs facilities list');
+                            } else {
+                                console.error('No data to export');
+                                alert('No data to export')
+                            }
+                        }}>
+                            <i className='fa fa-download'></i>&nbsp;
+                            Excel/CSV
+                        </button>
+                    </div>
                 </div>
 
                 <table className="table table-striped table-sm  table-hover">

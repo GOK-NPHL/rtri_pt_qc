@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import LineGraph from '../../../components/utils/charts/LineGraph';
 import RTCard from '../../../components/utils/RTCard';
 import StackedHorizontal from '../../../components/utils/charts/StackedHorizontal'
-import { FetchAdminUsers } from '../../../components/utils/Helpers';
+import { FetchAdminUsers, exportToExcel } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -106,8 +106,8 @@ class ListUser extends React.Component {
                                     }
                                 }
                                 style={{ 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm">
-                                <i className="fas fa-user-edit"></i>
+                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
+                                <i className="fas fa-user-edit"></i> Edit
                             </a>
                             {/* <a
                                 onClick={() => {
@@ -141,17 +141,41 @@ class ListUser extends React.Component {
                 <a style={{ "color": "white" }} type="button" href="add-admin-user" className="btn btn-info float-right">Add Manager</a>
             </div>
             <div className='col-sm-12 col-md-12'>
-                <div className="form-group mb-2">
-                    <input type="text"
-                        onChange={(event) => {
-                            console.log(this.state.allTableElements);
-                            let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
-                                elemnt['props']['children'][1]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
-                                elemnt['props']['children'][2]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
-                            );
-                            this.updatedSearchItem(currElementsTableEl);
-                        }}
-                        className="form-control" placeholder="search user"></input>
+                <div className='row'>
+                    <div className="col-md-10 form-group mb-2">
+                        <input type="text"
+                            style={{ maxWidth: '300px' }}
+                            onChange={(event) => {
+                                console.log(this.state.allTableElements);
+                                let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
+                                    elemnt['props']['children'][1]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
+                                    elemnt['props']['children'][2]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase())
+                                );
+                                this.updatedSearchItem(currElementsTableEl);
+                            }}
+                            className="form-control" placeholder="Search"></input>
+                    </div>
+                    <div className='col-md-2 text-right'>
+                        <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
+                            if(this.state.data && this.state.data.length > 0){
+                                let final_data = this.state.data.map(element => {
+                                    return {
+                                        name: element.name,
+                                        email: element.email,
+                                        'phone number': element.phone_number,
+                                        role: element.is_admin==1 ? 'Administrator' : 'User'
+                                    }
+                                })
+                                exportToExcel(final_data, 'Users');
+                            }else{
+                                console.error('No data to export');
+                                alert('No data to export')
+                            }
+                        }}>
+                            <i className='fa fa-download'></i>&nbsp;
+                            Excel/CSV
+                        </button>
+                    </div>
                 </div>
 
                 <table className="table table-striped table-sm  table-hover">
