@@ -8,7 +8,8 @@ class FcdrrSetting extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            windowPeriod: 0
+            windowPeriod: 0,
+            newState: 0,
         }
         this.windowPeriodhandler = this.windowPeriodhandler.bind(this);
     }
@@ -33,7 +34,7 @@ class FcdrrSetting extends React.Component {
                     }
                 })
                 this.setState({
-                    windowPeriod: windowPeriod
+                    windowPeriod: windowPeriod,
                 })
             }
 
@@ -42,7 +43,7 @@ class FcdrrSetting extends React.Component {
 
     windowPeriodhandler(value, name) {
         this.setState({
-            windowPeriod: value
+            windowPeriod: value,
         });
 
         (async () => {
@@ -51,10 +52,21 @@ class FcdrrSetting extends React.Component {
 
             if (response.status == 500) {
                 this.setState({
-                    message: response.data.Message,
+                    message: response?.data?.Message || response?.Message || 'Error saving settings',
+                });
+                $('#settingModal').modal('toggle');
+            }else{
+                this.setState({
+                    message: response?.data?.Message || response?.Message || 'Settings saved successfully',
                 });
                 $('#settingModal').modal('toggle');
             }
+
+            setTimeout(() => {
+                if(window && window.location){
+                    window.location.reload();
+                }
+            }, 3000);
 
         })();
     }
@@ -91,19 +103,43 @@ class FcdrrSetting extends React.Component {
                     {/* Settings body */}
                     <div className="col-sm-8">
                         <div className="card">
+                            <div className='card-header'>
+                                <h6 className='text-muted text-uppercase mb-0'>Reporting days window period</h6>
+                            </div>
+                            <div className="card-body">
 
-                            <ul className="list-group list-group-flush">
-                                <li className="list-group-item">
-                                    <h6>Reporting days window period</h6>
-                                    <label htmlFor="window_period">Length</label>
-                                    <input type="number" onChange={
-                                        (event) => this.windowPeriodhandler(event.target.value, "window_period")
+                                <ul className="list-group list-group-flush">
+                                    <li className="list-group-item" style={{display: 'grid', gridTemplateColumns: '1fr 2fr', alignItems: 'center'}}>
+                                        <label htmlFor="window_period">Length</label>
+                                        <input type="number" min={0} 
+                                            onChange={ (event) => {
+                                                    // this.windowPeriodhandler(event.target.value, "window_period")
+                                                    this.setState({
+                                                        newPeriod: event.target.value
+                                                    })
+                                                }
+                                            }
+                                            // value={this.state.windowPeriod}
+                                            placeholder={'Current: ' + this.state.windowPeriod}
+                                            className="form-control" id="window_period" required 
+                                        />
+                                    </li>
+                                    {/* <li className="list-group-item">Dapibus ac facilisis in</li>
+                                    <li className="list-group-item">Vestibulum at eros</li> */}
+                                </ul>
+                            </div>
+                            <div className='card-footer p-3'>
+                                <button type='button' className='btn btn-primary py-2' onClick={() => {
+                                    if(this.state.newPeriod && this.state.newPeriod != this.state.windowPeriod && this.state.newPeriod != null){
+                                        this.windowPeriodhandler(this.state.newPeriod, "window_period")
+                                    }else{
+                                        this.setState({
+                                            message: 'Please enter a valid value'
+                                        })
+                                        $('#settingModal').modal('toggle');
                                     }
-                                        value={this.state.windowPeriod} className="form-control" id="window_period" required />
-                                </li>
-                                {/* <li className="list-group-item">Dapibus ac facilisis in</li>
-                                <li className="list-group-item">Vestibulum at eros</li> */}
-                            </ul>
+                                }}>Save Changes</button>
+                            </div>
                         </div>
                     </div>
                 </div>
