@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FetchQcByMonthCountyFacility } from '../../../components/utils/Helpers';
+import { FetchQcByMonthCountyFacility, exportToExcel } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { MDBDataTable } from 'mdbreact';
 import ExportDashboardToCSV from './ExportDashboardToCSV';
@@ -170,46 +170,68 @@ class QCByMonthByCountyAndFacility extends React.Component {
         };
 
         let qCByMonthByCountyAndFacility = <React.Fragment>
-            <ul className="nav nav-tabs" id="myTab" role="tablist">
+            {/* <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
                     <a className="nav-link nav-link-custom active" id="home-tab" data-toggle="tab"
                         href="#home" role="tab" aria-controls="home" aria-selected="true">Tabular data</a>
                 </li>
-                {/* <li className="nav-item">
+                <li className="nav-item">
                     <a className="nav-link nav-link-custom" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link nav-link-custom" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-                </li> */}
-            </ul>
-            <div className="tab-content mt-3" id="myTabContent">
-                {/* <div className='col-sm-2 text-right'>
-                    <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
-                        // exportToExcel(this.state.data, 'all-submissions')
-                        console.log(this.state.data['county_lab_kit_date']);
-                    }}>
-                        <i className='fa fa-download'></i>&nbsp;
-                        Excel/CSV
-                    </button>
-                </div> */}
-                <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <MDBDataTable
-                        striped
-                        // bootstrap4
-                        bordered
-                        small
-                        data={data}
-                    />
-                </div>
-                {/* <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div> */}
-                {/* <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div> */}
+                </li>
+            </ul> */}
+            {/* <div className="tab-content mt-3" id="myTabContent"> */}
+            <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <MDBDataTable
+                    striped
+                    // bootstrap4
+                    bordered
+                    small
+                    data={data}
+                />
             </div>
+            {/* <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div> */}
+            {/* <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div> */}
+            {/* </div> */}
         </React.Fragment>
 
         return (
             <React.Fragment>
-                <h4 className="mb-4">Perfomance by month, county and facility</h4>
-                {qCByMonthByCountyAndFacility}
+                <div className='row mb-4'>
+                    <div className='col-md-10'>
+                        <h4 className="text-bold text-center">Perfomance by month, county and facility</h4>
+                    </div>
+                    <div className='col-md-2 text-right'>
+                        <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
+                            let final_data = [];
+                            this.formatDataToTableFormat(this.state.data['county_lab_kit_date']).map((fd,fx)=>{
+                                const kl = fd['kit_lot '];
+                                final_data.push({
+                                    'Month': fd['month'],
+                                    'County': fd['county'],
+                                    'RTRI Lab/Facility ': fd['lab_name'],
+                                    'QC Kit lot ': kl,
+                                    'Number of QC Specimens tested ': fd['total_tested'],
+                                    '% correctly identified as Recent': fd['correct_recent'],
+                                    '% correctly identified as long term': fd['correct_longterm'],
+                                    '% correctly identified as Negative': fd['correct_negative'],
+                                    '% Invalid ': fd['invalids']
+                                });
+                            })
+                            exportToExcel(final_data, 'QC By Month, County & Facility');
+                        }}>
+                            <i className='fa fa-download'></i>&nbsp;
+                            Excel/CSV
+                        </button>
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col-md-12'>
+                        {qCByMonthByCountyAndFacility}
+                    </div>
+                </div>
                 {/* <ExportDashboardToCSV data={rowzz} columns={columnzz}/> */}
             </React.Fragment>
         );

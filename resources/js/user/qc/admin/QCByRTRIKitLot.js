@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { MDBDataTable } from 'mdbreact';
 import ExportDashboardToCSV from './ExportDashboardToCSV';
+import { exportToExcel } from '../../../components/utils/Helpers';
 
 class QCByRTRIKitLot extends React.Component {
 
@@ -138,18 +139,18 @@ class QCByRTRIKitLot extends React.Component {
         };
 
         let qCByMonthByAndFacility = <React.Fragment>
-            <ul className="nav nav-tabs" id="myTab" role="tablist">
+            {/* <ul className="nav nav-tabs" id="myTab" role="tablist">
                 <li className="nav-item">
                     <a className="nav-link nav-link-custom active" id="home-tab" data-toggle="tab"
                         href="#home" role="tab" aria-controls="home" aria-selected="true">Tabular data</a>
                 </li>
-                {/* <li className="nav-item">
+                <li className="nav-item">
                     <a className="nav-link nav-link-custom" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
                 </li>
                 <li className="nav-item">
                     <a className="nav-link nav-link-custom" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-                </li> */}
-            </ul>
+                </li>
+            </ul> */}
             <div className="tab-content mt-3" id="myTabContent">
                 <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <MDBDataTable
@@ -168,8 +169,36 @@ class QCByRTRIKitLot extends React.Component {
 
         return (
             <React.Fragment>
-                <h4 className="mb-4">QC panel performance by RTRI Kit Lot</h4>
-                {qCByMonthByAndFacility}
+                <div className='row mb-4'>
+                    <div className='col-md-10'>
+                        <h4 className="text-bold text-center">QC panel performance by RTRI Kit Lot</h4>
+                    </div>
+                    <div className='col-md-2 text-right'>
+                        <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
+                            let final_data = [];
+                            this.formatDataToTableFormat(this.state.data['rtri_lot_no']).map((fd,fx)=>{
+                                const kl = fd['rtri_lot_no '];
+                                final_data.push({
+                                    'RTRI Kit lot': kl,
+                                    'Number of QC Specimens tested': fd['total_tested'],
+                                    '% correctly identified as Recent': fd['correct_recent'],
+                                    '% correctly identified as long term': fd['correct_longterm'],
+                                    '% correctly identified as Negative': fd['correct_negative'],
+                                    '% Invalid': fd['invalids']
+                                })
+                            })
+                            exportToExcel(final_data, 'QC panel performance by RTRI Kit Lot');
+                        }}>
+                            <i className='fa fa-download'></i>&nbsp;
+                            Excel/CSV
+                        </button>
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col-md-12'>
+                        {qCByMonthByAndFacility}
+                    </div>
+                </div>
                 {/* <ExportDashboardToCSV data={rowzz} columns={columnzz}/> */}
             </React.Fragment>
         );

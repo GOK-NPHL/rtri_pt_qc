@@ -199,7 +199,7 @@ use Illuminate\Support\Facades\Gate;
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        <footer class="main-footer">
+        <footer class="main-footer bg-white">
             <strong>Copyright &copy; 2014- <script>
                     document.write(new Date().getFullYear());
                 </script> <a href="https://nphl.go.ke/">NPHL KNEQAS - RTRI QC</a>.</strong>

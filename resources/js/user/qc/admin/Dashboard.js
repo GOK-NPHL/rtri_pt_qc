@@ -31,10 +31,28 @@ class Dashboard extends React.Component {
 
         return (
             <React.Fragment>
-                <QCByMonthByCountyAndFacility data={this.state.qCByMonthByCountyAndFacility} />
-                <QCByMonthByAndFacility data={this.state.qCByMonthByCountyAndFacility} />
-                <QCByKitLot data={this.state.qCByMonthByCountyAndFacility} />
-                <QCByRTRIKitLot data={this.state.qCByMonthByCountyAndFacility} />
+                <div className='container'>
+                    <div className='row'>
+                        <div className='col-md-12 mb-4 p-3' style={{backgroundColor: '#f3f4f8', borderColor: '#7c5656', borderRadius: '5px', borderWidth: '1px'}}>
+                            <QCByMonthByCountyAndFacility data={this.state.qCByMonthByCountyAndFacility} />
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-md-12 mb-4 p-3' style={{backgroundColor: '#f3f4f8', borderColor: '#7c5656', borderRadius: '5px', borderWidth: '1px'}}>
+                            <QCByMonthByAndFacility data={this.state.qCByMonthByCountyAndFacility} />
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-md-12 mb-4 p-3' style={{backgroundColor: '#f3f4f8', borderColor: '#7c5656', borderRadius: '5px', borderWidth: '1px'}}>
+                            <QCByKitLot data={this.state.qCByMonthByCountyAndFacility} />
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-md-12 mb-4 p-3' style={{backgroundColor: '#f3f4f8', borderColor: '#7c5656', borderRadius: '5px', borderWidth: '1px'}}>
+                            <QCByRTRIKitLot data={this.state.qCByMonthByCountyAndFacility} />
+                        </div>
+                    </div>
+                </div>
             </React.Fragment>
         );
     }

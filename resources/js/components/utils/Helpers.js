@@ -950,7 +950,7 @@ export function exportToExcel(bundle, filename) {
         let keys = Object.keys(bundle[0])//.map(key => key.split('_').join(' '));
         csv += keys.join(',') + '\r\n';
         bundle.forEach(item => {
-            csv += keys.map(key => item[key]).join(',') + '\r\n';
+            csv += keys.map(key => item[key] ).join(',') + '\r\n';
         });
         var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         if (navigator.msSaveBlob) { // IE 10+
