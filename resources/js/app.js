@@ -30,7 +30,8 @@ require('./user/pt/readiness/AddReadiness');
 require('./user/pt/readiness/EditReadiness');
 require('./user/pt/readiness/ListReadiness');
 
-require('./user/qc/participant/FcdrrToolDashboard');
+require('./user/qc/participant/FcdrrSummaryDashboard');
+require('./user/qc/participant/FcdrrToolSubmissions');
 require('./user/report/ListFcdrrReports');
 require('./user/report/FcdrrReport');
 require('./user/report/FcdrrIndicators');

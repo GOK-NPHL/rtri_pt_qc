@@ -147,13 +147,13 @@ class Dashboard extends React.Component {
                                     })
                                 }}
                                 style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
-                                <i className="fas fa-user-edit"></i> Edit
+                                className="d-none d-sm-inline-block btn btn-sm text-xs btn-info text-white">
+                                <i className="fas fa-edit"></i> Edit
                             </a>
                             <a
                                 onClick={() => this.deleteSubmissionHandler(element['id'])}
                                 style={{ "display": "inlineBlock" }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
+                                className="d-none d-sm-inline-block btn btn-sm text-xs btn-danger text-white">
                                 <i className="fas fa-trash"></i> Delete
                             </a>
                         </td>

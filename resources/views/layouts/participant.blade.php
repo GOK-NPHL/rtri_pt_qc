@@ -4,6 +4,7 @@
 <?php
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Routing\Router;
 ?>
 
 <head>
@@ -78,8 +79,8 @@ use Illuminate\Support\Facades\Gate;
                with font-awesome or any other icon font library -->
 
                         <?php if (Gate::allows('view_qc_component')) { ?>
-                            <li class="nav-item has-treeview menu-open">
-                                <a href="{{ route('participant-home') }}" class="nav-link active">
+                            <li class="nav-item has-treeview menu-open mb-2">
+                                <a href="{{ route('participant-home') }}" class="nav-link {{ Route::is('participant-home') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-balance-scale"></i>
                                     <p>
                                         RTRI QC
@@ -89,11 +90,19 @@ use Illuminate\Support\Facades\Gate;
                         <?php } ?>
 
                         <?php if (Gate::allows('view_qc_component')) { ?>
-                            <li class="nav-item has-treeview menu-open">
-                                <a href="{{ route('fcdrr-tool-home') }}" class="nav-link active">
+                            <li class="nav-item has-treeview menu-open mb-2">
+                                <a href="{{ route('fcdrr-dashboard') }}" class="nav-link {{ Route::is('fcdrr-dashboard') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-boxes"></i>
                                     <p>
-                                        FCDRR Tool
+                                        FCDRR Dashboard
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview menu-open mb-2">
+                                <a href="{{ route('fcdrr-submissions') }}" class="nav-link {{ Route::is('fcdrr-submissions') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-boxes"></i>
+                                    <p>
+                                        FCDRR Submissions
                                     </p>
                                 </a>
                             </li>
@@ -101,7 +110,7 @@ use Illuminate\Support\Facades\Gate;
 
                         <!-- <?php
                         if (Gate::allows('view_pt_component')) { ?>
-                            <li class="nav-item has-treeview menu-open">
+                            <li class="nav-item has-treeview menu-open mb-2">
                                 <a href="{{ route('participant-pt-home') }}" class="nav-link">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
@@ -143,7 +152,7 @@ use Illuminate\Support\Facades\Gate;
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('participant-qc-demographics') }}" class="nav-link">
+                                    <a href="{{ route('participant-qc-demographics') }}" class="nav-link {{ Route::is('participant-qc-demographics') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>My Login Information</p>
                                     </a>

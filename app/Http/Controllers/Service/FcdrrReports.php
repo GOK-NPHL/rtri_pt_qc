@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Service;
 
 use App\FcdrrSubmission;
+use App\FcdrrSubmissionResults;
 use App\Http\Controllers\Controller;
 use App\Laboratory;
 use App\Service\FcdrrSetting;
@@ -26,7 +27,7 @@ class FcdrrReports extends Controller
             $cController  = new CommonsController();
             return $cController->fetchFcdrrSubmissions(true);
         } catch (Exception $ex) {
-            return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Error getting submissions: ' . $ex->getMessage()], 500);
         }
     }
 
@@ -57,7 +58,34 @@ class FcdrrReports extends Controller
             return $payload;
             // return SubmissionModel::all();
         } catch (Exception $ex) {
-            return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Error getting settings: ' . $ex->getMessage()], 500);
+        }
+    }
+
+
+    public function getFcdrrReports()
+    {
+        try {
+            // $reports = FcdrrSubmissionResults::all();
+            $reports = DB::table('fcdrr_submission_results')
+                ->join('fcdrr_submissions', 'fcdrr_submissions.id', '=', 'fcdrr_submission_results.submission_id')
+                ->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
+                ->join('counties', 'laboratories.county', '=', 'counties.id')
+                ->select('fcdrr_submission_results.*', 'counties.name as county_name', 'laboratories.lab_name', 'laboratories.mfl_code as lab_mfl', 'fcdrr_submissions.report_date', 'fcdrr_submissions.user_id')
+                ->get();
+            return $reports;
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error getting reports: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function getFcdrrReportById(Request $request)
+    {
+        try {
+            $report = FcdrrSubmissionResults::find($request->id);
+            return $report;
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error getting report: ' . $ex->getMessage()], 500);
         }
     }
 
@@ -80,7 +108,7 @@ class FcdrrReports extends Controller
             return response()->json(['Message' => 'Saved successfully'], 200);
         } catch (Exception $ex) {
             Log::error($ex);
-            return response()->json(['Message' => 'Could not save setting: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Could not save changes: ' . $ex->getMessage()], 500);
         }
     }
 
@@ -88,6 +116,15 @@ class FcdrrReports extends Controller
     {
         try {
             return  FcdrrSetting::all();
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error getting Settings: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function getFcdrrSettingByName(Request $request)
+    {
+        try {
+            return FcdrrSetting::where('name', $request->name)->first();
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error getting Settings: ' . $ex->getMessage()], 500);
         }

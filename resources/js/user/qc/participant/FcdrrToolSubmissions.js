@@ -5,7 +5,7 @@ import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exp
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
-class FcdrrToolDashboard extends React.Component {
+class FcdrrToolSubmissions extends React.Component {
 
     constructor(props) {
         super(props);
@@ -260,12 +260,12 @@ class FcdrrToolDashboard extends React.Component {
 
         let dashboardHeader = <div key={1} style={{ "marginBottom": "24px" }} className="row">
             <div className="col-sm-6">
-                <h5 className="m-0 text-dark">Facility Consumption Data Report & Requisition for ASANTE</h5>
+                <h5 className="m-0 text-sm text-muted text-uppercase text-bold">Facility Consumption Data Report & Requisition for ASANTE</h5>
             </div>
             <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right">
                     <li className="breadcrumb-item"><a href="/dashboard">RTRI QC</a></li>
-                    <li className="breadcrumb-item active">Dashboard</li>
+                    <li className="breadcrumb-item active">Submissions</li>
                 </ol>
             </div>
 
@@ -275,7 +275,7 @@ class FcdrrToolDashboard extends React.Component {
             <div key={2} className="row">
                 <div className="col-sm-12">
                     <div className="col-sm-12 mb-5">
-                        <h3 className="float-left">All Submissions</h3>
+                    <h4 className="float-left text-bold">All Submissions</h4>
                         <div className="float-right">
                             {canSubmit ?
                                 <button onClick={() => {
@@ -286,7 +286,7 @@ class FcdrrToolDashboard extends React.Component {
                                 }} type="button" className="btn btn-info">
                                     Submit result
                                 </button> :
-                                <p style={{ "backgroundColor": "green", "color": "white" }}>New submission closed</p>
+                                <label className="badge badge-warning px-3 py-2 text-sm" title='You cannot submit data at this time.' style={{opacity: 0.8, cursor: 'not-allowed'}} >Submission closed</label>
                             }
                         </div>
                     </div>
@@ -416,8 +416,8 @@ class FcdrrToolDashboard extends React.Component {
 
 }
 
-export default FcdrrToolDashboard;
+export default FcdrrToolSubmissions;
 
-if (document.getElementById('fcdrr_tool_dashboard')) {
-    ReactDOM.render(<FcdrrToolDashboard />, document.getElementById('fcdrr_tool_dashboard'));
+if (document.getElementById('fcdrr_tool_submissions')) {
+    ReactDOM.render(<FcdrrToolSubmissions />, document.getElementById('fcdrr_tool_submissions'));
 }

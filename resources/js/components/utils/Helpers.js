@@ -561,7 +561,6 @@ export async function DeleteSubmissions(id) {
 
 }
 export async function DeleteFcdrrSubmissions(id) {
-
     try {
         const response = await axios({
             method: 'delete',
@@ -569,6 +568,19 @@ export async function DeleteFcdrrSubmissions(id) {
             // data: {
             //     user: user,
             // }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
+export async function deleteCommodityById(id) {
+    try {
+        const response = await axios({
+            method: 'delete',
+            url: `${settings.serverBaseApi}/fcdrr/commodities/` + id,
         });
         return response;
     } catch (err) {
@@ -917,6 +929,35 @@ export async function SaveFcdrrSetting(value, name) {
     }
 }
 
+export async function saveCommodity(payload) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/fcdrr/commodities`,
+            data: {
+                ...payload
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+
+}
+
+export async function getAllCommodities() {
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/fcdrr/commodities`);
+        const responseData = response;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
 
 export async function GetFcdrrReportRates(period) {
 
@@ -924,10 +965,10 @@ export async function GetFcdrrReportRates(period) {
         if (period != '' && period != null) {
             console.log(period);
             period = new Date(period);
-            period = period.getFullYear() + '-' + (period.getMonth()+1) + '-' + period.getDay();
+            period = period.getFullYear() + '-' + (period.getMonth() + 1) + '-' + period.getDay();
             console.log(period);
         }
-        
+
         const response = await axios.get(`${settings.serverBaseApi}/get_fcdrr_reporting_rates/` + period);
         const responseData = response.data;
         return responseData;
@@ -940,23 +981,23 @@ export async function GetFcdrrReportRates(period) {
 
 export function exportToExcel(bundle, filename) {
     console.log('Exporting to Excel');
-    if(!filename || filename == '' || filename == null || filename == undefined){
+    if (!filename || filename == '' || filename == null || filename == undefined) {
         filename = 'data';
     }
     // let bundle = this.state.data
-    if(bundle.length>0){
+    if (bundle.length > 0) {
         let csv = '';
-        filename = filename+'-'+new Date().toLocaleDateString().split('/').join('_')+'.csv'
+        filename = filename + '-' + new Date().toLocaleDateString().split('/').join('_') + '.csv'
         let keys = Object.keys(bundle[0])//.map(key => key.split('_').join(' '));
         csv += keys.join(',') + '\r\n';
         bundle.forEach(item => {
-            csv += keys.map(key => item[key] ).join(',') + '\r\n';
+            csv += keys.map(key => item[key]).join(',') + '\r\n';
         });
         var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         if (navigator.msSaveBlob) { // IE 10+
             navigator.msSaveBlob(blob, filename);
         } else {
-            if(document && document.createElement){
+            if (document && document.createElement) {
                 let link = document.createElement("a");
                 if (link.download !== undefined) { // feature detection
                     // Browsers that support HTML5 download attribute
@@ -973,7 +1014,7 @@ export function exportToExcel(bundle, filename) {
                 document.body.removeChild(link);
 
             } else {
-                if(window && window.open){
+                if (window && window.open) {
                     window.open('data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
                 }
             }

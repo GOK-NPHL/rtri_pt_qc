@@ -1,5 +1,6 @@
 <?php
 
+use App\FcdrrCommodity;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\PT\PTReadinessController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\QC\QCParticipantController;
 use App\Http\Controllers\Service\AggregatorController;
 use App\Http\Controllers\Service\CommonsController;
 use App\Http\Controllers\Service\FcdrrReports;
+use App\Http\Controllers\Service\FcdrrCommodities;
 use App\Http\Controllers\Service\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +43,32 @@ Route::get('/get_fcdrr_submission_by_id/{id}', [FcdrrReports::class, 'getFcdrrSu
 Route::post('/save_fcdrr_setting', [FcdrrReports::class, 'saveFcdrrSetting']);
 Route::get('/get_all_fcdrr_settings',  [FcdrrReports::class, 'getAllFcdrrSettings']);
 
+Route::prefix('fcdrr')->group(function () {
+    //--SUBMISSION--
+    Route::get('/submissions',  [FcdrrReports::class, 'getAllFcdrrSubmissions']);
+    Route::get('/submissions/{id}', [FcdrrReports::class, 'getFcdrrSubmissionById']);
+    Route::get('/submission/{id}', [FcdrrReports::class, 'getFcdrrSubmissionById']);
+    //--SETTINGS--
+    Route::get('/settings',  [FcdrrReports::class, 'getAllFcdrrSettings']);
+    Route::post('/setting', [FcdrrReports::class, 'saveFcdrrSetting']);
+    Route::get('/settings/{name}', [FcdrrReports::class, 'getFcdrrSettingByName']);
+    Route::get('/setting/{name}', [FcdrrReports::class, 'getFcdrrSettingByName']);
+    //--REPORTS--
+    Route::get('/reports', [FcdrrReports::class, 'getFcdrrReports']);
+    Route::get('/reports/{id}', [FcdrrReports::class, 'getFcdrrReportById']);
+    //reports by county
+    // Route::get('/reports/county/{county}', [FcdrrReports::class, 'getReportsByCounty']);
+    // //reports by lab
+    // Route::get('/reports/lab/{lab}', [FcdrrReports::class, 'getReportsByLab']);
+    // //reports by period
+    // Route::get('/reports/period/{period}', [FcdrrReports::class, 'getReportsByPeriod']);
+    //--COMMODITIES--
+    Route::get('/commodities', [FcdrrCommodities::class, 'getAllCommodities']);
+    Route::get('/commodities/{id}', [FcdrrCommodities::class, 'getCommodityById']);
+    Route::post('/commodities', [FcdrrCommodities::class, 'createCommodity']);
+    Route::put('/commodities/{id}', [FcdrrCommodities::class, 'updateCommodity']);
+    Route::delete('/commodities/{id}', [FcdrrCommodities::class, 'deleteCommodity']);
+});
 
 Route::delete('/delete_submissions/{id}', 'Service\Submission@deleteSubmission');
 Route::get('/get_submission_by_id/{id}', [Submission::class, 'getSubmissionById']);
