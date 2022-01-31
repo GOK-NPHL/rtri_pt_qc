@@ -84,14 +84,7 @@ class FcdrrTool extends React.Component {
                             mflCode: userDemographics[0].mfl_code,
                             reportDate: reportDate,
                             edittableSubmission: edittableSubmission,
-                            // commodities: userDemographics[0].commodities,
                         });
-                        // if (this.state.all_commodities && this.state.all_commodities.length > 0) {
-                        //     this.setState({
-                        //         commodities: this.state.all_commodities.filter(c => JSON.parse(userDemographics[0].commodities).includes(c.id)),
-                        //         // // // rowsNumbers: userDemographics[0].commodities ? JSON.parse(userDemographics[0].commodities).length : 0
-                        //     });
-                        // }
                     }
                     ////////////////////////
                     ////////////////////////
@@ -296,11 +289,6 @@ class FcdrrTool extends React.Component {
         return (
             <>
                 <div className="row">
-                    {/* <div className="col-sm-12 text-left">
-                        <small>
-                            {JSON.stringify(this.state.commodities)}
-                        </small>
-                    </div> */}
                     <div className="col-sm-12 text-left">
 
                         {
