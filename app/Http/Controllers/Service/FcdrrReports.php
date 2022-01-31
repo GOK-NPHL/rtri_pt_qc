@@ -42,6 +42,7 @@ class FcdrrReports extends Controller
                 'fcdrr_submissions.user_id',
                 'laboratories.lab_name',
                 'laboratories.mfl_code as mfl',
+                'laboratories.commodities as commodities',
                 'counties.name as county'
             )->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
                 ->join('counties', 'laboratories.county', '=', 'counties.id')

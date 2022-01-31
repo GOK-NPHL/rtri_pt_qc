@@ -150,7 +150,7 @@ class FcdrrToolSubmissions extends React.Component {
     }
 
     daysBetween(date1, date2) {
-        console.log(date1, date2)
+        // console.log(date1, date2)
         //Get 1 day in milliseconds
         let one_day = 1000 * 60 * 60 * 24;
 
@@ -176,7 +176,7 @@ class FcdrrToolSubmissions extends React.Component {
         let isPastWindowPeriod = currDay > this.state.windowPeriod;
 
         if (this.state.latestDate) { //check if has last months submission
-            console.log("one");
+            // console.log("one");
             let lastReportDate = new Date(this.state.latestDate);
             if (
                 (
@@ -202,7 +202,7 @@ class FcdrrToolSubmissions extends React.Component {
                 canSubmit = false
             }
         } else {
-            console.log("one 4");
+            // console.log("one 4");
             canSubmit = !isPastWindowPeriod;
         }
 

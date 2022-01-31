@@ -322,7 +322,7 @@ class Submission extends Controller
 
                 $submissionModel = new FcdrrSubmissionResults([
                     "submission_id" => $submissionId,
-                    "comodity_name" => $submission["forData"][$x][0],
+                    "commodity_name" => $submission["forData"][$x][0],
                     "unit_of_issue" => $submission["forData"][$x][1],
                     "beggining_balance" => $submission["forData"][$x][2],
                     "qnty_received_kemsa" => $submission["forData"][$x][3],

@@ -1,6 +1,6 @@
 import React from 'react';
 import StatsLabel from '../../../components/utils/stats/StatsLabel';
-import { SaveFcdrrSubmission, FetchCurrentParticipantDemographics, FetchFcdrrSubmission } from '../../../components/utils/Helpers';
+import { SaveFcdrrSubmission, FetchCurrentParticipantDemographics, FetchFcdrrSubmission, getAllCommodities } from '../../../components/utils/Helpers';
 import './Results.css';
 import { v4 as uuidv4 } from 'uuid';
 import './fcdrr.css';
@@ -22,52 +22,90 @@ class FcdrrTool extends React.Component {
             edittableSubmission: {},
             testerName: '',
             reportDate: new Date(),
-            rowsNumbers: 50,
+            rowsNumbers: 0,
             submissionId: null,
-            dataRows: []
+            dataRows: [],
+            all_commodities: [],
+            commodities: [],
+            filled_commodities: [],
         }
     }
 
     componentDidMount() {
 
         (async () => {
-            let edittableSubmission = null;
-            let userDemographics = null;
 
-            if (this.props.isEdit) {
-                edittableSubmission = await FetchFcdrrSubmission(this.props.editId);
-                this.setState({
-                    labId: edittableSubmission['data']['lab_id'],
-                    userId: edittableSubmission['data']['user_id'],
-                    labName: edittableSubmission['data']['lab_name'],
-                    countyName: edittableSubmission['data']['county'],
-                    mflCode: edittableSubmission['data']['mfl'],
-                    reportDate: new Date(edittableSubmission['data']['report_date']),
-                    edittableSubmission: edittableSubmission,
-                    userDemographics: userDemographics,
-                    submissionId: this.props.editId
-                });
-            } else {
-                
-                let reportDate = new Date();
-                let currDay = 30;
-                let currYear = reportDate.getUTCFullYear();
-                let currYMonth = reportDate.getUTCMonth()+1
-                let dt = currYear + "-" + currYMonth + "-" + currDay;
-                reportDate = new Date(dt)
-                // reportDate.setMonth(reportDate.getMonth() - 1);
-                
-                userDemographics = await FetchCurrentParticipantDemographics();
-                this.setState({
-                    userDemographics: userDemographics,
-                    labId: userDemographics[0].lab_id,
-                    userId: userDemographics[0].user_id,
-                    labName: userDemographics[0].lab_name,
-                    countyName: userDemographics[0].county,
-                    mflCode: userDemographics[0].mfl_code,
-                    reportDate: reportDate,
-                    edittableSubmission: edittableSubmission,
-                });
+            // fetch all commodities
+            try {
+                let al_c = await getAllCommodities();
+                if (al_c.status == 200) {
+                    this.setState({
+                        all_commodities: al_c.data
+                    });
+
+                    ////////////////////////
+                    ////////////////////////
+                    let edittableSubmission = null;
+                    let userDemographics = null;
+
+
+                    if (this.props.isEdit) {
+                        edittableSubmission = await FetchFcdrrSubmission(this.props.editId);
+                        this.setState({
+                            labId: edittableSubmission['data']['lab_id'],
+                            userId: edittableSubmission['data']['user_id'],
+                            labName: edittableSubmission['data']['lab_name'],
+                            countyName: edittableSubmission['data']['county'],
+                            mflCode: edittableSubmission['data']['mfl'],
+                            commodities: JSON.parse(edittableSubmission['data']['commodities']),
+                            reportDate: new Date(edittableSubmission['data']['report_date']),
+                            edittableSubmission: edittableSubmission,
+                            userDemographics: userDemographics,
+                            submissionId: this.props.editId,
+                            rowsNumbers: edittableSubmission['data']['commodities'] ? JSON.parse(edittableSubmission['data']['commodities']).length : 0
+                        });
+                    } else {
+
+                        let reportDate = new Date();
+                        let currDay = 30;
+                        let currYear = reportDate.getUTCFullYear();
+                        let currYMonth = reportDate.getUTCMonth() + 1
+                        let dt = currYear + "-" + currYMonth + "-" + currDay;
+                        reportDate = new Date(dt)
+                        // reportDate.setMonth(reportDate.getMonth() - 1);
+
+                        userDemographics = await FetchCurrentParticipantDemographics();
+                        this.setState({
+                            userDemographics: userDemographics,
+                            labId: userDemographics[0].lab_id,
+                            userId: userDemographics[0].user_id,
+                            labName: userDemographics[0].lab_name,
+                            countyName: userDemographics[0].county,
+                            mflCode: userDemographics[0].mfl_code,
+                            reportDate: reportDate,
+                            edittableSubmission: edittableSubmission,
+                            // commodities: userDemographics[0].commodities,
+                        });
+                        // if (this.state.all_commodities && this.state.all_commodities.length > 0) {
+                        //     this.setState({
+                        //         commodities: this.state.all_commodities.filter(c => JSON.parse(userDemographics[0].commodities).includes(c.id)),
+                        //         // // // rowsNumbers: userDemographics[0].commodities ? JSON.parse(userDemographics[0].commodities).length : 0
+                        //     });
+                        // }
+                    }
+                    ////////////////////////
+                    ////////////////////////
+                } else {
+                    console.log('error fetching all commodities');
+                    this.setState({
+                        all_commodities: [],
+                        message: 'Error fetching all commodities'
+                    });
+                    $('#returnedMessage').text("error fetching all commodities");
+                    $('#messageModal').modal('toggle');
+                }
+            } catch (error) {
+                console.log(error);
             }
         })();
     }
@@ -140,17 +178,16 @@ class FcdrrTool extends React.Component {
     }
 
     render() {
-       
+
         let editRows = [];
 
         if (this.state.edittableSubmission && this.state.edittableSubmission['results']) {
             this.state.edittableSubmission['results'].map((value, index) => {
                 editRows.push(
-
                     <tr key={uuidv4()} ref={`formData${index}`}>
                         <td>{index + 1}</td>
-                        <td><input type="text" defaultValue={value['comodity_name']} /></td>
-                        <td><input className="width120px" defaultValue={value['unit_of_issue']} type="text" /></td>
+                        <td><input readOnly={true} type="text" defaultValue={value['commodity_name']} /></td>
+                        <td><input readOnly={true} defaultValue={value['unit_of_issue']} type="text" /></td>
                         <td><input className="width120px" defaultValue={value['beggining_balance']} type="number" /></td>
                         <td><input className="width120px" defaultValue={value['qnty_received_kemsa']} type="number" /></td>
                         <td><input className="width120px" defaultValue={value['qnty_received_other_sources']} type="number" /></td>
@@ -168,14 +205,19 @@ class FcdrrTool extends React.Component {
                     </tr>
                 )
             });
-            let additionalRows = 50 - editRows.length;
             let currentRowLen = editRows.length;
-            if (additionalRows > 0) {
-                Array(additionalRows).fill(null).map((value, index) => {
-                    editRows.push(<tr key={uuidv4()} ref={`formData${index + currentRowLen}`}>
-                        <td>{index + currentRowLen + 1}</td>
-                        <td><input type="text" /></td>
-                        <td><input className="width120px" type="text" /></td>
+            if (this.state.all_commodities && this.state.all_commodities.length > 0 && this.state.commodities && this.state.commodities.length > 0 && this.state.commodities.length > currentRowLen) {
+                this.state.commodities.filter(cdt =>
+                    !Array.from(
+                        this.state.edittableSubmission["results"], e=>
+                            this.state.all_commodities.find(c=>c.commodity_name==e.commodity_name).id
+                    ).includes(cdt)
+                ).map((cm, cx) => {
+                    let { commodity_name, unit_of_issue } = this.state.all_commodities.find(w => w.id == cm) || {};
+                    editRows.push(<tr key={uuidv4()} ref={`formData${cx + currentRowLen}`}>
+                        <td>{cx + currentRowLen + 1}</td>
+                        <td><input type="text" defaultValue={commodity_name} readOnly={true} /></td>
+                        <td><input type="text" defaultValue={unit_of_issue} readOnly={true} /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -196,13 +238,15 @@ class FcdrrTool extends React.Component {
 
         } else {
 
-            if (this.state.dataRows.length == 0) {
+            if (this.state.dataRows.length == 0 && this.state.commodities.length > 0) {
                 let dataRows = [];
-                Array(50).fill(null).map((value, index) => {
-                    dataRows.push(<tr key={uuidv4()} ref={`formData${index}`}>
-                        <td>{index + 1}</td>
-                        <td><input type="text" /></td>
-                        <td><input className="width120px" type="text" /></td>
+                this.state.commodities.map((cm, cx) => {
+                    dataRows.push(<tr key={uuidv4()} ref={`formData${cx}`}>
+                        <td>{cx + 1}</td>
+                        <td><input type="text" defaultValue={cm.commodity_name} readOnly={true} /></td>
+                        {/* <td><input type="text" /></td> */}
+                        <td><input type="text" defaultValue={cm.unit_of_issue} readOnly={true} /></td>
+                        {/* <td><input className="width120px" type="text" /></td> */}
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -252,6 +296,11 @@ class FcdrrTool extends React.Component {
         return (
             <>
                 <div className="row">
+                    {/* <div className="col-sm-12 text-left">
+                        <small>
+                            {JSON.stringify(this.state.commodities)}
+                        </small>
+                    </div> */}
                     <div className="col-sm-12 text-left">
 
                         {

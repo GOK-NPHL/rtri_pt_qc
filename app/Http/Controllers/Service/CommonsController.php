@@ -33,6 +33,7 @@ class CommonsController extends Controller
                 'fcdrr_submissions.report_date',
                 'laboratories.lab_name',
                 'laboratories.mfl_code',
+                'laboratories.commodities',
                 'counties.name as county',
                 DB::raw('max(report_date) as latest_date')
             )->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')

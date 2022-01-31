@@ -21,7 +21,8 @@ class Laboratory extends Model
         'phone_number',
         'lab_name',
         'facility_level',
-        'county'
+        'county',
+        'commodities',
     ];
 
     public function personel()

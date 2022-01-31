@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\FcdrrCommodity;
 use App\Laboratory;
 use App\User;
 use Exception;
@@ -42,6 +43,7 @@ class ParticipantController extends Controller
                 'facility_level' => $request->lab['facility_level'],
                 'county' => $request->lab['county'],
                 'lab_name' => $request->lab['lab_name'],
+                'commodities' => json_encode($request->lab['commodities']),//json_encode(FcdrrCommodity::whereIn('id', $request->lab['commodities'])->get()),
             ]);
             return response()->json(['Message' => 'Created successfully'], 200);
         } catch (Exception $ex) {
@@ -63,6 +65,7 @@ class ParticipantController extends Controller
             $lab->facility_level = $request->lab['facility_level'];
             $lab->county = $request->lab['county'];
             $lab->lab_name = $request->lab['lab_name'];
+            $lab->commodities = json_encode($request->lab['commodities']);//json_encode(FcdrrCommodity::whereIn('id', $request->lab['commodities'])->get());
             $lab->save();
 
             return response()->json(['Message' => 'Saved successfully'], 200);

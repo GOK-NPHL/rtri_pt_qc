@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 import LineGraph from '../../../components/utils/charts/LineGraph';
 import RTCard from '../../../components/utils/RTCard';
 import StackedHorizontal from '../../../components/utils/charts/StackedHorizontal'
-import { SaveParticipant, FetchParticipant, EditParticipant, FetchCounties } from '../../../components/utils/Helpers';
+import { SaveParticipant, FetchParticipant, EditParticipant, FetchCounties, getAllCommodities } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { matchPath } from "react-router";
+import MultiSelect from "@kenshooui/react-multi-select";
+import "@kenshooui/react-multi-select/dist/style.css"
 
 class ParticipantForm extends React.Component {
 
@@ -27,7 +29,9 @@ class ParticipantForm extends React.Component {
             county: '',
             labName: '',
             pageState: 'add',
-            counties: []
+            counties: [],
+            all_commodities: [],
+            selectedCommodities: [],
         }
 
         this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -39,6 +43,7 @@ class ParticipantForm extends React.Component {
         this.handleFacilityLevelChange = this.handleFacilityLevelChange.bind(this);
         this.handleMflCodeChange = this.handleMflCodeChange.bind(this);
         this.handleLabNameChange = this.handleLabNameChange.bind(this);
+        this.handleCommoditiesChange = this.handleCommoditiesChange.bind(this);
 
     }
 
@@ -72,7 +77,8 @@ class ParticipantForm extends React.Component {
                         email: editData.email,
                         pageState: 'edit',
                         isActive: editData.is_active,
-                        counties: counties
+                        counties: counties,
+                        selectedCommodities: JSON.parse(editData.commodities) || [],
                     });
                 }
             })();
@@ -86,6 +92,24 @@ class ParticipantForm extends React.Component {
             })();
 
         }
+
+        // fetch all commodities
+        (async () => {
+            try {
+                let al_c = await getAllCommodities();
+                if(al_c.status == 200){
+                    this.setState({
+                        all_commodities: al_c.data
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        })()
+    }
+
+    handleCommoditiesChange(selectedItems) {
+        this.setState({ selectedCommodities: Array.from(selectedItems, item => item.id) });
     }
 
     handleNameChange(instituteName) {
@@ -163,6 +187,7 @@ class ParticipantForm extends React.Component {
                 lab['facility_level'] = this.state.facilityLevel;
                 lab['county'] = this.state.county;
                 lab['lab_name'] = this.state.labName;
+                lab['commodities'] = this.state.selectedCommodities; //Array.from(this.state.selectedCommodities, r => r.id);
 
                 let response;
                 if (this.state.pageState == 'edit') {
@@ -182,12 +207,18 @@ class ParticipantForm extends React.Component {
                             mflCode: '',
                             facilityLevel: '',
                             county: '',
-                            labName: ''
+                            labName: '',
+                            selectedCommodities: []
                         });
                     } else {
                         this.setState({
                             message: response.data.Message,
                         });
+                        setTimeout(() => {
+                            if(window && window.location){
+                                window.location.href = '/list-lab';
+                            }
+                        }, 4000);
                     }
                 }
 
@@ -204,10 +235,15 @@ class ParticipantForm extends React.Component {
 
                 <div className="card" style={{ "backgroundColor": "#ecf0f1" }}>
                     <div className="card-body">
-                        <h5 className="card-title">Add New Participant</h5><br />
+                        <div className='row'>
+                            <div className='col-md-2'>
+                                <a href='/list-lab' className='link link-primary'>&larr; All Participants</a>
+                            </div>
+                            <h5 className="card-title col-md-10 text-bold text-center text-uppercase">Add New Participant</h5>
+                        </div>
                         <hr />
-                        <div>
-                            <form action="#" >
+                        <div className='row'>
+                            <form action="#" className='col-md-12'>
 
                                 <div className="form-row">
 
@@ -304,6 +340,26 @@ class ParticipantForm extends React.Component {
                                             <option value={1}>True</option>
                                             <option value={0}>False</option>
                                         </select>
+                                    </div>
+
+                                    <div className="col-md-12 mb-3">
+                                        <label htmlFor="u_is_active" >Commodities</label>
+                                        {(this.state.all_commodities && this.state.all_commodities.length>0) && <MultiSelect
+                                            className="form-control"
+                                            items={Array.from(this.state.all_commodities, ac=>{
+                                                return {
+                                                    id: ac.id,
+                                                    label: ac.commodity_name
+                                                }
+                                            })}
+                                            selectedItems={Array.from(this.state.selectedCommodities, sc=>{
+                                                return {
+                                                    id: sc,
+                                                    label: this.state.all_commodities.find(c=>c.id==sc).commodity_name
+                                                }
+                                            })}
+                                            onChange={this.handleCommoditiesChange}
+                                        />}
                                     </div>
                                 </div>
 
