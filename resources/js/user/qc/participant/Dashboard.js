@@ -4,7 +4,7 @@ import LineGraph from '../../../components/utils/charts/LineGraph';
 import RTCard from '../../../components/utils/RTCard';
 import StackedHorizontal from '../../../components/utils/charts/StackedHorizontal'
 import SubmitResults from './SubmitResults'
-import { FetchSubmissions, DeleteSubmissions, exportToExcel } from '../../../components/utils/Helpers';
+import { FetchSubmissions, DeleteSubmissions, exportToExcel, fetchCurrentUserParams } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -25,7 +25,8 @@ class Dashboard extends React.Component {
             endeTableData: 10,
             activePage: 1,
             isEdit: false,
-            editId: null
+            editId: null,
+            userParams: {}
         }
         this.toggleView = this.toggleView.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
@@ -39,6 +40,12 @@ class Dashboard extends React.Component {
             let response = await FetchSubmissions();
             this.setState({
                 data: response,
+            })
+        })();
+        (async () => {
+            let response = await fetchCurrentUserParams();
+            this.setState({
+                userParams: response,
             })
         })();
 
@@ -126,7 +133,7 @@ class Dashboard extends React.Component {
         let tableElem = [];
 
         if (this.state.data.length > 0) {
-            console.log(this.state.data);
+            // console.log(this.state.data);
             this.state.data.map((element, index) => {
                 tableElem.push(
 
@@ -219,7 +226,7 @@ class Dashboard extends React.Component {
                                     <input type="text"
                                         style={{ "width": "70%", "float": "right", "marginBottom": "5px" }}
                                         onChange={(event) => {
-                                            console.log(this.state.allTableElements);
+                                            // console.log(this.state.allTableElements);
                                             let currElementsTableEl = this.state.allTableElements.filter(elemnt =>
                                                 elemnt['props']['children'][0]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
                                                 elemnt['props']['children'][1]['props']['children'].toLowerCase().trim().includes(event.target.value.trim().toLowerCase()) ||
@@ -283,7 +290,6 @@ class Dashboard extends React.Component {
         return (
             <React.Fragment>
                 {dashboardContent}
-
                 {/*message box */}
                 <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog" aria-labelledby="messageModalTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">

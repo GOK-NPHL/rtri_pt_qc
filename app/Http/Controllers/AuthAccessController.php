@@ -20,8 +20,7 @@ class AuthAccessController extends Controller
     public function __construct()
     {
         // $this->middleware('guest:admin', ['except' => ['signOut']]);
-
-        $this->middleware('auth:admin', ['except' => ['signOut', 'adminLogin', 'doLogin']]);
+        $this->middleware('auth:admin', ['except' => ['signOut', 'adminLogin', 'doLogin', 'getCurrentUserParams']]);
     }
 
     public function manageRoles()
@@ -64,9 +63,21 @@ class AuthAccessController extends Controller
             $user_email = $user->email;
             $user_role_ids = json_decode($user->roles);
             $user_roles = [];
+            $user_permissions = [];
             if($user_role_ids != null && count($user_role_ids) > 0) {
                 foreach($user_role_ids as $role_id) {
-                    $user_roles[] = UserRoles::find($role_id) ? UserRoles::find($role_id)->id : null;
+                    $role = UserRoles::find($role_id) ?? null;
+                    $role_permissions = json_decode($role->permissions);
+                    $user_roles[] = [
+                        'id' => $role->id,
+                        'name' => $role->name,
+                        // 'permissions' => $role_permissions,
+                    ];
+                    if($role_permissions != null && count($role_permissions) > 0) {
+                        foreach($role_permissions as $permission) {
+                            $user_permissions[] = $permission;
+                        }
+                    }
                 }
             }
             $user_group_ids = json_decode($user->groups);
@@ -81,7 +92,8 @@ class AuthAccessController extends Controller
                 'name' => $user_name,
                 'email' => $user_email,
                 'roles' => $user_roles,
-                'groups' => $user_groups,
+                'permissions' => $user_permissions,
+                // 'groups' => $user_groups,
             ];
 
             // $response = $user;

@@ -102,55 +102,60 @@ class NegativeKit extends React.Component {
 
                 <tr>
                     <td>{this.props.isRepeat ? 'Negative repeat' : 'QC -Negative'}</td>
-                    <td ><input onClick={
-                        () => {
-                            if (this.props.isRepeat) {
-                                this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.resultNegative(event)
+                    <td >
+                        <input onClick={
+                            () => {
+                                if (this.props.isRepeat) {
+                                    this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.resultNegative(event)
+                                }
                             }
                         }
-                    }
                         onChange={(event) => {
                             this.setState({
                                 hasNegativeControl: event.target.checked
                             })
                         }}
                         checked={this.state.hasNegativeControl}
-                        value="c" type="checkbox" /></td>
-                    <td ><input onClick={
-
-                        () => {
-                            if (this.props.isRepeat) {
-                                this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.resultNegative(event)
+                        value="c" type="checkbox" />
+                    </td>
+                    <td >
+                        <input onClick={
+                            () => {
+                                if (this.props.isRepeat) {
+                                    this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.resultNegative(event)
+                                }
                             }
                         }
-                    }
                         onChange={(event) => {
                             this.setState({
                                 hasNegativeVerification: event.target.checked
                             })
                         }}
                         checked={this.state.hasNegativeVerification}
-                        value="v" type="checkbox" /></td>
-                    <td ><input onClick={
-                        () => {
-                            if (this.props.isRepeat) {
-                                this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.resultNegative(event)
+                        value="v" type="checkbox" />
+                    </td>
+                    <td >
+                        <input onClick={
+                            () => {
+                                if (this.props.isRepeat) {
+                                    this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.resultNegative(event)
+                                }
                             }
                         }
-                    }
-                        onChange={(event) => {
-                            this.setState({
-                                hasNegativeLongterm: event.target.checked
-                            })
-                        }}
-                        checked={this.state.hasNegativeLongterm}
-                        value="lt" type="checkbox" /></td>
+                            onChange={(event) => {
+                                this.setState({
+                                    hasNegativeLongterm: event.target.checked
+                                })
+                            }}
+                            checked={this.state.hasNegativeLongterm}
+                            value="lt" type="checkbox" />
+                    </td>
                     <td onChange={
                         (event) => {
                             if (event.target.value == 'invalid') {
