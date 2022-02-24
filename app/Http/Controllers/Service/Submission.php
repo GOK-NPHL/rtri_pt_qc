@@ -330,7 +330,9 @@ class Submission extends Controller
                     "qnty_used" => $submission["forData"][$x][5],
                     "no_of_tests_done" => $submission["forData"][$x][6],
                     "losses_damages" => $submission["forData"][$x][7],
-                    "losses_errors" => $submission["forData"][$x][8],
+                    // "losses_errors" => $submission["forData"][$x][8],
+                    "losses_errors" => $submission["forData"][$x][7], //REPLICATING THE SAME VALUE AS THE LOSSES_DAMAGES
+                    "losses_comments" => $submission["forData"][$x][8],
                     "adjustments_positive" => $submission["forData"][$x][9],
                     "adjustments_negative" => $submission["forData"][$x][10],
                     "end_of_month_stock" => $submission["forData"][$x][11],

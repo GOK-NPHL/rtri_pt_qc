@@ -69,12 +69,13 @@ class FcdrrTool extends React.Component {
                         let reportDate = new Date();
                         let currDay = 30;
                         let currYear = reportDate.getUTCFullYear();
-                        let currYMonth = reportDate.getUTCMonth() + 1
-                        let dt = currYear + "-" + currYMonth + "-" + currDay;
-                        reportDate = new Date(dt)
+                        let currYMonth = reportDate.getUTCMonth()// + 1
+                        let dt = currYear + "-" + (parseInt(currYMonth)<10? '0'+currYMonth:currYMonth) + "-" + currDay;
+                        reportDate = new Date(currYear, currYMonth, currDay);
                         // reportDate.setMonth(reportDate.getMonth() - 1);
 
                         userDemographics = await FetchCurrentParticipantDemographics();
+                        let lab_comm_ids = JSON.parse(userDemographics[0]['commodities']);
                         this.setState({
                             userDemographics: userDemographics,
                             labId: userDemographics[0].lab_id,
@@ -84,6 +85,10 @@ class FcdrrTool extends React.Component {
                             mflCode: userDemographics[0].mfl_code,
                             reportDate: reportDate,
                             edittableSubmission: edittableSubmission,
+                            commodities: Array.from(this.state.all_commodities, (x) => {
+                                return lab_comm_ids.includes(x.id) ? x : null;
+                            } ).filter(x => x != null), 
+                            rowsNumbers: lab_comm_ids.length,
                         });
                     }
                     ////////////////////////
@@ -188,7 +193,8 @@ class FcdrrTool extends React.Component {
                         <td><input className="width120px" defaultValue={value['no_of_tests_done']} type="number" /></td>
                         <td></td>
                         <td><input className="width120px" defaultValue={value['losses_damages']} type="number" /></td>
-                        <td><input className="width120px" defaultValue={value['losses_errors']} type="number" /></td>
+                        {/* <td><input className="width120px" defaultValue={value['losses_errors']} type="number" /></td> */}
+                        <td><textarea style={{width: '240px'}} defaultValue={value['losses_comments']} rows={2} /></td>
                         <td><input className="width120px" defaultValue={value['adjustments_positive']} type="number" /></td>
                         <td><input className="width120px" defaultValue={value['adjustments_negative']} type="number" /></td>
                         <td><input className="width120px" defaultValue={value['end_of_month_stock']} type="number" /></td>
@@ -218,7 +224,8 @@ class FcdrrTool extends React.Component {
                         <td><input className="width120px" type="number" /></td>
                         <td></td>
                         <td><input className="width120px" type="number" /></td>
-                        <td><input className="width120px" type="number" /></td>
+                        {/* <td><input className="width120px" type="number" /></td> */}
+                        <td><textarea style={{width: '240px'}} rows={2} /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -230,7 +237,7 @@ class FcdrrTool extends React.Component {
             }
 
         } else {
-
+            console.log('New submission');
             if (this.state.dataRows.length == 0 && this.state.commodities.length > 0) {
                 let dataRows = [];
                 this.state.commodities.map((cm, cx) => {
@@ -247,7 +254,8 @@ class FcdrrTool extends React.Component {
                         <td><input className="width120px" type="number" /></td>
                         <td></td>
                         <td><input className="width120px" type="number" /></td>
-                        <td><input className="width120px" type="number" /></td>
+                        {/* <td><input className="width120px" type="number" /></td> */}
+                        <td><textarea style={{width: '240px'}} rows={2} /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -259,6 +267,9 @@ class FcdrrTool extends React.Component {
                 this.setState({
                     dataRows: dataRows
                 });
+            }else{
+                console.log('commodities error:', 'None assigned to this lab');
+                // console.log('this.state.commodities ', this.state.commodities)
             }
         }
 
@@ -330,6 +341,9 @@ class FcdrrTool extends React.Component {
                     </div>
                 </div>
                 <div className="row">
+                    {/* <div className='col-md-12'>
+                        {JSON.stringify(this.state.commodities,null,2)}
+                    </div> */}
                     <table className="unstrip no-table-border">
                         <tbody>
                             <tr className="alignTdChildLeft">
@@ -338,7 +352,8 @@ class FcdrrTool extends React.Component {
                                 <td><strong>County:</strong>  <u>{this.state.countyName}</u></td>
                             </tr>
                             <tr className="alignTdChildLeft">
-                                <td><strong>Report for month: </strong>
+                                <td colSpan={2} className="text-center">
+                                    <strong>Report for month: </strong>
                                     {/* <input type="month" /> */}
                                     <DatePicker
                                         dateFormat="yyyy/MM"
@@ -350,7 +365,8 @@ class FcdrrTool extends React.Component {
                                     // }}
                                     />
                                 </td>
-                                <td><strong>Ending month: </strong>
+                                {/* <td>
+                                    <strong>Ending month: </strong>
                                     <DatePicker
                                         dateFormat="yyyy/MM"
                                         selected={this.state.reportDate}
@@ -360,7 +376,7 @@ class FcdrrTool extends React.Component {
                                     //     })
                                     // }} 
                                     />
-                                </td>
+                                </td> */}
                             </tr>
                         </tbody>
                     </table>
@@ -396,10 +412,11 @@ class FcdrrTool extends React.Component {
                             <tr className="boldTdChildText">
                                 <td>Quantity received<br /> from central<br /> stores this month</td>
                                 <td> Quantity received <br />  from other <br />  sources (e.g. local suppliers)</td>
-                                <td>Quantity used</td>
+                                <td>Quantity used (including errors, invalid)</td>
                                 <td>Number of<br /> Tests done <br />(include repeats, QA/QC)</td>
                                 <td>Losses (damages, expiries & unaccounted for) </td>
-                                <td>Losses (errors, invalid & undetermined) </td>
+                                {/* <td>Losses (errors, invalid & undetermined) </td> */}
+                                <td>Losses reasons (Comments) </td>
                                 <td>Positive</td>
                                 <td>Negative</td>
                             </tr>

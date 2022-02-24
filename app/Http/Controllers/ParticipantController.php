@@ -106,6 +106,7 @@ class ParticipantController extends Controller
             $user->email = $request->personel['email'];
             $user->phone_number = $request->personel['phone_number'];
             $user->is_active = $request->personel['is_active'];
+            $user->roles = json_encode($request->personel['roles']);
             if (!empty($request->personel['password'])) {
                 $user->password = Hash::make($request->personel['password']);
             }
@@ -154,7 +155,8 @@ class ParticipantController extends Controller
                 'users.phone_number',
                 'users.has_pt_access',
                 'users.is_active',
-                'users.second_name'
+                'users.second_name',
+                'users.roles'
             )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
                 ->get();
 
@@ -178,7 +180,8 @@ class ParticipantController extends Controller
                 'users.phone_number',
                 'users.has_pt_access',
                 'users.is_active',
-                'users.second_name'
+                'users.second_name',
+                'users.roles'
             )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
                 ->where('users.id', '=', $request->id)
                 ->get();

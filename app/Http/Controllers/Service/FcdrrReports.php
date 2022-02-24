@@ -40,6 +40,7 @@ class FcdrrReports extends Controller
                 'fcdrr_submissions.report_date',
                 'fcdrr_submissions.lab_id',
                 'fcdrr_submissions.user_id',
+                'fcdrr_submissions.submitted',
                 'laboratories.lab_name',
                 'laboratories.mfl_code as mfl',
                 'laboratories.commodities as commodities',
@@ -55,7 +56,9 @@ class FcdrrReports extends Controller
                 ->get();
 
             $payload = ['data' => $submission[0], 'results' => $submissionResults];
-
+            if ($payload == null) {
+                return response()->json(['error' => 404, 'message' => 'No submission found'], 404);
+            }
             return $payload;
             // return SubmissionModel::all();
         } catch (Exception $ex) {
@@ -64,16 +67,52 @@ class FcdrrReports extends Controller
     }
 
 
-    public function getFcdrrReports()
+    public function getFcdrrReports(Request $request)
     {
         try {
             // $reports = FcdrrSubmissionResults::all();
             $reports = DB::table('fcdrr_submission_results')
                 ->join('fcdrr_submissions', 'fcdrr_submissions.id', '=', 'fcdrr_submission_results.submission_id')
                 ->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
+                ->join('fcdrr_commodities', 'fcdrr_commodities.commodity_name', '=', 'fcdrr_commodities.commodity_name')
                 ->join('counties', 'laboratories.county', '=', 'counties.id')
-                ->select('fcdrr_submission_results.*', 'counties.name as county_name', 'laboratories.lab_name', 'laboratories.mfl_code as lab_mfl', 'fcdrr_submissions.report_date', 'fcdrr_submissions.user_id')
+                ->select('fcdrr_submission_results.*', 'counties.name as county_name', 'counties.id as county_id', 'laboratories.lab_name', 'laboratories.mfl_code as lab_mfl', 'fcdrr_submissions.report_date', 'fcdrr_submissions.user_id', 'fcdrr_commodities.id as commodity_id')
                 ->get();
+
+            if ($request->has('county')) {
+                $reports = $reports->whereIn('county_name', $request->county);
+                if ($reports->count() == 0) {
+                    $reports = $reports->whereIn('county_id', $request->county);
+                }
+            }
+            if ($request->has('lab')) {
+                $reports = $reports->where('laboratories.id', $request->lab);
+                if ($reports->count() == 0) {
+                    $reports = $reports->whereIn('laboratories.id', $request->lab);
+                }
+                if ($reports->count() == 0) {
+                    $reports = $reports->whereIn('lab_mfl', $request->lab);
+                }
+            }
+            if ($request->has('date')) {
+                $reports = $reports->where('fcdrr_submissions.report_date', $request->date);
+                if ($reports->count() == 0) {
+                    $reports = $reports->whereIn('fcdrr_submissions.report_date', $request->date);
+                }
+            }
+            if ($request->has('commodity')) {
+                $reports = $reports->where('commodity_id', $request->commodity);
+                if ($reports->count() == 0) {
+                    $reports = $reports->whereIn('commodity_name', $request->commodity);
+                }
+                if ($reports->count() == 0) {
+                    $reports = $reports->whereIn('commodity_id', $request->commodity);
+                }
+            }
+
+            if ($reports == null) {
+                return response()->json(['error' => 404, 'message' => 'No reports found'], 404);
+            }
             return $reports;
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error getting reports: ' . $ex->getMessage()], 500);
@@ -84,6 +123,9 @@ class FcdrrReports extends Controller
     {
         try {
             $report = FcdrrSubmissionResults::find($request->id);
+            if ($report == null) {
+                return response()->json(['error' => 404, 'Message' => 'Report not found'], 404);
+            }
             return $report;
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error getting report: ' . $ex->getMessage()], 500);

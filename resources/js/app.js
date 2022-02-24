@@ -38,6 +38,13 @@ require('./user/report/FcdrrIndicators');
 
 require('./user/settings/FcdrrSetting');
 
+//access-control
+require('./user/settings/ManageRoles');
+require('./user/settings/RolesForm');
+require('./user/settings/ManagePermissions');
+require('./user/settings/ManageGroups');
+require('./user/settings/GroupsForm');
+
 require('./user/general/Dashboard');
 //Intrface code
 require('./components/system/org-unit/OrgUnits');

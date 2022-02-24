@@ -49,7 +49,7 @@ use Illuminate\Support\Facades\Gate;
 
         .nav-link:hover,
         .bg-light>a:hover {
-            color: #1900ff !important;
+            color: lightskyblue !important;
             ;
         }
 
@@ -88,6 +88,20 @@ use Illuminate\Support\Facades\Gate;
                                     <a class="dropdown-item" href="{{route('list-personel')}}">QC Lab Personel</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{route('fcdrr-settings')}}">Fcdrr Settings</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Access Management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <!-- <a class="dropdown-item" href="#">Users</a>
+                                    <div class="dropdown-divider"></div> -->
+                                    <a class="dropdown-item" href="{{route('manage-permissions')}}">Permissions</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{route('manage-roles')}}">Access Roles</a>
+                                    {{--<div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{route('manage-groups')}}">User groups</a>--}}
                                 </div>
                             </li>
 

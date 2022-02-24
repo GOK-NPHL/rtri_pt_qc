@@ -20,7 +20,7 @@ class QCAdminUsersController extends Controller
         try {
             return Admin::all();
         } catch (Exception $ex) {
-            return response()->json(['Message' => 'Could fetch users: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Could not fetch users: ' . $ex->getMessage()], 500);
         }
     }
 }

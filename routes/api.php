@@ -2,6 +2,7 @@
 
 use App\FcdrrCommodity;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AuthAccessController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\PT\PTReadinessController;
 use App\Http\Controllers\PT\PTShipmentController;
@@ -78,6 +79,48 @@ Route::get('/get_admin_users', [QCAdminUsersController::class, 'getAdminUsers'])
 Route::get('/get_admin_user/{id}', [AdminAuthController::class, 'getAdminUser']);
 Route::post('create_admin', [AdminAuthController::class, 'create']);
 Route::post('edit_admin', [AdminAuthController::class, 'edit']);
+
+Route::prefix('/access-management')->group(function (){
+    Route::get('/permissions', [AuthAccessController::class, 'getPermissions']);
+    Route::get('/user-permissions', [AuthAccessController::class, 'getUserPermissions']);
+    Route::get('/permission/{id}', [AuthAccessController::class, 'getPermission']);
+    Route::get('/permission', [AuthAccessController::class, 'getPermission']);
+    Route::post('/permission', [AuthAccessController::class, 'createPermission']);
+    Route::post('/permissions', [AuthAccessController::class, 'createPermission']);
+    Route::put('/permission/{id}', [AuthAccessController::class, 'updatePermission']);
+    Route::delete('/permission/{id}', [AuthAccessController::class, 'deletePermission']);
+
+    Route::get('/roles', [AuthAccessController::class, 'getRoles']);
+    Route::get('/user-roles', [AuthAccessController::class, 'getUserRoles']);
+    Route::get('/user-with-role', [AuthAccessController::class, 'getAllUsersWithRole']);
+    Route::get('/role/{id}', [AuthAccessController::class, 'getRole']);
+    Route::get('/role', [AuthAccessController::class, 'getRole']);
+    Route::post('/role', [AuthAccessController::class, 'createRole']);
+    Route::post('/roles', [AuthAccessController::class, 'createRole']);
+    Route::put('/role/{id}', [AuthAccessController::class, 'updateRole']);
+    Route::delete('/role/{id}', [AuthAccessController::class, 'deleteRole']);
+
+    Route::get('/groups', [AuthAccessController::class, 'getGroups']);
+    Route::get('/user-groups', [AuthAccessController::class, 'getUserGroups']);
+    Route::get('/group/{id}', [AuthAccessController::class, 'getGroup']);
+    Route::get('/group', [AuthAccessController::class, 'getGroup']);
+    Route::post('/group', [AuthAccessController::class, 'createGroup']);
+    Route::post('/groups', [AuthAccessController::class, 'createGroup']);
+    Route::put('/group/{id}', [AuthAccessController::class, 'updateGroup']);
+    Route::delete('/group/{id}', [AuthAccessController::class, 'deleteGroup']);
+
+    //users
+    Route::get('/users', [AuthAccessController::class, 'getUsers']);
+    Route::get('/user/me', [AuthAccessController::class, 'getCurrentUserParams']);
+    Route::get('users-by-role', [AuthAccessController::class, 'getUsersByRole']);
+    Route::get('/user/{id}', [AuthAccessController::class, 'getUser']);
+    Route::get('/user', [AuthAccessController::class, 'getUser']);
+    Route::post('/user', [AuthAccessController::class, 'createUser']);
+    Route::post('/users', [AuthAccessController::class, 'createUser']);
+    Route::put('/user/{id}', [AuthAccessController::class, 'updateUser']);
+    Route::delete('/user/{id}', [AuthAccessController::class, 'deleteUser']);
+
+});
 
 Route::get('/get_participants', [ParticipantController::class, 'getParticipants'])->name('get_participants')->middleware('auth:admin');
 Route::get('/get_participant/{id}', [ParticipantController::class, 'getParticipant'])->name('get_participant')->middleware('auth:admin');

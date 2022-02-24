@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FcdrrTool from './FcdrrTool'
-import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel } from '../../../components/utils/Helpers';
+import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel, FetchCurrentParticipantDemographics } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -11,6 +11,8 @@ class FcdrrToolSubmissions extends React.Component {
         super(props);
         this.state = {
             submissions: [],
+            userDemographics: null,
+            isAdmin: true, //get from session
             isSubmitResult: false,
             dtObject: null,
             message: "",
@@ -38,6 +40,23 @@ class FcdrrToolSubmissions extends React.Component {
 
     componentDidMount() {
 
+        //get user roles from session
+        (async () => {
+            let res = await FetchCurrentParticipantDemographics();
+            this.setState({
+                userDemographics: res,
+                isAdmin: res[0]?.is_admin || false
+            })
+            // this.setState({
+            //     userDemographics: userDemographics,
+            //     id: userDemographics[0].user_id,
+            //     firstName: userDemographics[0].name,
+            //     secondName: userDemographics[0].second_name,
+            //     email: userDemographics[0].user_email,
+            //     phoneNumber: userDemographics[0].user_phone_number,
+            // })
+        })();
+
         (async () => {
             let settings = await GetAllFcdrrSettings();
             let response = await FetchFcdrrSubmissions();
@@ -47,7 +66,7 @@ class FcdrrToolSubmissions extends React.Component {
             if (settings.status != 500) {
                 settings.map((setting) => {
                     if (setting.name == 'window_period') {
-                        windowPeriod = setting.value
+                        windowPeriod = parseInt(setting.value)
                     }
                 })
             }
@@ -153,15 +172,16 @@ class FcdrrToolSubmissions extends React.Component {
         // console.log(date1, date2)
         //Get 1 day in milliseconds
         let one_day = 1000 * 60 * 60 * 24;
-
+        
         // Convert both dates to milliseconds
         let date1_ms = date1.getTime();
         let date2_ms = date2.getTime();
-
+        
         // Calculate the difference in milliseconds
         let difference_ms = date2_ms - date1_ms;
         // Convert back to days and return
         let diff = Math.round(difference_ms / one_day);
+        // console.log(`daysBetween(${date1}, ${date2}), returning ${diff-1}`)
         return diff - 1;
     }
 
@@ -171,12 +191,13 @@ class FcdrrToolSubmissions extends React.Component {
         let toDayDate = new Date();
         let currDay = toDayDate.getDate();
         let currYear = toDayDate.getUTCFullYear();
-        let currYMonth = toDayDate.getUTCMonth();
+        let currYMonth = toDayDate.getUTCMonth()+1;
         let canSubmit = true;
         let isPastWindowPeriod = currDay > this.state.windowPeriod;
+        // console.log('isPastWindowPeriod: ',isPastWindowPeriod)
 
         if (this.state.latestDate) { //check if has last months submission
-            // console.log("one");
+            // console.log("latestDate");
             let lastReportDate = new Date(this.state.latestDate);
             if (
                 (
@@ -202,7 +223,7 @@ class FcdrrToolSubmissions extends React.Component {
                 canSubmit = false
             }
         } else {
-            // console.log("one 4");
+            // console.log("NOT latestdate");
             canSubmit = !isPastWindowPeriod;
         }
 
@@ -213,35 +234,38 @@ class FcdrrToolSubmissions extends React.Component {
                     <tr key={uuidv4()}>
                         <td>{element['lab_name']}</td>
                         <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
-                        <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
+                        <td>{((element['submitted'] != null && element['submitted'] != undefined) && element['submitted']==true || element['submitted']==1) ? 'Yes' : 'No'}</td>
                         <td>
-
-                            <a
-                                href="#"
-                                onClick={() => {
-                                    this.setState({
-                                        isSubmitResult: true,
-                                        isEdit: true,
-                                        editId: element['id'],
-                                        actionElement: element
-                                    })
-                                }}
-                                style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
-                                <i className="fas fa-edit"></i> Edit
-                            </a>
-
                             {
-                                (this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
-                                    ?
-                                    '' :
-                                    <a
-                                        onClick={() => this.deleteSubmissionHandler(element['id'])}
-                                        style={{ "display": "inlineBlock" }}
-                                        className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
-                                        <i className="fas fa-trash"></i> Delete
-                                    </a>
-                            }
+                            this.state.isAdmin || 
+                            ( (element['submitted'] != null && element['submitted'] != undefined) && (element['submitted']==false || element['submitted']=='false' || element['submitted']==0) ) ? <>
+                                <a
+                                    href="#"
+                                    onClick={() => {
+                                        this.setState({
+                                            isSubmitResult: true,
+                                            isEdit: true,
+                                            editId: element['id'],
+                                            actionElement: element
+                                        })
+                                    }}
+                                    style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                    className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
+                                    <i className="fas fa-edit"></i> Edit
+                                </a>
+
+                                {
+                                    (this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
+                                        ?
+                                        '' :
+                                        <a
+                                            onClick={() => this.deleteSubmissionHandler(element['id'])}
+                                            style={{ "display": "inlineBlock" }}
+                                            className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
+                                            <i className="fas fa-trash"></i> Delete
+                                        </a>
+                                }
+                            </> : null}
 
                         </td>
 
@@ -339,8 +363,8 @@ class FcdrrToolSubmissions extends React.Component {
                                 <thead>
                                     <tr>
                                         <th>Laboratory</th>
-                                        <th>Start month</th>
-                                        <th>End month</th>
+                                        <th>Reporting month</th>
+                                        <th>Submitted?</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

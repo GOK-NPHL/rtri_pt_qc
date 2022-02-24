@@ -75,6 +75,7 @@ export async function FetchUserAuthorities() {
 
     try {
         let response = await axios.get(`${settings.serverBaseApi}/user_authorities`);
+        // let response = await axios.get(`${settings.serverBaseApi}/access-management/permissions`);
         return response.data;
     } catch (err) {
         // Handle Error Here
@@ -475,6 +476,16 @@ export async function FetchFcdrrSubmission(id) {
         return responseData;
     } catch (err) {
         // Handle Error Here
+        return err.response
+    }
+}
+
+export async function fetchCurrentUserParams(){
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/access-management/user/me`);
+        const responseData = response.data;
+        return responseData;
+    } catch (error) {
         return err.response
     }
 }
@@ -945,6 +956,67 @@ export async function saveCommodity(payload) {
         return err.response
     }
 
+}
+
+export async function getAMresource(resource, id) {
+    try {
+        let url = `${settings.serverBaseApi}/access-management/${resource}`
+        if(id && id !== '') {
+            url += `/${id}`
+        }
+        let response = await axios(url);
+        return response;
+    } catch (err) {
+        console.log(err);
+        return err.response
+    }
+}
+
+export async function saveAMresource(payload, resource) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/access-management/${resource}`,
+            data: {
+                ...payload
+            }
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        return err.response
+    }
+}
+
+export async function updateAMresource(payload, resource, id) {
+    try {
+        const response = await axios({
+            method: 'put',
+            url: `${settings.serverBaseApi}/access-management/${resource}/` + id,
+            data: {
+                ...payload
+            }
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        return err.response
+    }
+}
+export async function deleteAMresource(payload, resource, id) {
+    try {
+        const response = await axios({
+            method: 'delete',
+            url: `${settings.serverBaseApi}/access-management/${resource}/` + id,
+            data: {
+                ...payload
+            }
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        return err.response
+    }
 }
 
 export async function getAllCommodities() {
