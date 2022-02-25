@@ -12,6 +12,7 @@ class RepeatSubmission extends Model
         "result_longterm_line",
         "interpretation",
         "qcsubmissions_id",
-        "test_type"
+        "test_type",
+        "submitted"
     ];
 }

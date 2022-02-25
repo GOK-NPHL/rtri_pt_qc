@@ -571,6 +571,24 @@ export async function DeleteSubmissions(id) {
     }
 
 }
+
+export async function SubmitQC(id) {
+
+    try {
+        const response = await axios({
+            method: 'put',
+            url: `${settings.serverBaseApi}/submit_submissions/` + id,
+            // data: {
+            //     user: user,
+            // }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
 export async function DeleteFcdrrSubmissions(id) {
     try {
         const response = await axios({

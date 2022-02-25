@@ -48,8 +48,8 @@ class SubmitResults extends React.Component {
             longtermTestRepeats: [],
             edittableSubmission: {},
             testerName: '',
-            formId: null
-
+            formId: null,
+            qcSubmitted: false,
         }
         this.onNameOfTestHandler = this.onNameOfTestHandler.bind(this);
         this.onQcLotReceiceDateHandler = this.onQcLotReceiceDateHandler.bind(this);
@@ -314,6 +314,7 @@ class SubmitResults extends React.Component {
             submission["resultLongtermRepeat"] = this.state.resultLongtermRepeat;
             submission["qcLongtermIntepreationRepeat"] = this.state.qcLongtermIntepreationRepeat;
             submission["formId"] = this.state.formId;
+            submission["submitted"] = this.state.qcSubmitted ? 1 : 0;
 
             (async () => {
                 let response = await SaveSubmission(submission);

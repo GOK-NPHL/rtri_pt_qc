@@ -72,6 +72,7 @@ Route::prefix('fcdrr')->group(function () {
 });
 
 Route::delete('/delete_submissions/{id}', 'Service\Submission@deleteSubmission');
+Route::put('/submit_submissions/{id}', 'Service\Submission@submitSubmission');
 Route::get('/get_submission_by_id/{id}', [Submission::class, 'getSubmissionById']);
 
 Route::delete('/delete_fcdrr_submissions/{id}', 'Service\Submission@deleteFcdrrSubmission');

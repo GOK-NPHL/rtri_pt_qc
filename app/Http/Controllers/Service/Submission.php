@@ -55,6 +55,7 @@ class Submission extends Controller
                     "qc_tested" => $submission["isQCTested"],
                     "not_test_reason" => $submission["qcNotTestedReason"],
                     "other_not_tested_reason" => $submission["qcNotTestedOtherReason"],
+                    "submitted" => $submission["submitted"] ?? 0,
                 ]
 
             );
@@ -122,7 +123,7 @@ class Submission extends Controller
             return response()->json(['Message' => 'Saved successfully'], 200);
         } catch (Exception $ex) {
             Log::error($ex);
-            return response()->json(['Message' => 'Could not save sumbmission: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Could not save submission: : ' . $ex->getMessage()], 500);
         }
     }
 
@@ -213,6 +214,7 @@ class Submission extends Controller
                 'qcsubmissions.kit_date_received',
                 'qcsubmissions.kit_lot_no',
                 'qcsubmissions.testing_date',
+                'qcsubmissions.submitted',
                 'laboratories.lab_name',
                 'laboratories.mfl_code',
             )->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
@@ -245,6 +247,7 @@ class Submission extends Controller
                 'qcsubmissions.tester_name',
                 'qcsubmissions.test_justification',
                 'qcsubmissions.qc_tested',
+                'qcsubmissions.submitted',
                 'qcsubmissions.not_test_reason',
                 'qcsubmissions.other_not_tested_reason',
                 'laboratories.email',
@@ -289,6 +292,42 @@ class Submission extends Controller
             return response()->json(['Message' => 'Deleted Successfully'], 200);
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Error deleting submission: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function submitSubmission(Request $request)
+    {
+        $user = Auth::user();
+        try {
+            $qs = SubmissionModel::find($request->id);
+            //$qs=DB::table('qcsubmissions')->where('id', $request->id);
+            if ($qs) {
+                $qs->submitted = 1;
+                $qs->save();
+                return response()->json(['Message' => 'Submitted Successfully'], 200);
+            } else {
+                return response()->json(['Message' => 'Submission not found'], 404);
+            }
+            return response()->json(['Message' => 'Submitted Successfully'], 200);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error submitting submission: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function submitRepeatSubmission(Request $request)
+    {
+        $user = Auth::user();
+        try {
+            $rqs = RepeatSubmission::find($request->id);
+            if ($rqs) {
+                $rqs->submitted = 1;
+                $rqs->save();
+                return response()->json(['Message' => 'Submitted Successfully'], 200);
+            } else {
+                return response()->json(['Message' => 'Submission not found'], 404);
+            }
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error submitting submission: ' . $ex->getMessage()], 500);
         }
     }
 
@@ -350,7 +389,7 @@ class Submission extends Controller
             return response()->json(['Message' => 'Saved successfully'], 200);
         } catch (Exception $ex) {
             Log::error($ex);
-            return response()->json(['Message' => 'Could not save sumbmission: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Could not save submission.. : ' . $ex->getMessage()], 500);
         }
     }
 

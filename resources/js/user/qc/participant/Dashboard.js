@@ -4,7 +4,7 @@ import LineGraph from '../../../components/utils/charts/LineGraph';
 import RTCard from '../../../components/utils/RTCard';
 import StackedHorizontal from '../../../components/utils/charts/StackedHorizontal'
 import SubmitResults from './SubmitResults'
-import { FetchSubmissions, DeleteSubmissions, exportToExcel, fetchCurrentUserParams } from '../../../components/utils/Helpers';
+import { FetchSubmissions, DeleteSubmissions, SubmitQC, exportToExcel, fetchCurrentUserParams } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -98,10 +98,29 @@ class Dashboard extends React.Component {
                     message: response?.data?.Message || response?.message || 'Deleted successfully'
                 })
                 $('#messageModal').modal('toggle');
-            }else if(!window || !window.confirm || window == undefined){
+            } else if (!window || !window.confirm || window == undefined) {
                 let response = await DeleteSubmissions(id);
                 this.setState({
                     message: response?.data?.Message || response?.message || 'Deleted successfully'
+                })
+                $('#messageModal').modal('toggle');
+            }
+        })();
+
+        this.fetchSubmissions();
+    }
+    submitSubmissionHandler(id) {
+        (async () => {
+            if (window && window.confirm("Are you sure you want to submit this?")) {
+                let response = await SubmitQC(id);
+                this.setState({
+                    message: response?.data?.Message || response?.message || 'Submitted successfully'
+                })
+                $('#messageModal').modal('toggle');
+            } else if (!window || !window.confirm || window == undefined) {
+                let response = await SubmitQC(id);
+                this.setState({
+                    message: response?.data?.Message || response?.message || 'Submitted successfully'
                 })
                 $('#messageModal').modal('toggle');
             }
@@ -132,7 +151,7 @@ class Dashboard extends React.Component {
 
         let tableElem = [];
 
-        if (this.state.data.length > 0) {
+        if (this.state.data.length > 0 && this.state.userParams && this.state.userParams.roles && this.state.userParams.roles.length > 0) {
             // console.log(this.state.data);
             this.state.data.map((element, index) => {
                 tableElem.push(
@@ -144,25 +163,64 @@ class Dashboard extends React.Component {
                         <td>{element['kit_lot_no']}</td>
                         <td>{element['testing_date']}</td>
                         <td>
-                            <a
-                                href="#"
-                                onClick={() => {
-                                    this.setState({
-                                        isSubmitResult: true,
-                                        isEdit: true,
-                                        editId: element['id']
-                                    })
-                                }}
-                                style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm text-xs btn-info text-white">
-                                <i className="fas fa-edit"></i> Edit
-                            </a>
-                            <a
-                                onClick={() => this.deleteSubmissionHandler(element['id'])}
-                                style={{ "display": "inlineBlock" }}
-                                className="d-none d-sm-inline-block btn btn-sm text-xs btn-danger text-white">
-                                <i className="fas fa-trash"></i> Delete
-                            </a>
+                            {element['submitted'] == 1 || element['submitted'] == true ? 'Yes' : <>
+                                No&nbsp;
+                                {this.state.userParams.permissions.includes("edit_qc") && <a
+                                    href="#"
+                                    onClick={() => this.submitSubmissionHandler(element['id'])}
+                                    style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                    className="btn btn-xs text-xs btn-success text-white">
+                                    Submit now
+                                </a>}
+                            </>}
+                        </td>
+                        <td>
+                            {this.state.userParams.permissions.includes("edit_qc") && <>
+                                {((
+                                    this.state.userParams.roles.filter(rl => rl.name == "Administrator").length > 0 ||
+                                    this.state.userParams.permissions.includes("edit_qc_after_submission")
+                                ) ? <>
+                                    <a
+                                        href="#"
+                                        onClick={() => {
+                                            this.setState({
+                                                isSubmitResult: true,
+                                                isEdit: true,
+                                                editId: element['id']
+                                            })
+                                        }}
+                                        style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                        className="d-none d-sm-inline-block btn btn-sm text-xs btn-info text-white">
+                                        <i className="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a
+                                        onClick={() => this.deleteSubmissionHandler(element['id'])}
+                                        style={{ "display": "inlineBlock" }}
+                                        className="d-none d-sm-inline-block btn btn-sm text-xs btn-danger text-white">
+                                        <i className="fas fa-trash"></i> Delete
+                                    </a>
+                                </> : ( element['submitted'] != 1 && element['submitted'] != true &&<>
+                                    {this.state.userParams.permissions.includes("edit_qc") && <a
+                                        href="#"
+                                        onClick={() => {
+                                            this.setState({
+                                                isSubmitResult: true,
+                                                isEdit: true,
+                                                editId: element['id']
+                                            })
+                                        }}
+                                        style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                        className="d-none d-sm-inline-block btn btn-sm text-xs btn-info text-white">
+                                        <i className="fas fa-edit"></i> Edit
+                                    </a>}
+                                    {this.state.userParams.permissions.includes("delete_qc") && <a
+                                        onClick={() => this.deleteSubmissionHandler(element['id'])}
+                                        style={{ "display": "inlineBlock" }}
+                                        className="d-none d-sm-inline-block btn btn-sm text-xs btn-danger text-white">
+                                        <i className="fas fa-trash"></i> Delete
+                                    </a>}
+                                </>))}
+                            </>}
                         </td>
 
                     </tr>
@@ -196,17 +254,17 @@ class Dashboard extends React.Component {
                     <div className="col-sm-12 mb-5">
                         <h3 className="float-left">All Submissions</h3>
                         <div className="float-right">
-                            <button onClick={() => {
+                            {this.state.userParams && this.state.userParams.roles && this.state.userParams.roles.length > 0 && this.state.userParams.permissions.includes("add_qc") && <button onClick={() => {
                                 this.setState({
                                     isSubmitResult: true,
                                     isEdit: false
                                 })
-                            }} type="button" className="btn btn-info">Submit result</button>
+                            }} type="button" className="btn btn-info">Submit result</button>}
                         </div>
                     </div>
 
 
-                    <div id='user_table' className='row p-3 ' style={{backgroundColor: '#f6f6f2', border: '1px solid #d6d6d2', borderRadius: '4px'}}>
+                    <div id='user_table' className='row p-3 ' style={{ backgroundColor: '#f6f6f2', border: '1px solid #d6d6d2', borderRadius: '4px' }}>
                         {this.props.isShowNewShipmentPage ? <div className="col-sm-12 mb-3 mt-3"><h3 className="float-left">All Shipments</h3> </div> : ''}
                         <div className='col-sm-12 col-md-12'>
 
@@ -258,6 +316,7 @@ class Dashboard extends React.Component {
                                         <th>Kit Date Received</th>
                                         <th>Kit Lot No</th>
                                         <th>Testing Date</th>
+                                        <th>Submitted?</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -290,6 +349,9 @@ class Dashboard extends React.Component {
         return (
             <React.Fragment>
                 {dashboardContent}
+                {window && window.location && window.location.href.includes('localhost') && <details style={{ color: '#777', marginTop: '2.3em' }}><summary>User params:</summary><pre style={{ whiteSpace: 'pre-wrap' }}>
+                    {this.state.userParams && this.state.userParams.roles && this.state.userParams.roles.length > 0 && JSON.stringify(this.state.userParams, null, 2)}
+                </pre></details>}
                 {/*message box */}
                 <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog" aria-labelledby="messageModalTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
