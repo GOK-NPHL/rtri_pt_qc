@@ -103,77 +103,100 @@ class NegativeKit extends React.Component {
                 <tr>
                     <td>{this.props.isRepeat ? 'Negative repeat' : 'QC -Negative'}</td>
                     <td >
-                        <input onClick={
-                            () => {
+                        <input 
+                        onChange={(event) => {
+                            const origVal = event.target.checked;
+                            if(window && window.confirm('Are you sure you want to change this value?')){
+                                // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
                                 } else {
                                     this.props.resultNegative(event)
                                 }
+                                // </moved from onclick
+                                this.setState({
+                                    hasNegativeControl: event.target.checked
+                                })
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
+                                event.target.checked = origVal;
                             }
-                        }
-                        onChange={(event) => {
-                            this.setState({
-                                hasNegativeControl: event.target.checked
-                            })
                         }}
                         checked={this.state.hasNegativeControl}
                         value="c" type="checkbox" />
                     </td>
                     <td >
-                        <input onClick={
-                            () => {
+                        <input 
+                        onChange={(event) => {
+                            const origVal = event.target.checked;
+                            if(window && window.confirm('Are you sure you want to change this value?')){
+                                // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
                                 } else {
                                     this.props.resultNegative(event)
                                 }
+                                // </moved from onclick
+                                this.setState({
+                                    hasNegativeVerification: event.target.checked
+                                })
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
+                                event.target.checked = origVal;
                             }
-                        }
-                        onChange={(event) => {
-                            this.setState({
-                                hasNegativeVerification: event.target.checked
-                            })
                         }}
                         checked={this.state.hasNegativeVerification}
                         value="v" type="checkbox" />
                     </td>
                     <td >
-                        <input onClick={
-                            () => {
-                                if (this.props.isRepeat) {
-                                    this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
-                                } else {
-                                    this.props.resultNegative(event)
-                                }
-                            }
-                        }
+                        <input 
                             onChange={(event) => {
-                                this.setState({
-                                    hasNegativeLongterm: event.target.checked
-                                })
+                                const origVal = event.target.checked;
+                                if(window && window.confirm('Are you sure you want to change this value?')){
+                                    // <moved from onclick
+                                    if (this.props.isRepeat) {
+                                        this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
+                                    } else {
+                                        this.props.resultNegative(event)
+                                    }
+                                    // </moved from onclick
+                                    this.setState({
+                                        hasNegativeLongterm: event.target.checked
+                                    })
+                                }else{
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    event.target.checked = origVal;
+                                }
                             }}
                             checked={this.state.hasNegativeLongterm}
                             value="lt" type="checkbox" />
                     </td>
                     <td onChange={
                         (event) => {
-                            if (event.target.value == 'invalid') {
-                                this.setState({
-                                    isShowNegativeRepeat: true
-                                })
-                            } else {
-                                this.setState({
-                                    isShowNegativeRepeat: false
-                                })
-                            }
+                            const origVal = event.target.value;
+                            if (window && window.confirm('Are you sure you want to change this value?')) {
+                                if (event.target.value == 'invalid') {
+                                    this.setState({
+                                        isShowNegativeRepeat: true
+                                    })
+                                } else {
+                                    this.setState({
+                                        isShowNegativeRepeat: false
+                                    })
+                                }
 
-                            if (this.props.isRepeat) {
-                                this.props.qcInterpretationNegative(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.qcInterpretationNegative(event)
+                                if (this.props.isRepeat) {
+                                    this.props.qcInterpretationNegative(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.qcInterpretationNegative(event)
+                                }
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
                             }
-
                         }
                     }>
                         <div className="form-check form-check-inline">

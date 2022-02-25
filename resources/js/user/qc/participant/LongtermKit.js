@@ -94,79 +94,100 @@ class LongtermKit extends React.Component {
             <React.Fragment>
                 <tr >
                     <td>{this.props.isRepeat ? 'Long term repeat' : 'QC - Long Term'}</td>
-                    <td ><input onClick={
-                        () => {
-                            if (this.props.isRepeat) {
-                                this.props.resultLongterm(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.resultLongterm(event)
-                            }
-                        }
-                    }
-
+                    <td ><input 
                         onChange={(event) => {
-                            this.setState({
-                                hasLongtermControl: event.target.checked
-                            })
+                            const origVal = event.target.checked;
+                            if(window && window.confirm('Are you sure you want to change this value?')){
+                                // <moved from onclick
+                                if (this.props.isRepeat) {
+                                    this.props.resultLongterm(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.resultLongterm(event)
+                                }
+                                // </moved from onclick
+                                this.setState({
+                                    hasLongtermControl: event.target.checked
+                                })
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
+                                event.target.checked = origVal;
+                            }
                         }}
                         checked={this.state.hasLongtermControl}
 
 
                         value="c" type="checkbox" /></td>
-                    <td ><input onClick={
-                        () => {
-                            if (this.props.isRepeat) {
-                                this.props.resultLongterm(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.resultLongterm(event)
-                            }
-                        }
-                    }
-
-
+                    <td ><input 
                         onChange={(event) => {
-                            this.setState({
-                                hasLongtermVerification: event.target.checked
-                            })
+                            const origVal = event.target.checked;
+                            if(window && window.confirm('Are you sure you want to change this value?')){
+                                // <moved from onclick
+                                if (this.props.isRepeat) {
+                                    this.props.resultLongterm(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.resultLongterm(event)
+                                }
+                                // </moved from onclick
+                                this.setState({
+                                    hasLongtermVerification: event.target.checked
+                                })
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
+                                event.target.checked = origVal;
+                            }
                         }}
                         checked={this.state.hasLongtermVerification}
 
 
                         value="v" type="checkbox" /></td>
-                    <td ><input onClick={
-                        () => {
-                            if (this.props.isRepeat) {
-                                this.props.resultLongterm(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.resultLongterm(event)
-                            }
-                        }
-                    }
-
+                    <td ><input 
                         onChange={(event) => {
-                            this.setState({
-                                hasLongtermLongterm: event.target.checked
-                            })
+                            const origVal = event.target.checked;
+                            if(window && window.confirm('Are you sure you want to change this value?')){
+                                // <moved from onclick
+                                if (this.props.isRepeat) {
+                                    this.props.resultLongterm(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.resultLongterm(event)
+                                }
+                                // </moved from onclick
+                                this.setState({
+                                    hasLongtermLongterm: event.target.checked
+                                })
+                            }else{
+                                // reset the value
+                                event.preventDefault();
+                                event.stopPropagation();
+                                event.target.checked = origVal;
+                            }
                         }}
                         checked={this.state.hasLongtermLongterm}
 
                         value="lt" type="checkbox" /></td>
                     <td onChange={
                         (event) => {
-                            if (event.target.value == 'invalid') {
-                                this.setState({
-                                    isShowLongtermRepeat: true
-                                })
-                            } else {
-                                this.setState({
-                                    isShowLongtermRepeat: false
-                                })
-                            }
+                            const origVal = event.target.value;
+                            if (window && window.confirm('Are you sure you want to change this value?')) {
+                                if (event.target.value == 'invalid') {
+                                    this.setState({
+                                        isShowLongtermRepeat: true
+                                    })
+                                } else {
+                                    this.setState({
+                                        isShowLongtermRepeat: false
+                                    })
+                                }
 
-                            if (this.props.isRepeat) {
-                                this.props.qcInterpretationLongterm(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.qcInterpretationLongterm(event)
+                                if (this.props.isRepeat) {
+                                    this.props.qcInterpretationLongterm(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.qcInterpretationLongterm(event)
+                                }
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
                             }
 
                         }
