@@ -49,6 +49,7 @@ Route::prefix('fcdrr')->group(function () {
     Route::get('/submissions',  [FcdrrReports::class, 'getAllFcdrrSubmissions']);
     Route::get('/submissions/{id}', [FcdrrReports::class, 'getFcdrrSubmissionById']);
     Route::get('/submission/{id}', [FcdrrReports::class, 'getFcdrrSubmissionById']);
+    Route::put('/submit/{id}',  [FcdrrReports::class, 'submitFcdrr']);
     //--SETTINGS--
     Route::get('/settings',  [FcdrrReports::class, 'getAllFcdrrSettings']);
     Route::post('/setting', [FcdrrReports::class, 'saveFcdrrSetting']);
@@ -72,7 +73,7 @@ Route::prefix('fcdrr')->group(function () {
 });
 
 Route::delete('/delete_submissions/{id}', 'Service\Submission@deleteSubmission');
-Route::put('/submit_submissions/{id}', 'Service\Submission@submitSubmission');
+Route::put('/submit_qc/{id}', 'Service\Submission@submitSubmission');
 Route::get('/get_submission_by_id/{id}', [Submission::class, 'getSubmissionById']);
 
 Route::delete('/delete_fcdrr_submissions/{id}', 'Service\Submission@deleteFcdrrSubmission');

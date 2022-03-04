@@ -50,6 +50,30 @@ use Illuminate\Routing\Router;
                     <a class="nav-link" style="color: white;" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user"></i> {{ Auth::user()->name }} &#9662;
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-left">
+                        <span class="dropdown-item dropdown-header">
+                            <span>{{ Auth::user()->name }} {{ Auth::user()->second_name ?? Auth::user()->second_name }}</span>
+                            (<span>{{ Auth::user()->email }}</span>)
+                        </span>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ route('participant-qc-demographics') }}" class="dropdown-item nav-link">
+                            <i class="fas fa-edit mr-2"></i> Edit profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a  href="{{ route('logout') }}" class="dropdown-item nav-link">
+                            <i class="fa fa-door-open mr-2"></i> Log out
+                        </a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </li>
+            </ul>
         </nav>
         <!-- /.navbar -->
 
@@ -142,7 +166,7 @@ use Illuminate\Routing\Router;
 
 
                         <!-- Account features-->
-                        <li class="nav-item has-treeview">
+                        <!--<li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-user"></i>
                                 <p>
@@ -154,11 +178,11 @@ use Illuminate\Routing\Router;
                                 <li class="nav-item">
                                     <a href="{{ route('participant-qc-demographics') }}" class="nav-link {{ Route::is('participant-qc-demographics') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>My Login Information</p>
+                                        <p>{{ Auth::user()->name }} {{ Auth::user()->second_name ?? Auth::user()->second_name }}</p>
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li>-->
                         <!-- end account features -->
 
                         <li class="nav-item">
@@ -170,17 +194,6 @@ use Illuminate\Routing\Router;
                                 </p>
                             </a>
                         </li>
-
-                        <!-- <li class="nav-header">EXAMPLES</li>
-                        <li class="nav-item">
-                            <a href="pages/calendar.html" class="nav-link">
-                                <i class="nav-icon far fa-calendar-alt"></i>
-                                <p>
-                                    Calendar
-                                    <span class="badge badge-info right">2</span>
-                                </p>
-                            </a>
-                        </li> -->
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

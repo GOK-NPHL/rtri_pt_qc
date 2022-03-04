@@ -349,9 +349,9 @@ class Dashboard extends React.Component {
         return (
             <React.Fragment>
                 {dashboardContent}
-                {window && window.location && window.location.href.includes('localhost') && <details style={{ color: '#777', marginTop: '2.3em' }}><summary>User params:</summary><pre style={{ whiteSpace: 'pre-wrap' }}>
+                {/* {window && window.location && window.location.href.includes('localhost') && <details style={{ color: '#777', marginTop: '2.3em' }}><summary>User params:</summary><pre style={{ whiteSpace: 'pre-wrap' }}>
                     {this.state.userParams && this.state.userParams.roles && this.state.userParams.roles.length > 0 && JSON.stringify(this.state.userParams, null, 2)}
-                </pre></details>}
+                </pre></details>} */}
                 {/*message box */}
                 <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog" aria-labelledby="messageModalTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">

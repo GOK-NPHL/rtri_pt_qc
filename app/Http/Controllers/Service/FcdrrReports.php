@@ -66,6 +66,26 @@ class FcdrrReports extends Controller
         }
     }
 
+    
+    public function submitFcdrr(Request $request)
+    {
+        $user = Auth::user();
+        try {
+            $fcdrr = FcdrrSubmission::find($request->id);
+            //$fcdrr=DB::table('qcsubmissions')->where('id', $request->id);
+            if ($fcdrr) {
+                $fcdrr->submitted = 1;
+                $fcdrr->save();
+                return response()->json(['Message' => 'Submitted Successfully'], 200);
+            } else {
+                return response()->json(['Message' => 'Submission not found'], 404);
+            }
+            return response()->json(['Message' => 'Submitted Successfully'], 200);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error submitting FCDRR: ' . $ex->getMessage()], 500);
+        }
+    }
+
 
     public function getFcdrrReports(Request $request)
     {

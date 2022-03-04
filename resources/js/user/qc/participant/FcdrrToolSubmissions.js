@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FcdrrTool from './FcdrrTool'
-import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel, FetchCurrentParticipantDemographics } from '../../../components/utils/Helpers';
+import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel, FetchCurrentParticipantDemographics, fetchCurrentUserParams, SubmitFCDRR } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
@@ -28,7 +28,8 @@ class FcdrrToolSubmissions extends React.Component {
             settings: [],
             latestDate: null,
             windowPeriod: 1000000,
-            actionElement: null
+            actionElement: null,
+            userParams: {}
         }
         this.toggleView = this.toggleView.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
@@ -85,6 +86,13 @@ class FcdrrToolSubmissions extends React.Component {
                 })
             }
 
+        })();
+
+        (async () => {
+            let response = await fetchCurrentUserParams();
+            this.setState({
+                userParams: response,
+            })
         })();
 
     }
@@ -146,6 +154,27 @@ class FcdrrToolSubmissions extends React.Component {
         this.fetchSubmissions();
     }
 
+
+    submitSubmissionHandler(id) {
+        (async () => {
+            if (window && window.confirm("Are you sure you want to submit this?")) {
+                let response = await SubmitFCDRR(id);
+                this.setState({
+                    message: response?.data?.Message || response?.message || 'Submitted successfully'
+                })
+                $('#messageModal').modal('toggle');
+            } else if (!window || !window.confirm || window == undefined) {
+                let response = await SubmitFCDRR(id);
+                this.setState({
+                    message: response?.data?.Message || response?.message || 'Submitted successfully'
+                })
+                $('#messageModal').modal('toggle');
+            }
+        })();
+
+        this.fetchSubmissions();
+    }
+
     fetchSubmissions() {
         (async () => {
             let settings = await GetAllFcdrrSettings();
@@ -191,9 +220,12 @@ class FcdrrToolSubmissions extends React.Component {
         let toDayDate = new Date();
         let currDay = toDayDate.getDate();
         let currYear = toDayDate.getUTCFullYear();
-        let currYMonth = toDayDate.getUTCMonth()+1;
+        let currYMonth = toDayDate.getUTCMonth()//+1; - FIXING SUBMISSION WINDOW BUG
         let canSubmit = true;
         let isPastWindowPeriod = currDay > this.state.windowPeriod;
+
+        console.log('currYMonth:', currYMonth)
+        console.log('this.state.latestDate:', this.state.latestDate)
         // console.log('isPastWindowPeriod: ',isPastWindowPeriod)
 
         if (this.state.latestDate) { //check if has last months submission
@@ -234,38 +266,79 @@ class FcdrrToolSubmissions extends React.Component {
                     <tr key={uuidv4()}>
                         <td>{element['lab_name']}</td>
                         <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
-                        <td>{((element['submitted'] != null && element['submitted'] != undefined) && element['submitted']==true || element['submitted']==1) ? 'Yes' : 'No'}</td>
-                        <td>
-                            {
-                            this.state.isAdmin || 
-                            ( (element['submitted'] != null && element['submitted'] != undefined) && (element['submitted']==false || element['submitted']=='false' || element['submitted']==0) ) ? <>
-                                <a
+                        <td>{((element['submitted'] != null && element['submitted'] != undefined) && element['submitted']==true || element['submitted']==1) ? 'Yes' : 'No'}&nbsp;
+                                {element['submitted'] != 1 && element['submitted'] != true && this.state.userParams.permissions.includes("edit_fcdrr") && <a
                                     href="#"
-                                    onClick={() => {
-                                        this.setState({
-                                            isSubmitResult: true,
-                                            isEdit: true,
-                                            editId: element['id'],
-                                            actionElement: element
-                                        })
-                                    }}
+                                    onClick={() => this.submitSubmissionHandler(element['id'])}
                                     style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                    className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
-                                    <i className="fas fa-edit"></i> Edit
-                                </a>
+                                    className="btn btn-xs text-xs btn-success text-white">
+                                    Submit now
+                                </a>}</td>
+                        <td>
+                            {/* ----- */}
+                            {this.state.userParams.permissions.includes("edit_fcdrr") && <>
+                                {((
+                                    this.state.userParams.roles.filter(rl => rl.name == "Administrator").length > 0 ||
+                                    this.state.userParams.permissions.includes("edit_fcdrr_after_submission")
+                                ) ? <>
+                                   {this.state.userParams.permissions.includes("edit_fcdrr") &&  <a
+                                        href="#"
+                                        onClick={() => {
+                                            this.setState({
+                                                isSubmitResult: true,
+                                                isEdit: true,
+                                                editId: element['id']
+                                            })
+                                        }}
+                                        style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                        className="d-none d-sm-inline-block btn btn-sm text-xs btn-info text-white">
+                                        <i className="fas fa-edit"></i> Edit
+                                    </a> }
+                                    {(this.state.userParams.permissions.includes("delete_fcdrr") || this.state.userParams.permissions.includes("delete_fcdrr_after_submission")) &&
+                                        <>
+                                            {(this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
+                                                ?
+                                                '' :
+                                            <a
+                                                onClick={() => this.deleteSubmissionHandler(element['id'])}
+                                                style={{ "display": "inlineBlock" }}
+                                                className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
+                                                <i className="fas fa-trash"></i> Delete
+                                            </a>}
+                                        </>
+                                    }
+                                </> : ( element['submitted'] != 1 && element['submitted'] != true && <>
+                                    {this.state.userParams.permissions.includes("edit_fcdrr") && <a
+                                        href="#"
+                                        onClick={() => {
+                                            this.setState({
+                                                isSubmitResult: true,
+                                                isEdit: true,
+                                                editId: element['id'],
+                                                actionElement: element
+                                            })
+                                        }}
+                                        style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                        className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
+                                        <i className="fas fa-edit"></i> Edit
+                                    </a>}
 
-                                {
-                                    (this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
-                                        ?
-                                        '' :
-                                        <a
-                                            onClick={() => this.deleteSubmissionHandler(element['id'])}
-                                            style={{ "display": "inlineBlock" }}
-                                            className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
-                                            <i className="fas fa-trash"></i> Delete
-                                        </a>
-                                }
-                            </> : null}
+                                    {this.state.userParams.permissions.includes("delete_fcdrr") &&
+                                        <>
+                                            {(this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
+                                                ?
+                                                '' :
+                                            <a
+                                                onClick={() => this.deleteSubmissionHandler(element['id'])}
+                                                style={{ "display": "inlineBlock" }}
+                                                className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
+                                                <i className="fas fa-trash"></i> Delete
+                                            </a>}
+                                        </>
+                                    }
+                                </>))}
+                            </>}
+                            {/* ----- */}
 
                         </td>
 
@@ -288,8 +361,8 @@ class FcdrrToolSubmissions extends React.Component {
             </div>
             <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right">
-                    <li className="breadcrumb-item"><a href="/dashboard">RTRI QC</a></li>
-                    <li className="breadcrumb-item active">Submissions</li>
+                    <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
+                    <li className="breadcrumb-item active">FCDRR Submissions</li>
                 </ol>
             </div>
 
@@ -300,7 +373,7 @@ class FcdrrToolSubmissions extends React.Component {
                 <div className="col-sm-12">
                     <div className="col-sm-12 mb-5">
                     <h4 className="float-left text-bold">All Submissions</h4>
-                        <div className="float-right">
+                    {this.state.userParams && this.state.userParams.roles && this.state.userParams.roles.length > 0 && this.state.userParams.permissions.includes("add_fcdrr") && <div className="float-right">
                             {canSubmit ?
                                 <button onClick={() => {
                                     this.setState({
@@ -312,7 +385,7 @@ class FcdrrToolSubmissions extends React.Component {
                                 </button> :
                                 <label className="badge badge-warning px-3 py-2 text-sm" title='You cannot submit data at this time.' style={{opacity: 0.8, cursor: 'not-allowed'}} >Submission closed</label>
                             }
-                        </div>
+                        </div>}
                     </div>
 
 

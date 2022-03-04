@@ -577,7 +577,25 @@ export async function SubmitQC(id) {
     try {
         const response = await axios({
             method: 'put',
-            url: `${settings.serverBaseApi}/submit_submissions/` + id,
+            url: `${settings.serverBaseApi}/submit_qc/` + id,
+            // data: {
+            //     user: user,
+            // }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
+
+export async function SubmitFCDRR(id) {
+
+    try {
+        const response = await axios({
+            method: 'put',
+            url: `${settings.serverBaseApi}/fcdrr/submit/` + id,
             // data: {
             //     user: user,
             // }
