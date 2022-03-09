@@ -58,6 +58,7 @@ Route::prefix('fcdrr')->group(function () {
     //--REPORTS--
     Route::get('/reports', [FcdrrReports::class, 'getFcdrrReports']);
     Route::get('/reports/{id}', [FcdrrReports::class, 'getFcdrrReportById']);
+    Route::get('/reporting-rates', [FcdrrReports::class, 'getFcdrrReportingRates']);
     //reports by county
     // Route::get('/reports/county/{county}', [FcdrrReports::class, 'getReportsByCounty']);
     // //reports by lab

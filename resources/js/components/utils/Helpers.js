@@ -538,7 +538,33 @@ export async function FetchAllFcdrrReports() {
         // Handle Error Here
         return err.response
     }
+}
+export async function FetchFcdrrReports({county_name, county_id, date, lab, commodity}) {
 
+    try {
+        let url = `${settings.serverBaseApi}/fcdrr/reports?all=1`;
+        if(county_name && county_name != null){
+            url += `&county_name=${county_name}`;
+        }
+        if(county_id && county_id != null){
+            url += `&county_id=${county_id}`;
+        }
+        if(date && date != null){
+            url += `&date=${date}`;
+        }
+        if(lab && lab != null){
+            url += `&lab=${lab}`;
+        }
+        if(commodity && commodity != null){
+            url += `&commodity=${commodity}`;
+        }
+        const response = await axios.get(url);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
 }
 
 export async function FetchAdminUser(userId) {
@@ -1074,10 +1100,32 @@ export async function GetFcdrrReportRates(period) {
             console.log(period);
             period = new Date(period);
             period = period.getFullYear() + '-' + (period.getMonth() + 1) + '-' + period.getDay();
-            console.log(period);
+            console.log('GetFcdrrReportRates:',period);
         }
 
         const response = await axios.get(`${settings.serverBaseApi}/get_fcdrr_reporting_rates/` + period);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+export async function getFcdrrReportingRates({county_name, county_id, date}) {
+
+    try {
+        let url = `${settings.serverBaseApi}/fcdrr/reporting-rates?all=1`
+        if(county_name && county_name != null){
+            url += `&county_name=${county_name}`;
+        }
+        if(county_id && county_id != null){
+            url += `&county_id=${county_id}`;
+        }
+        if(date && date != null){
+            url += `&period=${date}`;
+        }
+
+        const response = await axios.get(url);
         const responseData = response.data;
         return responseData;
     } catch (err) {

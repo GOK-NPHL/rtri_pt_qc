@@ -1,73 +1,204 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FcdrrTool from './FcdrrTool'
-import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel } from '../../../components/utils/Helpers';
+import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel, getFcdrrReportingRates, FetchFcdrrReports, FetchCounties, getAllCommodities } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
+import { render } from 'react-dom';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
 class FcdrrSummaryDashboard extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            submissions: [],
-            isSubmitResult: false,
-            dtObject: null,
-            message: "",
-            data: [],
-            currElementsTableEl: [],
-            allTableElements: [],
-            selectedElement: null,
-            startTableData: 0,
-            endeTableData: 10,
-            activePage: 1,
-            isEdit: false,
-            editId: null,
-            settings: [],
-            latestDate: null,
-            windowPeriod: 1000000,
-            actionElement: null
+            allReports: [],
+            loading: false,
+            reportingRates: [],
+            counties: [],
+            commodities: [],
+            reportsQuery: {
+                county_name: null,
+                county_id: null,
+                date: new Date().toISOString().substr(0, 7),
+                lab: null,
+                commodity: 1
+            },
+            stockStatusSummary: {
+                total_comsumption: 0,
+                total_losses: 0,
+                current_stock: 0,
+            },
+            accountabilitySummary: {
+                negative_adjustments: 0,
+                positive_adjustments: 0,
+            },
+            expiriesAnalysis: {
+                losses: 0,
+                opening: 0,
+                closing: 0,
+                used: 0,
+            },
+            status: null,
+            message: null,
         }
-        this.toggleView = this.toggleView.bind(this);
-        this.handlePageChange = this.handlePageChange.bind(this);
-        this.deleteSubmissionHandler = this.deleteSubmissionHandler.bind(this);
-        this.fetchSubmissions = this.fetchSubmissions.bind(this);
-        this.daysBetween = this.daysBetween.bind(this);
+        this.fetchAllReports = this.fetchAllReports.bind(this);
+        this.fetchAllCommodities = this.fetchAllCommodities.bind(this);
+        this.fetchReportingRates = this.fetchReportingRates.bind(this);
+        this.getMonths = this.getMonths.bind(this);
+        this.formatPeriod = this.formatPeriod.bind(this);
 
     }
 
-    componentDidMount() {
-
-        (async () => {
-            let settings = await GetAllFcdrrSettings();
-            let response = await FetchFcdrrSubmissions();
-
-            let windowPeriod = null;
-
-            if (settings.status != 500) {
-                settings.map((setting) => {
-                    if (setting.name == 'window_period') {
-                        windowPeriod = setting.value
-                    }
-                })
-            }
-
-            if (response.status == 500) {
-                this.setState({
-                    message: response.data.Message,
-                });
-                $('#messageModal').modal('toggle');
+    getMonths(noOfMonths) {
+        //format = 'YYYYMM
+        let months = [];
+        let currentMonth = new Date().getMonth() + 1;
+        let currentYear = new Date().getFullYear();
+        for (let i = 0; i < noOfMonths; i++) {
+            if (currentMonth < 10) {
+                months.push(currentYear + '-0' + currentMonth);
             } else {
-                this.setState({
-                    data: response,
-                    latestDate: response[0] ? response[0].latest_date : '',
-                    settings: settings,
-                    windowPeriod: windowPeriod
-                })
+                months.push(currentYear + '-' + currentMonth);
             }
+            currentMonth--;
+            if (currentMonth == 0) {
+                currentMonth = 12;
+                currentYear--;
+            }
+        }
+        return months;
+    }
+
+    formatPeriod(period) {
+        let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        if (period.length == 6 && !isNaN(period)) {
+            return months[period.substr(4, 2) - 1] + ' ' + period.substr(0, 4)
+        } else if (period.length == 7 && period.includes('-')) {
+            let prd = period.split('-');
+            return months[prd[1] - 1] + ' ' + prd[0]
+        }
+    }
+
+    fetchReportingRates(qry) {
+        (async () => {
+            this.setState({
+                loading: true
+            });
+            getFcdrrReportingRates(qry).then(res => {
+                if ( res && res.data && res.data.Message ){
+                    this.setState({
+                        loading: false,
+                        status: 'danger',
+                        message: 'An error occured while fetching reporting rates. ' + res?.data.Message || res?.status + ' ' + res?.statusText || ''
+                    })
+                }else{
+                    this.setState({
+                        reportingRates: res,
+                        loading: false,
+                        status: null,
+                        message: null
+                    })
+                }
+            })
+        })();
+    }
+
+    fetchAllReports(query) {
+        (async () => {
+            this.setState({
+                loading: true
+            })
+            FetchFcdrrReports(query).then(res => {
+                //if type = object, convert to array
+                if ( res && res.data && res.data.Message ){
+                    this.setState({
+                        loading: false,
+                        status: 'danger',
+                        message: 'An error occured while fetching reports. ' + res?.data.Message || res?.status + ' ' + res?.statusText || ''
+                    })
+                }else{
+                    let rps
+                    if (Array.isArray(res)) {
+                        rps = res
+                    } else if (typeof res === 'object' && res.length == undefined) {
+                        rps = Array.from(Object.keys(res), (key) => res[key])
+                    } else {
+                        rps = [];
+                    }
+                    let stockStatusSummary = {
+                        total_comsumption: 0,
+                        total_losses: 0,
+                        current_stock: 0,
+                    }
+                    let accountabilitySummary = {
+                        negative_adjustments: 0,
+                        positive_adjustments: 0,
+                    }
+                    let expiriesAnalysis = {
+                        losses: 0,
+                        opening: 0,
+                        closing: 0,
+                        used: 0,
+                    }
+                    rps.forEach(report => {
+                        stockStatusSummary.total_comsumption += (
+                            report.qnty_used + report.adjustments_negative
+                        )
+                        stockStatusSummary.total_losses += (
+                            report.losses_damages
+                        );
+                        stockStatusSummary.current_stock += report.end_of_month_stock;
+                        accountabilitySummary.negative_adjustments += (
+                            report.adjustments_negative + report.qnty_used + report.losses_damages + report.beggining_balance
+                        );
+                        accountabilitySummary.positive_adjustments += (
+                            report.adjustments_positive + report.end_of_month_stock + report.qnty_received_kemsa
+                        )
+
+                        expiriesAnalysis.losses += report.losses_damages;
+                        expiriesAnalysis.opening += report.beggining_balance;
+                        expiriesAnalysis.closing += report.end_of_month_stock;
+                        expiriesAnalysis.used += report.qnty_used;
+                    })
+                    this.setState({
+                        stockStatusSummary: stockStatusSummary,
+                        accountabilitySummary: accountabilitySummary,
+                        expiriesAnalysis: expiriesAnalysis,
+                        loading: false,
+                        allReports: rps,
+                        status: null,
+                        message: null
+                    })
+                }
+            })
 
         })();
+    }
 
+    fetchAllCommodities() {
+        (async () => {
+            getAllCommodities().then(al_c => {
+                if (al_c.status == 200) {
+                    this.setState({
+                        commodities: al_c.data
+                    });
+                }
+            })
+        })();
+    }
+
+    componentDidMount() {
+        this.fetchReportingRates(this.state.reportsQuery);
+        this.fetchAllReports(this.state.reportsQuery);
+        this.fetchAllCommodities();
+        (async () => {
+            let counties = await FetchCounties();
+            this.setState({
+                counties: counties
+            });
+        })();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -78,185 +209,7 @@ class FcdrrSummaryDashboard extends React.Component {
             this.fetchSubmissions();
         }
     }
-
-    handlePageChange(pageNumber) {
-        let pgNumber = pageNumber * 10 + 1;
-        this.setState({
-            startTableData: pgNumber - 11,
-            endeTableData: pgNumber - 1,
-            activePage: pageNumber
-        });
-    }
-
-    updatedSearchItem(currElementsTableEl) {
-        this.setState({
-            currElementsTableEl: currElementsTableEl,
-            activePage: 1,
-            startTableData: 0,
-            endeTableData: 10,
-        })
-    }
-
-    deleteSubmissionHandler(id) {
-
-        // (async () => {
-        //     let response = await DeleteFcdrrSubmissions(id);
-        //     this.setState({
-        //         message: response.data.Message,
-        //     });
-        //     $('#messageModal').modal('toggle');
-
-        // })();
-
-        (async () => {
-            if (window && window.confirm("Are you sure you want to delete this submission?")) {
-                let response = await DeleteFcdrrSubmissions(id);
-                this.setState({
-                    message: response?.data?.Message || response?.message || 'Deleted successfully'
-                })
-                $('#messageModal').modal('toggle');
-            } else if (!window || !window.confirm || window == undefined) {
-                let response = await DeleteFcdrrSubmissions(id);
-                this.setState({
-                    message: response?.data?.Message || response?.message || 'Deleted successfully'
-                })
-                $('#messageModal').modal('toggle');
-            }
-        })();
-
-        this.fetchSubmissions();
-    }
-
-    fetchSubmissions() {
-        (async () => {
-            let settings = await GetAllFcdrrSettings();
-
-            let response = await FetchFcdrrSubmissions();
-            this.setState({
-                data: response,
-                allTableElements: [],
-                currElementsTableEl: [],
-                settings: settings,
-                latestDate: response[0] ? response[0].latest_date : '',
-            })
-        })();
-    }
-
-    toggleView() {
-        this.setState({
-            isEdit: !this.state.isEdit,
-            isSubmitResult: !this.state.isSubmitResult
-        })
-    }
-
-    daysBetween(date1, date2) {
-        // console.log(date1, date2)
-        //Get 1 day in milliseconds
-        let one_day = 1000 * 60 * 60 * 24;
-
-        // Convert both dates to milliseconds
-        let date1_ms = date1.getTime();
-        let date2_ms = date2.getTime();
-
-        // Calculate the difference in milliseconds
-        let difference_ms = date2_ms - date1_ms;
-        // Convert back to days and return
-        let diff = Math.round(difference_ms / one_day);
-        return diff - 1;
-    }
-
     render() {
-
-        let tableElem = [];
-        let toDayDate = new Date();
-        let currDay = toDayDate.getDate();
-        let currYear = toDayDate.getUTCFullYear();
-        let currYMonth = toDayDate.getUTCMonth();
-        let canSubmit = true;
-        let isPastWindowPeriod = currDay > this.state.windowPeriod;
-
-        if (this.state.latestDate) { //check if has last months submission
-            // console.log("one");
-            let lastReportDate = new Date(this.state.latestDate);
-            if (
-                (
-                    currYear == lastReportDate.getUTCFullYear()
-                    &&
-                    (currYMonth - lastReportDate.getUTCMonth()) == 1
-                )
-                ||
-                isPastWindowPeriod
-            ) {
-                canSubmit = false
-            }
-
-            if ( //for new year and old comparision
-                (
-                    (currYear - lastReportDate.getUTCFullYear()) == 1
-                    &&
-                    (lastReportDate.getUTCMonth() - currYMonth) == 11
-                )
-                ||
-                isPastWindowPeriod
-            ) {
-                canSubmit = false
-            }
-        } else {
-            // console.log("one 4");
-            canSubmit = !isPastWindowPeriod;
-        }
-
-        if (this.state.data.length > 0) {
-            this.state.data.map((element, index) => {
-                tableElem.push(
-
-                    <tr key={uuidv4()}>
-                        <td>{element['lab_name']}</td>
-                        <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
-                        <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
-                        <td>
-
-                            <a
-                                href="#"
-                                onClick={() => {
-                                    this.setState({
-                                        isSubmitResult: true,
-                                        isEdit: true,
-                                        editId: element['id'],
-                                        actionElement: element
-                                    })
-                                }}
-                                style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
-                                <i className="fas fa-edit"></i> Edit
-                            </a>
-
-                            {
-                                (this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
-                                    ?
-                                    '' :
-                                    <a
-                                        onClick={() => this.deleteSubmissionHandler(element['id'])}
-                                        style={{ "display": "inlineBlock" }}
-                                        className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
-                                        <i className="fas fa-trash"></i> Delete
-                                    </a>
-                            }
-
-                        </td>
-
-                    </tr>
-
-                );
-            });
-            if (this.state.allTableElements.length == 0) {
-                this.setState({
-                    allTableElements: tableElem,
-                    currElementsTableEl: tableElem
-                })
-            }
-
-        }
 
         let dashboardHeader = <div key={1} style={{ "marginBottom": "24px" }} className="row">
             <div className="col-sm-6">
@@ -268,99 +221,384 @@ class FcdrrSummaryDashboard extends React.Component {
                     <li className="breadcrumb-item active">FCDRR Summary Dashboard</li>
                 </ol>
             </div>
-
+            {this.state.status && this.state.message && <div className='col-md-12'>
+                <div className={`alert alert-default-${this.state.status}`}>
+                    {this.state.statusCode ? <h3>{this.state.statusCode}</h3> : null}
+                    {this.state.message ? <small>{this.state.message}</small> : null}
+                </div>
+            </div>}
         </div>
 
         let dashboardMain = <>
             <div key={2} className="row">
-                <div className="col-sm-12 mb-5" style={{ borderBottom: '1px solid #f6f2f4' }}>
-                    <h4 className="float-left text-bold">FCDRR Summary</h4>
+                <div className="col-sm-12 mb-5 py-1" style={{ borderBottom: '1px solid #f6f2f4' }}>
+                    <div className='row'>
+                        <div className='col-md-3'>
+                            <h4 className="float-left text-bold">
+                                <span>FCDRR Summary</span>
+                            </h4>
+                        </div>
+                        <div className='col-md-3'>
+                            <h5 className="float-left text-bold">
+                                <small>{this.state.reportsQuery.date ? this.formatPeriod(this.state.reportsQuery.date) : null}</small>
+                                &nbsp; &nbsp; &nbsp;
+                                <small>{this.state.reportsQuery.county_name ? this.state.reportsQuery.county_name : this.state.reportsQuery.county_id ? this.state.counties.find(ct => ct.id == this.state.reportsQuery.county_id)?.name : null}</small>
+                                &nbsp; &nbsp; &nbsp;
+                                <small>{this.state.reportsQuery.commodity ? this.state.commodities.find(ct => ct.id == this.state.reportsQuery.commodity)?.commodity_name : null}</small>
+                            </h5>
+                        </div>
+                        <div className='col-md-6'>
+                            <div className='row'>
+                                <div className='col-sm-4'>
+                                    <select className='form-control' value={this.state.reportsQuery.date} style={{ padding: '2px', fontSize: '14px', color: '#228ccc', backgroundColor: '#f4f4fc', height: '33px' }} onChange={ev => {
+                                        let qry = this.state.reportsQuery;
+                                        if(ev.target.value != '-'){
+                                            qry.commodity = ev.target.value;
+                                        }else{
+                                            qry.commodity = null;
+                                        }
+                                        this.setState({
+                                            reportsQuery: qry
+                                        })
+                                        this.fetchReportingRates(qry);
+                                        this.fetchAllReports(qry);
+                                    }}>
+                                        <option value={"-"} disabled>Select Commodity</option>
+                                        {this.state.commodities && this.state.commodities.length>0 && this.state.commodities.map((cdt,ky) => (
+                                            <option key={cdt.id+"-"+ky} value={cdt.id || "-"}>{cdt.commodity_name || "-"}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className='col-sm-4'>
+                                    <select className='form-control' value={this.state.reportsQuery.date} style={{ padding: '2px', fontSize: '14px', color: '#228ccc', backgroundColor: '#f4f4fc', height: '33px' }} onChange={ev => {
+                                        let qry = this.state.reportsQuery;
+                                        if(ev.target.value != '-'){
+                                            qry.date = ev.target.value;
+                                        }else{
+                                            qry.date = new Date().toISOString().substr(0, 7)
+                                        }
+                                        this.setState({
+                                            reportsQuery: qry
+                                        })
+                                        this.fetchReportingRates(qry);
+                                        this.fetchAllReports(qry);
+                                    }}>
+                                        <option value={"-"} disabled>Select Period</option>
+                                        {this.getMonths(12).map((month, index) => (
+                                            <option key={month+"_"+index} value={month || "-"}>{this.formatPeriod(month) || "-"}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className='col-sm-4'>
+                                    <select className='form-control' value={this.state.reportsQuery.county_id} style={{ padding: '2px', fontSize: '14px', color: '#228ccc', backgroundColor: '#f4f4fc', height: '33px' }} onChange={ev => {
+                                        let qry = this.state.reportsQuery;
+                                        if(ev.target.value != '-'){
+                                            qry.county_id = ev.target.value;
+                                        }else{
+                                            qry.county_id = null;
+                                        }
+                                        this.setState({
+                                            reportsQuery: qry
+                                        })
+                                        this.fetchReportingRates(qry);
+                                        this.fetchAllReports(qry);
+                                    }}>
+                                        <option value={"-"} disabled>Select County</option>
+                                        <option value={"-"}>National (Kenya)</option>
+                                        {this.state.counties && this.state.counties.length>0 && this.state.counties.map((county,ky) => {
+                                            return <option key={county.id+"-"+ky} value={county.id || "-"}>{county.name || "-"}</option>
+                                        })}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card" style={{ backgroundColor: '#fafaf6', border: '1px solid transparent', borderRadius: '4px' }}>
-                        <div class="card-header text-center">
+            <div className="row">
+                <div className="col-md-6">
+                    <div className="card" style={{ backgroundColor: '#fafaf6', border: '1px solid transparent', borderRadius: '4px' }}>
+                        <div className="card-header text-center">
                             <h5 className='text-bold mb-0 text-uppercase text-md'>Stock levels summary</h5>
                         </div>
-                        <div class="card-body" style={{ minHeight: '400px' }}>
-                            Bar chart showing stock levels for all commodities nationally
+                        <div className="card-body" style={{ minHeight: '400px' }}>
+                            {/* <p style={{fontSize:'14px'}}>Bar chart showing stock levels for all commodities nationally.</p> */}
+                            <HighchartsReact highcharts={Highcharts} options={{
+                                chart: {
+                                    type: 'pie'
+                                },
+                                title: {
+                                    text: 'Stock levels summary'
+                                },
+                                colors: ['#f7a35c', '#90ee7e', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee'],
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Stock levels',
+                                    data: [
+                                        ['Current Stock', this.state.stockStatusSummary.current_stock],
+                                        ['Total Consumption', this.state.stockStatusSummary.total_comsumption],
+                                        ['Total Losses', this.state.stockStatusSummary.total_losses],
+                                    ]
+                                }],
+                                credits: {
+                                    enabled: false
+                                },
+                                exporting: {
+                                    enabled: true,
+                                    filename: 'Stock levels summary'
+                                }
+                            }} />
+                            <details>
+                                <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
+                                <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
+                                    {JSON.stringify(this.state.stockStatusSummary, null, 2)}
+                                </pre>
+                            </details>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card" style={{ backgroundColor: '#fafaf6', border: '1px solid transparent', borderRadius: '4px' }}>
-                        <div class="card-header text-center">
-                            <h5 className='text-bold mb-0 text-uppercase text-md'>Consumption vs Supply</h5>
+                <div className="col-md-6">
+                    <div className="card" style={{ backgroundColor: '#fafaf6', border: '1px solid transparent', borderRadius: '4px' }}>
+                        <div className="card-header text-center">
+                            <h5 className='text-bold mb-0 text-uppercase text-md'>Accountability summary</h5>
                         </div>
-                        <div class="card-body" style={{ minHeight: '400px' }}>
-                            Stacked bar chart showing the consumption vs supply for each commodity (national, last month)
+                        <div className="card-body" style={{ minHeight: '400px' }}>
+                            {/* <p style={{fontSize:'14px'}}>Bar chart showing stock levels for all commodities nationally.</p> */}
+                            <HighchartsReact highcharts={Highcharts} options={{
+                                chart: {
+                                    type: 'pie'
+                                },
+                                title: {
+                                    text: 'Accountability summary'
+                                },
+                                subtitle: {
+                                    text: 'All Negative adjustments (losses, qty used, negative adjustments, beginning balance) vs all positive adjustments (closing balance, qty received, positive adjustments, ending balance)'
+                                },
+                                colors: ['#f7a35c', '#90ee7e', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee'],
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Accountability',
+                                    data: [
+                                        ['Negative adjustments', this.state.accountabilitySummary.negative_adjustments],
+                                        ['Positive adjustments', this.state.accountabilitySummary.positive_adjustments]
+                                    ]
+                                }],
+                                credits: {
+                                    enabled: false
+                                },
+                                exporting: {
+                                    enabled: true,
+                                    filename: 'Accountability summary'
+                                }
+                            }} />
+                            <details>
+                                <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
+                                <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
+                                    {JSON.stringify(this.state.accountabilitySummary, null, 2)}
+                                </pre>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-6">
+                    <div className="card" style={{ backgroundColor: '#fafaf6', border: '1px solid transparent', borderRadius: '4px' }}>
+                        <div className="card-header text-center">
+                            <h5 className='text-bold mb-0 text-uppercase text-md'>Reporting rate</h5>
+                        </div>
+                        <div className="card-body" style={{ minHeight: '400px' }}>
+                            {/* <p style={{ fontSize: '14px' }}>Bar chart showing stock levels for all commodities nationally.</p> */}
+                            <HighchartsReact highcharts={Highcharts} options={{
+                                chart: {
+                                    type: 'pie'
+                                },
+                                title: {
+                                    text: 'Reporting rates'
+                                },
+                                colors: ['#f7a35c', '#90ee7e', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee'],
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Reporting rates',
+                                    data: [
+                                        ['Total expected reports (# labs)', this.state.reportingRates.expected],
+                                        ['Submitted FCDRR reports', this.state.reportingRates.actual ? this.state.reportingRates.actual.length : 0],
+                                    ]
+                                }],
+                                credits: {
+                                    enabled: false
+                                },
+                                exporting: {
+                                    enabled: true,
+                                    filename: 'Reporting rates'
+                                }
+                            }} />
+                            <details>
+                                <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
+                                <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
+                                    {JSON.stringify(this.state.reportingRates, null, 2)}
+                                </pre>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-6">
+                    <div className="card" style={{ backgroundColor: '#fafaf6', border: '1px solid transparent', borderRadius: '4px' }}>
+                        <div className="card-header text-center">
+                            <h5 className='text-bold mb-0 text-uppercase text-md'>Stock levels vs Losses</h5>
+                        </div>
+                        <div className="card-body" style={{ minHeight: '400px' }}>
+                            {/* <p style={{ fontSize: '14px' }}>Bar chart showing stock levels for all commodities nationally.</p> */}
+                            <HighchartsReact highcharts={Highcharts} options={{
+                                chart: {
+                                    type: 'column'
+                                },
+                                title: {
+                                    text: 'Stock levels vs Expiries'
+                                },
+                                // colors: ['#f7a35c', '#90ee7e', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee'],
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                        }
+                                    }
+                                },
+                                series: [
+                                    { name: 'Total commodity losses', data: [this.state.expiriesAnalysis.losses] },
+                                    { name: 'Opening balance', data: [this.state.expiriesAnalysis.opening] },
+                                    { name: 'Closing Balance', data: [this.state.expiriesAnalysis.closing] },
+                                    { name: 'Quantity used', data: [this.state.expiriesAnalysis.used] },
+                                ],
+                                credits: {
+                                    enabled: false
+                                },
+                                exporting: {
+                                    enabled: true,
+                                    filename: 'Stock levels vs Expiries'
+                                }
+                            }} />
+                            <details>
+                                <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
+                                <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
+                                    {JSON.stringify(this.state.expiriesAnalysis, null, 2)}
+                                </pre>
+                            </details>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card" style={{ backgroundColor: '#fafaf6', border: '1px solid transparent', borderRadius: '4px' }}>
-                        <div class="card-header text-center">
+            {/* <div className="row">
+                <div className="col-md-12">
+                    <div className="card" style={{ backgroundColor: '#fafaf6', border: '1px solid transparent', borderRadius: '4px' }}>
+                        <div className="card-header text-center">
                             <h5 className='text-bold mb-0 text-uppercase text-md'>Commodity Comsumption Summary</h5>
                         </div>
-                        <div class="card-body" style={{ minHeight: '400px' }}>
-                            Table showing adjustments (negative & positive), stock levels & days out of stock for each commodity (national, last month)
+                        <div className="card-body" style={{ minHeight: '400px' }}>
+                            {this.state.allReports && this.state.allReports.length > 0 ? <div className='table-responsive'>
+                                <table className='table table-condensed table-striped'>
+                                    <thead>
+                                        <tr>
+                                            {Object.keys(this.state.allReports[0]).map((key, index) => {
+                                                let toIgnore = [
+                                                    'id',
+                                                    'commodity_id',
+                                                    'unit_of_issue',
+                                                    'created_at',
+                                                    'updated_at',
+                                                    'submission_id',
+                                                    'user_id',
+                                                ]
+                                                if (toIgnore.includes(key)) {
+                                                    return null
+                                                }
+                                                return (
+                                                    <th className='text-xs' key={index}>{key.split('_').join(' ').toLocaleUpperCase()}</th>
+                                                )
+                                            })}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.allReports && this.state.allReports.length>0 && this.state.allReports.map((report, index) => (
+                                            <tr key={index}>
+                                                {Object.keys(report).map((key, index) => {
+                                                    let toIgnore = [
+                                                        'id',
+                                                        'commodity_id',
+                                                        'unit_of_issue',
+                                                        'created_at',
+                                                        'updated_at',
+                                                        'submission_id',
+                                                        'user_id',
+                                                    ]
+                                                    if (toIgnore.includes(key)) {
+                                                        return null
+                                                    }
+                                                    return (
+                                                        <td key={index}>{report[key]}</td>
+                                                    )
+                                                })}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div> : <div className='alert alert-warning text-sm text-center'><h5>No data available</h5></div>}
+                            <details>
+                                <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
+                                <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
+                                    {JSON.stringify(this.state.allReports, null, 2)}
+                                </pre>
+                            </details>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
         </>
 
-        let dashboardContent = [dashboardHeader, dashboardMain];
-
-        if (this.state.isSubmitResult) {
-            let repDate = new Date();
-            try {
-                repDate = this.state.actionElement['report_date'];
-            } catch (err) {
-                // console.log(err);
-            }
-
-            dashboardContent =
-
-                <FcdrrTool
-                    canUpdate={
-                        this.state.isEdit &&
-                        !(this.daysBetween(new Date(repDate), new Date()) > this.state.windowPeriod)
-                    }
-                    isEdit={this.state.isEdit}
-                    editId={this.state.editId}
-                    toggleView={this.toggleView} />
-        }
+        let dashboardContent = [dashboardHeader, (this.state.loading ? <>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '77vh' }}>
+                <div className='row'>
+                    <div className='col-md-12'>
+                        <div className='text-center alert alert-default-info'>&nbsp;&nbsp;&nbsp;Loading...&nbsp;&nbsp;&nbsp;</div>
+                    </div>
+                </div>
+            </div>
+        </> : dashboardMain)];
 
         return (
             <React.Fragment>
                 {dashboardContent}
-
-                {/*message box */}
-                <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog" aria-labelledby="messageModalTitle" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLongTitle">Notice!</h5>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <p id="returnedMessage">{this.state.message}</p>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </React.Fragment>
         );
     }

@@ -6,8 +6,10 @@ use App\FcdrrSubmission;
 use App\FcdrrSubmissionResults;
 use App\Http\Controllers\Controller;
 use App\Laboratory;
+use App\County;
 use App\Service\FcdrrSetting;
 use Exception;
+use App\FcdrrCommodity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -96,42 +98,78 @@ class FcdrrReports extends Controller
                 ->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
                 ->join('fcdrr_commodities', 'fcdrr_commodities.commodity_name', '=', 'fcdrr_commodities.commodity_name')
                 ->join('counties', 'laboratories.county', '=', 'counties.id')
-                ->select('fcdrr_submission_results.*', 'counties.name as county_name', 'counties.id as county_id', 'laboratories.lab_name', 'laboratories.mfl_code as lab_mfl', 'fcdrr_submissions.report_date', 'fcdrr_submissions.user_id', 'fcdrr_commodities.id as commodity_id')
+                ->select('fcdrr_submission_results.*', 'counties.name as county_name', 'counties.id as county_id', 'laboratories.lab_name', 'laboratories.mfl_code as lab_mfl', 'fcdrr_submissions.report_date as report_date' , 'fcdrr_submissions.user_id', 'fcdrr_commodities.id as commodity_id')
                 ->get();
 
-            if ($request->has('county')) {
-                $reports = $reports->whereIn('county_name', $request->county);
+            if ($request->has('county') || $request->has('county_name')) {
+                $cn = $request->has('county') ? $request->county : $request->county_name;
+                $reports = $reports->whereIn('county_name', $cn);
                 if ($reports->count() == 0) {
-                    $reports = $reports->whereIn('county_id', $request->county);
+                    $reports = $reports->where('county_name', $cn);
+                    if ($reports->count() == 0) {
+                        // return response()->json(['Message' => 'No reports found for the given county'], 404);
+                    }
                 }
             }
-            if ($request->has('lab')) {
-                $reports = $reports->where('laboratories.id', $request->lab);
+            if ($request->has('county_id')) {
+                $reports = $reports->whereIn('county_id', $request->county_id);
                 if ($reports->count() == 0) {
-                    $reports = $reports->whereIn('laboratories.id', $request->lab);
-                }
-                if ($reports->count() == 0) {
-                    $reports = $reports->whereIn('lab_mfl', $request->lab);
-                }
-            }
-            if ($request->has('date')) {
-                $reports = $reports->where('fcdrr_submissions.report_date', $request->date);
-                if ($reports->count() == 0) {
-                    $reports = $reports->whereIn('fcdrr_submissions.report_date', $request->date);
+                    $reports = $reports->where('county_id', $request->county_id);
+                    if ($reports->count() == 0) {
+                        // return response()->json(['Message' => 'No reports found for the given county'], 404);
+                    }
                 }
             }
             if ($request->has('commodity')) {
                 $reports = $reports->where('commodity_id', $request->commodity);
                 if ($reports->count() == 0) {
-                    $reports = $reports->whereIn('commodity_name', $request->commodity);
+                    // $reports = $reports->where('commodity_id', $request->commodity_id);
+                    // return response()->json(['Message' => 'No reports found for the given commodity'], 404);
+                }
+            }
+            if ($request->has('lab')) {
+                $reports = $reports->whereIn('laboratories.id', $request->lab);
+                if ($reports->count() == 0) {
+                    $reports = $reports->where('laboratories.id', $request->lab);
+                    if ($reports->count() == 0) {
+                        // return response()->json(['Message' => 'No reports found for the given lab'], 404);
+                    }
                 }
                 if ($reports->count() == 0) {
-                    $reports = $reports->whereIn('commodity_id', $request->commodity);
+                    $reports = $reports->where('lab_mfl', $request->lab);
+                    if ($reports->count() == 0) {
+                        // return response()->json(['Message' => 'No reports found for the given lab'], 404);
+                    }
                 }
+            }
+            if ($request->has('date')) {
+                if (strlen($request->date) == 6) {
+                    $query_year = substr($request->date, 0, 4);
+                    $query_month = substr($request->date, 4, 6);
+                    $reports = $reports
+                        ->whereBetween('report_date', [$query_year . '-' . $query_month . '-01', $query_year . '-' . $query_month . '-31']);
+                }else if (strlen($request->date) == 7 && strpos($request->date, '-') !== false) {
+                    $reports = $reports
+                        ->whereBetween('report_date', [$request->date . '-01', $request->date . '-31']);
+                        // ->where('report_date', '>=', date('Y-m-d', strtotime($request->date)));
+                    $reports = $reports->toArray();
+                } else {
+                    //if date includes -
+                    if(strpos($request->date, '-') !== false) {
+                        $reports = $reports->whereIn('report_date', date('Y-m-d', strtotime($request->date)));
+                        if ($reports->count() == 0) {
+                            $reports = $reports->where('report_date', date('Y-m-d', strtotime($request->date)));
+                        }
+                    } else {
+                        $reports = $reports->where('report_date', $request->date);
+                    }
+                }
+
             }
 
             if ($reports == null) {
-                return response()->json(['error' => 404, 'message' => 'No reports found'], 404);
+                // return response()->json(['error' => 404, 'message' => 'No reports found'], 404);
+                return [];
             }
             return $reports;
         } catch (Exception $ex) {
@@ -193,44 +231,119 @@ class FcdrrReports extends Controller
         }
     }
 
+    // @method GET
+    // @url /api/reports/fcdrr/reportingrates
+    // @params [county, period]
+    // @return [
+    //     {
+    //         "period": "2019-03",
+    //         "county": "Nairobi",
+    //         "expected": "90", // number of labs
+    //         "reported": "10", // fcdrr submissions
+    //         "reporting_rate": "11.11" // percentage
+    //     }
+    //]
     public function getFcdrrReportingRates(Request $request)
     {
         try {
-            $prevMonth = null;
-            $month = null;
-            $year = null;
-
-            if (empty($request->period) || !isset($request->period) || $request->period == 'null') {
-                $prevMonth = date('Y-m-d', strtotime(date('Y-m') . " -1 month"));
-                $month = date("m", strtotime($prevMonth));
-                $year = date("Y", strtotime($prevMonth));
-            } else {
-                $prevMonth = date('Y-m-d', strtotime($request->period));
-                $month = date("m", strtotime($prevMonth));
-                $year = date("Y", strtotime($prevMonth));
+            $county_name = $request->has('county_name') ? $request->county_name : null;
+            $county_id = $request->has('county_id') ? $request->county_id : null;
+            $period = $request->has('period') ? $request->period : null;
+            // $period = $request->has('date') ? $request->date : null;
+            $year = $request->has('year') ? $request->year : null;
+            $month = $request->has('month') ? $request->month : null;
+            if($period == null) {
+                return response()->json(['error' => 400, 'message' => 'Please provide a period'], 400);
+            }else{
+                $prd = explode('-', $period);
+                $year = $prd[0];
+                $month = $prd[1];
             }
+            $expected = Laboratory::select(
+                DB::raw('count(*) as expected')
+            )->get();
 
-            $submissions = FcdrrSubmission::select(
-                DB::raw('count(*) as report_rates')
-            )
-                ->whereYear('report_date', '=', $year)
-                ->whereMonth('report_date', '=', $month);
+            // $actual = FcdrrSubmission::select(
+            //         DB::raw('count(*) as report_rates')
+            //     )
+            //         ->whereYear('report_date', '=', $year)
+            //         ->whereMonth('report_date', '=', $month)
+            //         ->get();
 
-            $submissions = $submissions->get();
-
-            $totalLabs = Laboratory::select(
-                DB::raw('count(*) as total_labs')
-            )
+            $actual = DB::table('fcdrr_submission_results')
+                ->join('fcdrr_submissions', 'fcdrr_submissions.id', '=', 'fcdrr_submission_results.submission_id')
+                ->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
+                ->join('fcdrr_commodities', 'fcdrr_commodities.commodity_name', '=', 'fcdrr_commodities.commodity_name')
+                ->join('counties', 'laboratories.county', '=', 'counties.id')
+                ->select(
+                    DB::raw('submission_id, county, report_date') //, fcdrr_commodities.commodity_name')
+                )
+                ->distinct()
                 ->get();
 
-            $period = $year . "-" . $month;
+            if($county_name != null) {
+                $county = County::where('name', $county_name)->get('id')->get(0)->id;
+                $expected = $expected->where('county', $county);
+                $actual = $actual->where('county', $county);
+            }
+            if($county_id != null) {
+                $expected = $expected->where('county', $county_id);
+                $actual = $actual->where('county', $county_id);
+            }
+            if($period != null) {
+                $prd = explode('-', $period);
+                $year = $prd[0];
+                $month = $prd[1];
+                // todo: get only labs that were registered on or before the period DONE
+                $expected = $expected->where('created_at', '<=', $year.'-'.$month.'-31');
+                $actual = $actual
+                    ->whereBetween('report_date', [$year . '-' . $month . '-01', $year . '-' . $month . '-31']);
+            }
+
+
+
+            // $prevMonth = null;
+            // $month = null;
+            // $year = null;
+
+            // if (empty($request->period) || !isset($request->period) || $request->period == 'null') {
+            //     $prevMonth = date('Y-m-d', strtotime(date('Y-m') . " -1 month"));
+            //     $month = date("m", strtotime($prevMonth));
+            //     $year = date("Y", strtotime($prevMonth));
+            // } else {
+            //     $prevMonth = date('Y-m-d', strtotime($request->period));
+            //     $month = date("m", strtotime($prevMonth));
+            //     $year = date("Y", strtotime($prevMonth));
+            // }
+
+            // $submissions = FcdrrSubmission::select(
+            //     DB::raw('count(*) as report_rates')
+            // )
+            //     ->whereYear('report_date', '=', $year)
+            //     ->whereMonth('report_date', '=', $month);
+
+            // $submissions = $submissions->get();
+
+            // $totalLabs = Laboratory::select(
+            //     DB::raw('count(*) as total_labs')
+            // )
+            //     ->get();
+
+            // $period = $year . "-" . $month;
             return [
-                "report_rates" => ($submissions[0]['report_rates'] / $totalLabs[0]['total_labs']) * 100,
-                "period" => $period,
-                "total_labs" => $totalLabs[0]['total_labs']
+                // "report_rates" => ($submissions[0]['report_rates'] / $totalLabs[0]['total_labs']) * 100,
+                // "period" => $period,
+                // "total_labs" => $totalLabs[0]['total_labs']
+                "expected" => $expected[0]['expected'] ?? 0,
+                "actual" => $actual,//[0]['report_rates'] ?? 0,
+                "request" => [
+                    "county_name" => $county_name,
+                    "county_id" => $county_id,
+                    "period" => $period
+                ]
             ];
         } catch (Exception $ex) {
-            return response()->json(['Message' => 'Error getting Settings: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Error getting reporting rate: ' . $ex->getMessage()], 500);
         }
     }
 }
