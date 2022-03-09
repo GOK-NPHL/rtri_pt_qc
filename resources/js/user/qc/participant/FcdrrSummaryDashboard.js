@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FcdrrTool from './FcdrrTool'
-import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel, getFcdrrReportingRates, FetchFcdrrReports, FetchCounties, getAllCommodities } from '../../../components/utils/Helpers';
+import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel, getFcdrrReportingRates, fetchCurrentUserParams, FetchFcdrrReports, FetchCounties, getAllCommodities } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 import { render } from 'react-dom';
@@ -16,6 +16,7 @@ class FcdrrSummaryDashboard extends React.Component {
             allReports: [],
             loading: false,
             reportingRates: [],
+            userParams: {},
             counties: [],
             commodities: [],
             reportsQuery: {
@@ -190,15 +191,21 @@ class FcdrrSummaryDashboard extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchReportingRates(this.state.reportsQuery);
-        this.fetchAllReports(this.state.reportsQuery);
-        this.fetchAllCommodities();
         (async () => {
             let counties = await FetchCounties();
             this.setState({
                 counties: counties
             });
         })();
+        (async () => {
+            let userParams = await fetchCurrentUserParams();
+            this.setState({
+                userParams: userParams
+            });
+        })();
+        this.fetchReportingRates(this.state.reportsQuery);
+        this.fetchAllReports(this.state.reportsQuery);
+        this.fetchAllCommodities();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -233,6 +240,14 @@ class FcdrrSummaryDashboard extends React.Component {
             <div key={2} className="row">
                 <div className="col-sm-12 mb-5 py-1" style={{ borderBottom: '1px solid #f6f2f4' }}>
                     <div className='row'>
+                        <div className='col-md-12'>
+                            <details>
+                                <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
+                                <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
+                                    {JSON.stringify(this.state.userParams, null, 2)}
+                                </pre>
+                            </details>
+                        </div>
                         <div className='col-md-3'>
                             <h4 className="float-left text-bold">
                                 <span>FCDRR Summary</span>
@@ -586,15 +601,25 @@ class FcdrrSummaryDashboard extends React.Component {
 
         </>
 
-        let dashboardContent = [dashboardHeader, (this.state.loading ? <>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '77vh' }}>
-                <div className='row'>
-                    <div className='col-md-12'>
-                        <div className='text-center alert alert-default-info'>&nbsp;&nbsp;&nbsp;Loading...&nbsp;&nbsp;&nbsp;</div>
+        let dashboardContent = [dashboardHeader, ((this.state.userParams && this.state.userParams.permissions && this.state.userParams.permissions.includes('view_fcdrr_dashboard')) ? <>
+            {this.state.loading ? <>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '77vh' }}>
+                    <div className='row'>
+                        <div className='col-md-12'>
+                            <div className='text-center alert alert-default-info'>&nbsp;&nbsp;&nbsp;Loading...&nbsp;&nbsp;&nbsp;</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </> : dashboardMain)];
+            </> : dashboardMain}
+        </> : <>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '77vh' }}>
+                    <div className='row'>
+                        <div className='col-md-12'>
+                            <div className='text-center alert alert-default-warning'>You do not have sufficient rights to view this page</div>
+                        </div>
+                    </div>
+                </div>
+            </>)];
 
         return (
             <React.Fragment>
