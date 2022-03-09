@@ -241,9 +241,12 @@ class FcdrrSummaryDashboard extends React.Component {
                 <div className="col-sm-12 mb-5 py-1" style={{ borderBottom: '1px solid #f6f2f4' }}>
                     <div className='row'>
                         <div className='col-md-12'>
-                            <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
-                                {JSON.stringify(this.state.userParams, null, 2)}
-                            </pre>
+                            <details>
+                                <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
+                                <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
+                                    {JSON.stringify(this.state.userParams, null, 2)}
+                                </pre>
+                            </details>
                         </div>
                         <div className='col-md-3'>
                             <h4 className="float-left text-bold">

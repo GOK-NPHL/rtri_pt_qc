@@ -285,6 +285,16 @@ class AuthAccessController extends Controller
         try {
             $role = UserRoles::find($request->id);
             $role->delete();
+            $users = User::where('roles', 'like', '%' . $request->id . '%')->get();
+            foreach ($users as $usr) {
+                $user_roles = json_decode($usr->roles);
+                $key = array_search($request->id, $user_roles);
+                if ($key !== false) {
+                    unset($user_roles[$key]);
+                    $usr->permissions = json_encode($user_roles);
+                    $usr->save();
+                }
+            }
             // $role->is_active = 0;
             // $role->save();
             // return response()->json($role);
@@ -376,6 +386,16 @@ class AuthAccessController extends Controller
         try {
             $group = UserGroups::find($request->id);
             $group->delete();
+            $users = User::where('groups', 'like', '%' . $request->id . '%')->get();
+            foreach ($users as $usr) {
+                $user_groups = json_decode($usr->groups);
+                $key = array_search($request->id, $user_groups);
+                if ($key !== false) {
+                    unset($user_groups[$key]);
+                    $usr->permissions = json_encode($user_groups);
+                    $usr->save();
+                }
+            }
             // $group->is_active = 0;
             // $group->save();
             // return response()->json($group);
