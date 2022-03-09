@@ -4,6 +4,7 @@
 <?php
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Routing\Router;
 ?>
 
 <head>
@@ -49,6 +50,30 @@ use Illuminate\Support\Facades\Gate;
                     <a class="nav-link" style="color: white;" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Notifications Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user"></i> {{ Auth::user()->name }} &#9662;
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-left">
+                        <span class="dropdown-item dropdown-header">
+                            <span>{{ Auth::user()->name }} {{ Auth::user()->second_name ?? Auth::user()->second_name }}</span>
+                            (<span>{{ Auth::user()->email }}</span>)
+                        </span>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ route('participant-qc-demographics') }}" class="dropdown-item nav-link">
+                            <i class="fas fa-edit mr-2"></i> Edit profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a  href="{{ route('logout') }}" class="dropdown-item nav-link">
+                            <i class="fa fa-door-open mr-2"></i> Log out
+                        </a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </li>
+            </ul>
         </nav>
         <!-- /.navbar -->
 
@@ -78,8 +103,8 @@ use Illuminate\Support\Facades\Gate;
                with font-awesome or any other icon font library -->
 
                         <?php if (Gate::allows('view_qc_component')) { ?>
-                            <li class="nav-item has-treeview menu-open">
-                                <a href="{{ route('participant-home') }}" class="nav-link active">
+                            <li class="nav-item has-treeview menu-open mb-2">
+                                <a href="{{ route('participant-home') }}" class="nav-link {{ Route::is('participant-home') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-balance-scale"></i>
                                     <p>
                                         RTRI QC
@@ -89,11 +114,19 @@ use Illuminate\Support\Facades\Gate;
                         <?php } ?>
 
                         <?php if (Gate::allows('view_qc_component')) { ?>
-                            <li class="nav-item has-treeview menu-open">
-                                <a href="{{ route('fcdrr-tool-home') }}" class="nav-link active">
+                            <li class="nav-item has-treeview menu-open mb-2">
+                                <a href="{{ route('fcdrr-dashboard') }}" class="nav-link {{ Route::is('fcdrr-dashboard') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-boxes"></i>
                                     <p>
-                                        FCDRR Tool
+                                        FCDRR Dashboard
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview menu-open mb-2">
+                                <a href="{{ route('fcdrr-submissions') }}" class="nav-link {{ Route::is('fcdrr-submissions') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-boxes"></i>
+                                    <p>
+                                        FCDRR Submissions
                                     </p>
                                 </a>
                             </li>
@@ -101,7 +134,7 @@ use Illuminate\Support\Facades\Gate;
 
                         <!-- <?php
                         if (Gate::allows('view_pt_component')) { ?>
-                            <li class="nav-item has-treeview menu-open">
+                            <li class="nav-item has-treeview menu-open mb-2">
                                 <a href="{{ route('participant-pt-home') }}" class="nav-link">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
@@ -133,7 +166,7 @@ use Illuminate\Support\Facades\Gate;
 
 
                         <!-- Account features-->
-                        <li class="nav-item has-treeview">
+                        <!--<li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="fas fa-user"></i>
                                 <p>
@@ -143,13 +176,13 @@ use Illuminate\Support\Facades\Gate;
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('participant-qc-demographics') }}" class="nav-link">
+                                    <a href="{{ route('participant-qc-demographics') }}" class="nav-link {{ Route::is('participant-qc-demographics') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>My Login Information</p>
+                                        <p>{{ Auth::user()->name }} {{ Auth::user()->second_name ?? Auth::user()->second_name }}</p>
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li>-->
                         <!-- end account features -->
 
                         <li class="nav-item">
@@ -161,17 +194,6 @@ use Illuminate\Support\Facades\Gate;
                                 </p>
                             </a>
                         </li>
-
-                        <!-- <li class="nav-header">EXAMPLES</li>
-                        <li class="nav-item">
-                            <a href="pages/calendar.html" class="nav-link">
-                                <i class="nav-icon far fa-calendar-alt"></i>
-                                <p>
-                                    Calendar
-                                    <span class="badge badge-info right">2</span>
-                                </p>
-                            </a>
-                        </li> -->
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

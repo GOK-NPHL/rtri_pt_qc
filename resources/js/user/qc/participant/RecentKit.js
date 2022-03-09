@@ -89,72 +89,95 @@ class RecentKit extends React.Component {
 
                 <tr>
                     <td>{this.props.isRepeat ? 'Recent repeat' : 'QC - Recent'}</td>
-                    <td><input onClick={
-                        () => {
-                            if (this.props.isRepeat) {
-                                this.props.resultRecent(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.resultRecent(event)
-                            }
-                        }
-
-                    }
+                    <td><input 
                         onChange={(event) => {
-                            this.setState({
-                                hasRecentControl: event.target.checked
-                            })
+                            const origVal = event.target.checked;
+                            if(window && window.confirm('Are you sure you want to change this value?')){
+                                // <moved from onclick
+                                if (this.props.isRepeat) {
+                                    this.props.resultRecent(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.resultRecent(event)
+                                }
+                                // </moved from onclick
+                                this.setState({
+                                    hasRecentControl: event.target.checked
+                                })
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
+                                event.target.checked = origVal;
+                            }
                         }}
                         checked={this.state.hasRecentControl}
                         value="c" type="checkbox" /></td>
-                    <td><input onClick={
-                        () => {
-                            if (this.props.isRepeat) {
-                                this.props.resultRecent(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.resultRecent(event)
-                            }
-                        }
-                    }
+                    <td><input 
                         onChange={(event) => {
-                            this.setState({
-                                hasRecentVerification: event.target.checked
-                            })
+                            const origVal = event.target.checked;
+                            if(window && window.confirm('Are you sure you want to change this value?')){
+                                // <moved from onclick
+                                if (this.props.isRepeat) {
+                                    this.props.resultRecent(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.resultRecent(event)
+                                }
+                                // </moved from onclick
+                                this.setState({
+                                    hasRecentVerification: event.target.checked
+                                })
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
+                                event.target.checked = origVal;
+                            }
                         }}
                         checked={this.state.hasRecentVerification}
                         value="v" type="checkbox" /></td>
-                    <td ><input onClick={
-                        () => {
-                            if (this.props.isRepeat) {
-                                this.props.resultRecent(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.resultRecent(event)
-                            }
-                        }
-                    }
+                    <td ><input 
                         onChange={(event) => {
-                            this.setState({
-                                hasRecentLongterm: event.target.checked
-                            })
+                            const origVal = event.target.checked;
+                            if(window && window.confirm('Are you sure you want to change this value?')){
+                                // <moved from onclick
+                                if (this.props.isRepeat) {
+                                    this.props.resultRecent(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.resultRecent(event)
+                                }
+                                // </moved from onclick
+                                this.setState({
+                                    hasRecentLongterm: event.target.checked
+                                })
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
+                                event.target.checked = origVal;
+                            }
                         }}
                         checked={this.state.hasRecentLongterm}
 
                         value="lt" type="checkbox" /></td>
                     <td onChange={
                         (event) => {
-                            if (event.target.value == 'invalid') {
-                                this.setState({
-                                    isShowRecentRepeat: true
-                                })
-                            } else {
-                                this.setState({
-                                    isShowRecentRepeat: false
-                                })
-                            }
+                            const origVal = event.target.value;
+                            if (window && window.confirm('Are you sure you want to change this value?')) {
+                                if (event.target.value == 'invalid') {
+                                    this.setState({
+                                        isShowRecentRepeat: true
+                                    })
+                                } else {
+                                    this.setState({
+                                        isShowRecentRepeat: false
+                                    })
+                                }
 
-                            if (this.props.isRepeat) {
-                                this.props.qcInterpretationRecent(event, 'repeat', this.state.kitPositionInForm);
-                            } else {
-                                this.props.qcInterpretationRecent(event)
+                                if (this.props.isRepeat) {
+                                    this.props.qcInterpretationRecent(event, 'repeat', this.state.kitPositionInForm);
+                                } else {
+                                    this.props.qcInterpretationRecent(event)
+                                }
+                            }else{
+                                event.preventDefault();
+                                event.stopPropagation();
                             }
 
                         }

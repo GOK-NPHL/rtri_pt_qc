@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FcdrrTool from './FcdrrTool'
-import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel } from '../../../components/utils/Helpers';
+import { FetchFcdrrSubmissions, DeleteFcdrrSubmissions, GetAllFcdrrSettings, exportToExcel, FetchCurrentParticipantDemographics, fetchCurrentUserParams, SubmitFCDRR } from '../../../components/utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
 
-class FcdrrToolDashboard extends React.Component {
+class FcdrrToolSubmissions extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             submissions: [],
+            userDemographics: null,
+            isAdmin: true, //get from session
             isSubmitResult: false,
             dtObject: null,
             message: "",
@@ -26,7 +28,8 @@ class FcdrrToolDashboard extends React.Component {
             settings: [],
             latestDate: null,
             windowPeriod: 1000000,
-            actionElement: null
+            actionElement: null,
+            userParams: {}
         }
         this.toggleView = this.toggleView.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
@@ -38,6 +41,23 @@ class FcdrrToolDashboard extends React.Component {
 
     componentDidMount() {
 
+        //get user roles from session
+        (async () => {
+            let res = await FetchCurrentParticipantDemographics();
+            this.setState({
+                userDemographics: res,
+                isAdmin: res[0]?.is_admin || false
+            })
+            // this.setState({
+            //     userDemographics: userDemographics,
+            //     id: userDemographics[0].user_id,
+            //     firstName: userDemographics[0].name,
+            //     secondName: userDemographics[0].second_name,
+            //     email: userDemographics[0].user_email,
+            //     phoneNumber: userDemographics[0].user_phone_number,
+            // })
+        })();
+
         (async () => {
             let settings = await GetAllFcdrrSettings();
             let response = await FetchFcdrrSubmissions();
@@ -47,7 +67,7 @@ class FcdrrToolDashboard extends React.Component {
             if (settings.status != 500) {
                 settings.map((setting) => {
                     if (setting.name == 'window_period') {
-                        windowPeriod = setting.value
+                        windowPeriod = parseInt(setting.value)
                     }
                 })
             }
@@ -66,6 +86,13 @@ class FcdrrToolDashboard extends React.Component {
                 })
             }
 
+        })();
+
+        (async () => {
+            let response = await fetchCurrentUserParams();
+            this.setState({
+                userParams: response,
+            })
         })();
 
     }
@@ -127,6 +154,27 @@ class FcdrrToolDashboard extends React.Component {
         this.fetchSubmissions();
     }
 
+
+    submitSubmissionHandler(id) {
+        (async () => {
+            if (window && window.confirm("Are you sure you want to submit this?")) {
+                let response = await SubmitFCDRR(id);
+                this.setState({
+                    message: response?.data?.Message || response?.message || 'Submitted successfully'
+                })
+                $('#messageModal').modal('toggle');
+            } else if (!window || !window.confirm || window == undefined) {
+                let response = await SubmitFCDRR(id);
+                this.setState({
+                    message: response?.data?.Message || response?.message || 'Submitted successfully'
+                })
+                $('#messageModal').modal('toggle');
+            }
+        })();
+
+        this.fetchSubmissions();
+    }
+
     fetchSubmissions() {
         (async () => {
             let settings = await GetAllFcdrrSettings();
@@ -150,18 +198,19 @@ class FcdrrToolDashboard extends React.Component {
     }
 
     daysBetween(date1, date2) {
-        console.log(date1, date2)
+        // console.log(date1, date2)
         //Get 1 day in milliseconds
         let one_day = 1000 * 60 * 60 * 24;
-
+        
         // Convert both dates to milliseconds
         let date1_ms = date1.getTime();
         let date2_ms = date2.getTime();
-
+        
         // Calculate the difference in milliseconds
         let difference_ms = date2_ms - date1_ms;
         // Convert back to days and return
         let diff = Math.round(difference_ms / one_day);
+        // console.log(`daysBetween(${date1}, ${date2}), returning ${diff-1}`)
         return diff - 1;
     }
 
@@ -171,12 +220,16 @@ class FcdrrToolDashboard extends React.Component {
         let toDayDate = new Date();
         let currDay = toDayDate.getDate();
         let currYear = toDayDate.getUTCFullYear();
-        let currYMonth = toDayDate.getUTCMonth();
+        let currYMonth = toDayDate.getUTCMonth()//+1; - FIXING SUBMISSION WINDOW BUG
         let canSubmit = true;
         let isPastWindowPeriod = currDay > this.state.windowPeriod;
 
+        console.log('currYMonth:', currYMonth)
+        console.log('this.state.latestDate:', this.state.latestDate)
+        // console.log('isPastWindowPeriod: ',isPastWindowPeriod)
+
         if (this.state.latestDate) { //check if has last months submission
-            console.log("one");
+            // console.log("latestDate");
             let lastReportDate = new Date(this.state.latestDate);
             if (
                 (
@@ -202,7 +255,7 @@ class FcdrrToolDashboard extends React.Component {
                 canSubmit = false
             }
         } else {
-            console.log("one 4");
+            // console.log("NOT latestdate");
             canSubmit = !isPastWindowPeriod;
         }
 
@@ -213,35 +266,79 @@ class FcdrrToolDashboard extends React.Component {
                     <tr key={uuidv4()}>
                         <td>{element['lab_name']}</td>
                         <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
-                        <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
+                        <td>{((element['submitted'] != null && element['submitted'] != undefined) && element['submitted']==true || element['submitted']==1) ? 'Yes' : 'No'}&nbsp;
+                                {element['submitted'] != 1 && element['submitted'] != true && this.state.userParams.permissions.includes("edit_fcdrr") && <a
+                                    href="#"
+                                    onClick={() => this.submitSubmissionHandler(element['id'])}
+                                    style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                    className="btn btn-xs text-xs btn-success text-white">
+                                    Submit now
+                                </a>}</td>
                         <td>
+                            {/* ----- */}
+                            {this.state.userParams.permissions.includes("edit_fcdrr") && <>
+                                {((
+                                    this.state.userParams.roles.filter(rl => rl.name == "Administrator").length > 0 ||
+                                    this.state.userParams.permissions.includes("edit_fcdrr_after_submission")
+                                ) ? <>
+                                   {this.state.userParams.permissions.includes("edit_fcdrr") &&  <a
+                                        href="#"
+                                        onClick={() => {
+                                            this.setState({
+                                                isSubmitResult: true,
+                                                isEdit: true,
+                                                editId: element['id']
+                                            })
+                                        }}
+                                        style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                        className="d-none d-sm-inline-block btn btn-sm text-xs btn-info text-white">
+                                        <i className="fas fa-edit"></i> Edit
+                                    </a> }
+                                    {(this.state.userParams.permissions.includes("delete_fcdrr") || this.state.userParams.permissions.includes("delete_fcdrr_after_submission")) &&
+                                        <>
+                                            {(this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
+                                                ?
+                                                '' :
+                                            <a
+                                                onClick={() => this.deleteSubmissionHandler(element['id'])}
+                                                style={{ "display": "inlineBlock" }}
+                                                className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
+                                                <i className="fas fa-trash"></i> Delete
+                                            </a>}
+                                        </>
+                                    }
+                                </> : ( element['submitted'] != 1 && element['submitted'] != true && <>
+                                    {this.state.userParams.permissions.includes("edit_fcdrr") && <a
+                                        href="#"
+                                        onClick={() => {
+                                            this.setState({
+                                                isSubmitResult: true,
+                                                isEdit: true,
+                                                editId: element['id'],
+                                                actionElement: element
+                                            })
+                                        }}
+                                        style={{ "display": "inlineBlock", 'marginRight': '5px' }}
+                                        className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
+                                        <i className="fas fa-edit"></i> Edit
+                                    </a>}
 
-                            <a
-                                href="#"
-                                onClick={() => {
-                                    this.setState({
-                                        isSubmitResult: true,
-                                        isEdit: true,
-                                        editId: element['id'],
-                                        actionElement: element
-                                    })
-                                }}
-                                style={{ "display": "inlineBlock", 'marginRight': '5px' }}
-                                className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
-                                <i className="fas fa-edit"></i> Edit
-                            </a>
-
-                            {
-                                (this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
-                                    ?
-                                    '' :
-                                    <a
-                                        onClick={() => this.deleteSubmissionHandler(element['id'])}
-                                        style={{ "display": "inlineBlock" }}
-                                        className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
-                                        <i className="fas fa-trash"></i> Delete
-                                    </a>
-                            }
+                                    {this.state.userParams.permissions.includes("delete_fcdrr") &&
+                                        <>
+                                            {(this.daysBetween(new Date(element['report_date']), new Date()) > this.state.windowPeriod)
+                                                ?
+                                                '' :
+                                            <a
+                                                onClick={() => this.deleteSubmissionHandler(element['id'])}
+                                                style={{ "display": "inlineBlock" }}
+                                                className="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm text-white">
+                                                <i className="fas fa-trash"></i> Delete
+                                            </a>}
+                                        </>
+                                    }
+                                </>))}
+                            </>}
+                            {/* ----- */}
 
                         </td>
 
@@ -260,12 +357,12 @@ class FcdrrToolDashboard extends React.Component {
 
         let dashboardHeader = <div key={1} style={{ "marginBottom": "24px" }} className="row">
             <div className="col-sm-6">
-                <h5 className="m-0 text-dark">Facility Consumption Data Report & Requisition for ASANTE</h5>
+                <h5 className="m-0 text-sm text-muted text-uppercase text-bold">Facility Consumption Data Report & Requisition for ASANTE</h5>
             </div>
             <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right">
-                    <li className="breadcrumb-item"><a href="/dashboard">RTRI QC</a></li>
-                    <li className="breadcrumb-item active">Dashboard</li>
+                    <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
+                    <li className="breadcrumb-item active">FCDRR Submissions</li>
                 </ol>
             </div>
 
@@ -275,8 +372,8 @@ class FcdrrToolDashboard extends React.Component {
             <div key={2} className="row">
                 <div className="col-sm-12">
                     <div className="col-sm-12 mb-5">
-                        <h3 className="float-left">All Submissions</h3>
-                        <div className="float-right">
+                    <h4 className="float-left text-bold">All Submissions</h4>
+                    {this.state.userParams && this.state.userParams.roles && this.state.userParams.roles.length > 0 && this.state.userParams.permissions.includes("add_fcdrr") && <div className="float-right">
                             {canSubmit ?
                                 <button onClick={() => {
                                     this.setState({
@@ -286,9 +383,9 @@ class FcdrrToolDashboard extends React.Component {
                                 }} type="button" className="btn btn-info">
                                     Submit result
                                 </button> :
-                                <p style={{ "backgroundColor": "green", "color": "white" }}>New submission closed</p>
+                                <label className="badge badge-warning px-3 py-2 text-sm" title='You cannot submit data at this time.' style={{opacity: 0.8, cursor: 'not-allowed'}} >Submission closed</label>
                             }
-                        </div>
+                        </div>}
                     </div>
 
 
@@ -339,8 +436,8 @@ class FcdrrToolDashboard extends React.Component {
                                 <thead>
                                     <tr>
                                         <th>Laboratory</th>
-                                        <th>Start month</th>
-                                        <th>End month</th>
+                                        <th>Reporting month</th>
+                                        <th>Submitted?</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -416,8 +513,8 @@ class FcdrrToolDashboard extends React.Component {
 
 }
 
-export default FcdrrToolDashboard;
+export default FcdrrToolSubmissions;
 
-if (document.getElementById('fcdrr_tool_dashboard')) {
-    ReactDOM.render(<FcdrrToolDashboard />, document.getElementById('fcdrr_tool_dashboard'));
+if (document.getElementById('fcdrr_tool_submissions')) {
+    ReactDOM.render(<FcdrrToolSubmissions />, document.getElementById('fcdrr_tool_submissions'));
 }

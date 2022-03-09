@@ -18,7 +18,7 @@ class CreateFcdrrSubmissionResultsTable extends Migration
             $table->timestamps();
             $table->integer("submission_id");
 
-            $table->string("comodity_name");
+            $table->string("commodity_name");
             $table->string("unit_of_issue");
             $table->integer("beggining_balance");
             $table->integer("qnty_received_kemsa");

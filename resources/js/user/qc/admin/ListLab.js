@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
-import { FetchParticipantList, exportToExcel } from '../../../components/utils/Helpers';
+import { FetchParticipantList, exportToExcel, getAllCommodities } from '../../../components/utils/Helpers';
 
 
 class ListLab extends React.Component {
@@ -74,6 +74,9 @@ class ListLab extends React.Component {
                     <td>{element.mfl_code}</td>
                     <td>{element.lab_name}</td>
                     <td>{element.email}</td>
+                    <td>{element.commodities ? <>
+                        {JSON.parse(element.commodities).length}
+                    </> : 0}</td>
                     <td>{element.is_active ? 'Active' : 'Inactive'}</td>
 
                     {
@@ -145,7 +148,7 @@ class ListLab extends React.Component {
                                         'MFL code': element.mfl_code,
                                         'lab/facility name': element.lab_name,
                                         email: element.email,
-                                        status: element.is_active==1 ? 'Active' : 'Inactive'
+                                        status: element.is_active == 1 ? 'Active' : 'Inactive'
                                     }
                                 })
                                 exportToExcel(final_data, 'Labs facilities list');
@@ -167,6 +170,7 @@ class ListLab extends React.Component {
                             <th scope="col">Facility Code</th>
                             <th scope="col">Lab Name</th>
                             <th scope="col">Email</th>
+                            <th scope="col"># Commodities</th>
                             <th scope="col">Status</th>
                             <th scope="col">Action</th>
                         </tr>

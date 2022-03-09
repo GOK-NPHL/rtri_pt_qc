@@ -8,7 +8,7 @@ class FcdrrSubmissionResults extends Model
 {
     protected $fillable = [
         "submission_id",
-        "comodity_name",
+        "commodity_name",
         "unit_of_issue",
         "beggining_balance",
         "qnty_received_kemsa",
@@ -17,6 +17,7 @@ class FcdrrSubmissionResults extends Model
         "no_of_tests_done",
         "losses_damages",
         "losses_errors",
+        "losses_comments",
         "adjustments_positive",
         "adjustments_negative",
         "end_of_month_stock",

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\FcdrrCommodity;
 use App\Laboratory;
 use App\User;
 use Exception;
@@ -42,6 +43,7 @@ class ParticipantController extends Controller
                 'facility_level' => $request->lab['facility_level'],
                 'county' => $request->lab['county'],
                 'lab_name' => $request->lab['lab_name'],
+                'commodities' => json_encode($request->lab['commodities']),//json_encode(FcdrrCommodity::whereIn('id', $request->lab['commodities'])->get()),
             ]);
             return response()->json(['Message' => 'Created successfully'], 200);
         } catch (Exception $ex) {
@@ -63,6 +65,7 @@ class ParticipantController extends Controller
             $lab->facility_level = $request->lab['facility_level'];
             $lab->county = $request->lab['county'];
             $lab->lab_name = $request->lab['lab_name'];
+            $lab->commodities = json_encode($request->lab['commodities']);//json_encode(FcdrrCommodity::whereIn('id', $request->lab['commodities'])->get());
             $lab->save();
 
             return response()->json(['Message' => 'Saved successfully'], 200);
@@ -103,6 +106,7 @@ class ParticipantController extends Controller
             $user->email = $request->personel['email'];
             $user->phone_number = $request->personel['phone_number'];
             $user->is_active = $request->personel['is_active'];
+            $user->roles = json_encode($request->personel['roles']);
             if (!empty($request->personel['password'])) {
                 $user->password = Hash::make($request->personel['password']);
             }
@@ -151,7 +155,8 @@ class ParticipantController extends Controller
                 'users.phone_number',
                 'users.has_pt_access',
                 'users.is_active',
-                'users.second_name'
+                'users.second_name',
+                'users.roles'
             )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
                 ->get();
 
@@ -175,7 +180,8 @@ class ParticipantController extends Controller
                 'users.phone_number',
                 'users.has_pt_access',
                 'users.is_active',
-                'users.second_name'
+                'users.second_name',
+                'users.roles'
             )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
                 ->where('users.id', '=', $request->id)
                 ->get();

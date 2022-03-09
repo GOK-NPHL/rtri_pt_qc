@@ -75,6 +75,7 @@ export async function FetchUserAuthorities() {
 
     try {
         let response = await axios.get(`${settings.serverBaseApi}/user_authorities`);
+        // let response = await axios.get(`${settings.serverBaseApi}/access-management/permissions`);
         return response.data;
     } catch (err) {
         // Handle Error Here
@@ -479,6 +480,16 @@ export async function FetchFcdrrSubmission(id) {
     }
 }
 
+export async function fetchCurrentUserParams(){
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/access-management/user/me`);
+        const responseData = response.data;
+        return responseData;
+    } catch (error) {
+        return err.response
+    }
+}
+
 export async function FetchCurrentParticipantDemographics() {
 
     try {
@@ -527,7 +538,33 @@ export async function FetchAllFcdrrReports() {
         // Handle Error Here
         return err.response
     }
+}
+export async function FetchFcdrrReports({county_name, county_id, date, lab, commodity}) {
 
+    try {
+        let url = `${settings.serverBaseApi}/fcdrr/reports?all=1`;
+        if(county_name && county_name != null){
+            url += `&county_name=${county_name}`;
+        }
+        if(county_id && county_id != null){
+            url += `&county_id=${county_id}`;
+        }
+        if(date && date != null){
+            url += `&date=${date}`;
+        }
+        if(lab && lab != null){
+            url += `&lab=${lab}`;
+        }
+        if(commodity && commodity != null){
+            url += `&commodity=${commodity}`;
+        }
+        const response = await axios.get(url);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
 }
 
 export async function FetchAdminUser(userId) {
@@ -560,8 +597,43 @@ export async function DeleteSubmissions(id) {
     }
 
 }
-export async function DeleteFcdrrSubmissions(id) {
 
+export async function SubmitQC(id) {
+
+    try {
+        const response = await axios({
+            method: 'put',
+            url: `${settings.serverBaseApi}/submit_qc/` + id,
+            // data: {
+            //     user: user,
+            // }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
+
+export async function SubmitFCDRR(id) {
+
+    try {
+        const response = await axios({
+            method: 'put',
+            url: `${settings.serverBaseApi}/fcdrr/submit/` + id,
+            // data: {
+            //     user: user,
+            // }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
+export async function DeleteFcdrrSubmissions(id) {
     try {
         const response = await axios({
             method: 'delete',
@@ -569,6 +641,19 @@ export async function DeleteFcdrrSubmissions(id) {
             // data: {
             //     user: user,
             // }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+
+}
+export async function deleteCommodityById(id) {
+    try {
+        const response = await axios({
+            method: 'delete',
+            url: `${settings.serverBaseApi}/fcdrr/commodities/` + id,
         });
         return response;
     } catch (err) {
@@ -917,6 +1002,96 @@ export async function SaveFcdrrSetting(value, name) {
     }
 }
 
+export async function saveCommodity(payload) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/fcdrr/commodities`,
+            data: {
+                ...payload
+            }
+        });
+        return response;
+    } catch (err) {
+        // Handle Error Here
+        console.log(err);
+        return err.response
+    }
+
+}
+
+export async function getAMresource(resource, id) {
+    try {
+        let url = `${settings.serverBaseApi}/access-management/${resource}`
+        if(id && id !== '') {
+            url += `/${id}`
+        }
+        let response = await axios(url);
+        return response;
+    } catch (err) {
+        console.log(err);
+        return err.response
+    }
+}
+
+export async function saveAMresource(payload, resource) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${settings.serverBaseApi}/access-management/${resource}`,
+            data: {
+                ...payload
+            }
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        return err.response
+    }
+}
+
+export async function updateAMresource(payload, resource, id) {
+    try {
+        const response = await axios({
+            method: 'put',
+            url: `${settings.serverBaseApi}/access-management/${resource}/` + id,
+            data: {
+                ...payload
+            }
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        return err.response
+    }
+}
+export async function deleteAMresource(payload, resource, id) {
+    try {
+        const response = await axios({
+            method: 'delete',
+            url: `${settings.serverBaseApi}/access-management/${resource}/` + id,
+            data: {
+                ...payload
+            }
+        });
+        return response;
+    } catch (err) {
+        console.log(err);
+        return err.response
+    }
+}
+
+export async function getAllCommodities() {
+    try {
+        const response = await axios.get(`${settings.serverBaseApi}/fcdrr/commodities`);
+        const responseData = response;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+
 
 export async function GetFcdrrReportRates(period) {
 
@@ -924,11 +1099,33 @@ export async function GetFcdrrReportRates(period) {
         if (period != '' && period != null) {
             console.log(period);
             period = new Date(period);
-            period = period.getFullYear() + '-' + (period.getMonth()+1) + '-' + period.getDay();
-            console.log(period);
+            period = period.getFullYear() + '-' + (period.getMonth() + 1) + '-' + period.getDay();
+            console.log('GetFcdrrReportRates:',period);
         }
-        
+
         const response = await axios.get(`${settings.serverBaseApi}/get_fcdrr_reporting_rates/` + period);
+        const responseData = response.data;
+        return responseData;
+    } catch (err) {
+        // Handle Error Here
+        return err.response
+    }
+}
+export async function getFcdrrReportingRates({county_name, county_id, date}) {
+
+    try {
+        let url = `${settings.serverBaseApi}/fcdrr/reporting-rates?all=1`
+        if(county_name && county_name != null){
+            url += `&county_name=${county_name}`;
+        }
+        if(county_id && county_id != null){
+            url += `&county_id=${county_id}`;
+        }
+        if(date && date != null){
+            url += `&period=${date}`;
+        }
+
+        const response = await axios.get(url);
         const responseData = response.data;
         return responseData;
     } catch (err) {
@@ -940,23 +1137,23 @@ export async function GetFcdrrReportRates(period) {
 
 export function exportToExcel(bundle, filename) {
     console.log('Exporting to Excel');
-    if(!filename || filename == '' || filename == null || filename == undefined){
+    if (!filename || filename == '' || filename == null || filename == undefined) {
         filename = 'data';
     }
     // let bundle = this.state.data
-    if(bundle.length>0){
+    if (bundle.length > 0) {
         let csv = '';
-        filename = filename+'-'+new Date().toLocaleDateString().split('/').join('_')+'.csv'
+        filename = filename + '-' + new Date().toLocaleDateString().split('/').join('_') + '.csv'
         let keys = Object.keys(bundle[0])//.map(key => key.split('_').join(' '));
         csv += keys.join(',') + '\r\n';
         bundle.forEach(item => {
-            csv += keys.map(key => item[key] ).join(',') + '\r\n';
+            csv += keys.map(key => item[key]).join(',') + '\r\n';
         });
         var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         if (navigator.msSaveBlob) { // IE 10+
             navigator.msSaveBlob(blob, filename);
         } else {
-            if(document && document.createElement){
+            if (document && document.createElement) {
                 let link = document.createElement("a");
                 if (link.download !== undefined) { // feature detection
                     // Browsers that support HTML5 download attribute
@@ -973,7 +1170,7 @@ export function exportToExcel(bundle, filename) {
                 document.body.removeChild(link);
 
             } else {
-                if(window && window.open){
+                if (window && window.open) {
                     window.open('data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
                 }
             }

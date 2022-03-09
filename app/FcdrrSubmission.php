@@ -10,5 +10,6 @@ class FcdrrSubmission extends Model
         "report_date",
         "lab_id",
         "user_id",
+        "submitted",
     ];
 }

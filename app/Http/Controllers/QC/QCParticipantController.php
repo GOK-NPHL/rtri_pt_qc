@@ -72,7 +72,8 @@ class QCParticipantController extends Controller
                 'laboratories.phone_number',
                 'laboratories.mfl_code',
                 'laboratories.email',
-                'counties.name as county'
+                'counties.name as county',
+                'commodities as commodities',
             )->join('laboratories', 'laboratories.id', '=', 'users.laboratory_id')
                 ->join('counties', 'laboratories.county', '=', 'counties.id')
                 ->where('users.id', '=', $user->id)
@@ -83,10 +84,19 @@ class QCParticipantController extends Controller
         }
     }
 
-    public function fcdrrToolHome()
+    public function fcdrrDashboard()
     {
         if (Gate::allows('view_qc_component')) {
-            return view('user.qc.participant.fcdrr_tool_dashboard');
+            return view('user.qc.participant.fcdrr_summary_dashboard');
+        } else {
+            return view('user.general.dashboard');
+        }
+    }
+
+    public function fcdrrSubmissions()
+    {
+        if (Gate::allows('view_qc_component')) {
+            return view('user.qc.participant.fcdrr_tool_submissions');
         } else {
             return view('user.general.dashboard');
         }

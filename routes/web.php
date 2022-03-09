@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\PT\PTAdminController;
 use App\Http\Controllers\QC\QCAdminController;
+use App\Http\Controllers\AuthAccessController;
 use App\Http\Controllers\QC\QCParticipantController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -66,7 +67,8 @@ Route::get('list-readiness', [PTAdminController::class, 'listReadiness'])->name(
 Route::get('edit-readiness/{readinessId}', [PTAdminController::class, 'editReadiness'])->name('edit-readiness');
 Route::get('add-readiness', [PTAdminController::class, 'addReadiness'])->name('add-readiness');
 
-Route::get('fcdrr-tool-home', [QCParticipantController::class, 'fcdrrToolHome'])->name('fcdrr-tool-home');
+Route::get('fcdrr-dashboard', [QCParticipantController::class, 'fcdrrDashboard'])->name('fcdrr-dashboard');
+Route::get('fcdrr-submissions', [QCParticipantController::class, 'fcdrrSubmissions'])->name('fcdrr-submissions');
 
 Route::get('fcdrr-report', 'QC\QCAdminController@listFcdrrReports')->name('fcdrr-report');
 Route::get('get-fcdrr-report/{id}', 'QC\QCAdminController@fcdrrReport')->name('get-fcdrr-report');
@@ -74,3 +76,20 @@ Route::get('get-fcdrr-report/{id}', 'QC\QCAdminController@fcdrrReport')->name('g
 Route::get('fcdrr-indicators', 'QC\QCAdminController@fcdrrIndicators')->name('fcdrr-indicators');
 
 Route::get('fcdrr-settings', 'QC\QCAdminController@fcdrrSettings')->name('fcdrr-settings');
+
+Route::prefix('access-management')->group(function () {
+    Route::redirect('/', '/access-management/roles');
+    Route::prefix('roles')->group(function () {
+        Route::get('/', [AuthAccessController::class, 'manageRoles'])->name('manage-roles');
+        Route::get('/new', [AuthAccessController::class, 'newRole'])->name('new-role');
+        Route::get('/edit/{roleId}', [AuthAccessController::class, 'editRole'])->name('edit-role');
+    });
+    
+    Route::get('permissions', [AuthAccessController::class, 'managePermissions'])->name('manage-permissions');
+    
+    Route::prefix('groups')->group(function () {
+        Route::get('/', [AuthAccessController::class, 'manageGroups'])->name('manage-groups');
+        Route::get('/new', [AuthAccessController::class, 'newGroup'])->name('new-group');
+        Route::get('/edit/{groupId}', [AuthAccessController::class, 'editGroup'])->name('edit-group');
+    });
+});

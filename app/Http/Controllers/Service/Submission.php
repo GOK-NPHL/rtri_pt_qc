@@ -55,6 +55,7 @@ class Submission extends Controller
                     "qc_tested" => $submission["isQCTested"],
                     "not_test_reason" => $submission["qcNotTestedReason"],
                     "other_not_tested_reason" => $submission["qcNotTestedOtherReason"],
+                    "submitted" => $submission["submitted"] ?? 0,
                 ]
 
             );
@@ -122,7 +123,7 @@ class Submission extends Controller
             return response()->json(['Message' => 'Saved successfully'], 200);
         } catch (Exception $ex) {
             Log::error($ex);
-            return response()->json(['Message' => 'Could not save sumbmission: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Could not save submission: : ' . $ex->getMessage()], 500);
         }
     }
 
@@ -213,6 +214,7 @@ class Submission extends Controller
                 'qcsubmissions.kit_date_received',
                 'qcsubmissions.kit_lot_no',
                 'qcsubmissions.testing_date',
+                'qcsubmissions.submitted',
                 'laboratories.lab_name',
                 'laboratories.mfl_code',
             )->join('laboratories', 'laboratories.id', '=', 'qcsubmissions.lab_id')
@@ -245,6 +247,7 @@ class Submission extends Controller
                 'qcsubmissions.tester_name',
                 'qcsubmissions.test_justification',
                 'qcsubmissions.qc_tested',
+                'qcsubmissions.submitted',
                 'qcsubmissions.not_test_reason',
                 'qcsubmissions.other_not_tested_reason',
                 'laboratories.email',
@@ -292,6 +295,42 @@ class Submission extends Controller
         }
     }
 
+    public function submitSubmission(Request $request)
+    {
+        $user = Auth::user();
+        try {
+            $qs = SubmissionModel::find($request->id);
+            //$qs=DB::table('qcsubmissions')->where('id', $request->id);
+            if ($qs) {
+                $qs->submitted = 1;
+                $qs->save();
+                return response()->json(['Message' => 'Submitted Successfully'], 200);
+            } else {
+                return response()->json(['Message' => 'Submission not found'], 404);
+            }
+            return response()->json(['Message' => 'Submitted Successfully'], 200);
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error submitting submission: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function submitRepeatSubmission(Request $request)
+    {
+        $user = Auth::user();
+        try {
+            $rqs = RepeatSubmission::find($request->id);
+            if ($rqs) {
+                $rqs->submitted = 1;
+                $rqs->save();
+                return response()->json(['Message' => 'Submitted Successfully'], 200);
+            } else {
+                return response()->json(['Message' => 'Submission not found'], 404);
+            }
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error submitting submission: ' . $ex->getMessage()], 500);
+        }
+    }
+
     public function createFcdrrSubmission(Request $request)
     {
         try {
@@ -322,7 +361,7 @@ class Submission extends Controller
 
                 $submissionModel = new FcdrrSubmissionResults([
                     "submission_id" => $submissionId,
-                    "comodity_name" => $submission["forData"][$x][0],
+                    "commodity_name" => $submission["forData"][$x][0],
                     "unit_of_issue" => $submission["forData"][$x][1],
                     "beggining_balance" => $submission["forData"][$x][2],
                     "qnty_received_kemsa" => $submission["forData"][$x][3],
@@ -330,7 +369,9 @@ class Submission extends Controller
                     "qnty_used" => $submission["forData"][$x][5],
                     "no_of_tests_done" => $submission["forData"][$x][6],
                     "losses_damages" => $submission["forData"][$x][7],
-                    "losses_errors" => $submission["forData"][$x][8],
+                    // "losses_errors" => $submission["forData"][$x][8],
+                    "losses_errors" => $submission["forData"][$x][7], //REPLICATING THE SAME VALUE AS THE LOSSES_DAMAGES
+                    "losses_comments" => $submission["forData"][$x][8],
                     "adjustments_positive" => $submission["forData"][$x][9],
                     "adjustments_negative" => $submission["forData"][$x][10],
                     "end_of_month_stock" => $submission["forData"][$x][11],
@@ -348,7 +389,7 @@ class Submission extends Controller
             return response()->json(['Message' => 'Saved successfully'], 200);
         } catch (Exception $ex) {
             Log::error($ex);
-            return response()->json(['Message' => 'Could not save sumbmission: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Could not save submission.. : ' . $ex->getMessage()], 500);
         }
     }
 

@@ -16,7 +16,6 @@ class CommonsController extends Controller
 
     public function getCounties()
     {
-
         try {
             return County::all();
             // return SubmissionModel::all();
@@ -31,9 +30,11 @@ class CommonsController extends Controller
         try {
             $submissions = FcdrrSubmission::select(
                 'fcdrr_submissions.id',
+                'fcdrr_submissions.submitted',
                 'fcdrr_submissions.report_date',
                 'laboratories.lab_name',
                 'laboratories.mfl_code',
+                'laboratories.commodities',
                 'counties.name as county',
                 DB::raw('max(report_date) as latest_date')
             )->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
@@ -56,7 +57,26 @@ class CommonsController extends Controller
             return $submissions;
             // return SubmissionModel::all();
         } catch (Exception $ex) {
-            return response()->json(['Message' => 'Error getting org units: ' . $ex->getMessage()], 500);
+            return response()->json(['Message' => 'Error getting data: ' . $ex->getMessage()], 500);
+        }
+    }
+
+    public function fetchFcdrrSubmissionsByCounty(){
+        $user = Auth::user();
+
+        try {
+            $submissions = FcdrrSubmission::select(
+                'fcdrr_submissions.id',
+                'fcdrr_submissions.report_date',
+                'laboratories.lab_name',
+                'laboratories.mfl_code',
+                'counties.name as county',
+                DB::raw('max(report_date) as latest_date')
+            )->join('laboratories', 'laboratories.id', '=', 'fcdrr_submissions.lab_id')
+                ->join('counties', 'laboratories.county', '=', 'counties.id');
+            return $submissions;
+        } catch (Exception $ex) {
+            return response()->json(['Message' => 'Error getting data: ' . $ex->getMessage()], 500);
         }
     }
 }

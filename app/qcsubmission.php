@@ -34,6 +34,7 @@ class qcsubmission extends Model
         "lab_id",
         "user_id",
         "sample_type",
-        "tester_name"
+        "tester_name",
+        "submitted"
     ];
 }
