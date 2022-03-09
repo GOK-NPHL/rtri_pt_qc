@@ -181,9 +181,21 @@ class AuthAccessController extends Controller
     {
         try {
             $permission = Permissions::find($request->id);
+            $slug = $permission->slug;
             $permission->is_active = 0;
             $permission->save();
             $permission->delete();
+            $roles = UserRoles::where('permissions', 'like', '%' . $slug . '%')->get();
+            foreach ($roles as $role) {
+                $role_permissions = json_decode($role->permissions);
+                $key = array_search($slug, $role_permissions);
+                if ($key !== false) {
+                    unset($role_permissions[$key]);
+                    $role->permissions = json_encode($role_permissions);
+                    $role->save();
+                }
+            }
+
             return response()->json(['Message' => 'Permission deleted successfully'], 200);
         } catch (Exception $ex) {
             return response()->json(['Message' => 'Could not delete permission: ' . $ex->getMessage()], 500);
