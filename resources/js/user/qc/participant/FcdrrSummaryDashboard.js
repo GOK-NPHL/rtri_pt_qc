@@ -240,11 +240,11 @@ class FcdrrSummaryDashboard extends React.Component {
                         </div>
                         <div className='col-md-3'>
                             <h5 className="float-left text-bold">
-                                <small>{this.state.reportsQuery.date ? this.formatPeriod(this.state.reportsQuery.date) : null}</small>
+                                <small style={{backgroundColor: '#e4f0f5', padding: '1px 2px', border: '1px solid #d8d8fa', borderRadius:'4px', whiteSpace: 'nowrap', fontSize: '13px'}}>{this.state.reportsQuery.date ? this.formatPeriod(this.state.reportsQuery.date) : null}</small>
                                 &nbsp; &nbsp; &nbsp;
-                                <small>{this.state.reportsQuery.county_name ? this.state.reportsQuery.county_name : this.state.reportsQuery.county_id ? this.state.counties.find(ct => ct.id == this.state.reportsQuery.county_id)?.name : null}</small>
+                                <small style={{backgroundColor: '#e4f0f5', padding: '1px 2px', border: '1px solid #d8d8fa', borderRadius:'4px', whiteSpace: 'nowrap', fontSize: '13px'}}>{this.state.reportsQuery.county_name ? this.state.reportsQuery.county_name : this.state.reportsQuery.county_id ? this.state.counties.find(ct => ct.id == this.state.reportsQuery.county_id)?.name : 'National (Kenya)'}</small>
                                 &nbsp; &nbsp; &nbsp;
-                                <small>{this.state.reportsQuery.commodity ? this.state.commodities.find(ct => ct.id == this.state.reportsQuery.commodity)?.commodity_name : null}</small>
+                                <small style={{backgroundColor: '#e4f0f5', padding: '1px 2px', border: '1px solid #d8d8fa', borderRadius:'4px', whiteSpace: 'nowrap', fontSize: '13px'}}>{this.state.reportsQuery.commodity ? this.state.commodities.find(ct => ct.id == this.state.reportsQuery.commodity)?.commodity_name : null}</small>
                             </h5>
                         </div>
                         <div className='col-md-6'>
@@ -358,12 +358,12 @@ class FcdrrSummaryDashboard extends React.Component {
                                     filename: 'Stock levels summary'
                                 }
                             }} />
-                            <details>
+                            {/* <details>
                                 <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
                                 <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
                                     {JSON.stringify(this.state.stockStatusSummary, null, 2)}
                                 </pre>
-                            </details>
+                            </details> */}
                         </div>
                     </div>
                 </div>
@@ -410,12 +410,12 @@ class FcdrrSummaryDashboard extends React.Component {
                                     filename: 'Accountability summary'
                                 }
                             }} />
-                            <details>
+                            {/* <details>
                                 <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
                                 <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
                                     {JSON.stringify(this.state.accountabilitySummary, null, 2)}
                                 </pre>
-                            </details>
+                            </details> */}
                         </div>
                     </div>
                 </div>
@@ -459,12 +459,12 @@ class FcdrrSummaryDashboard extends React.Component {
                                     filename: 'Reporting rates'
                                 }
                             }} />
-                            <details>
+                            {/* <details>
                                 <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
                                 <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
                                     {JSON.stringify(this.state.reportingRates, null, 2)}
                                 </pre>
-                            </details>
+                            </details> */}
                         </div>
                     </div>
                 </div>
@@ -507,12 +507,12 @@ class FcdrrSummaryDashboard extends React.Component {
                                     filename: 'Stock levels vs Expiries'
                                 }
                             }} />
-                            <details>
+                            {/* <details>
                                 <summary style={{ color: '#9f9f9f' }}>&nbsp;</summary>
                                 <pre style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '5px', fontSize: '12px', border: '1px solid #dadada', maxHeight: '500px', overflowY: 'auto' }}>
                                     {JSON.stringify(this.state.expiriesAnalysis, null, 2)}
                                 </pre>
-                            </details>
+                            </details> */}
                         </div>
                     </div>
                 </div>
