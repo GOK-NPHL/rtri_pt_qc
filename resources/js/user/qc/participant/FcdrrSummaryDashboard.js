@@ -7,6 +7,7 @@ import Pagination from "react-js-pagination";
 import { render } from 'react-dom';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+require('highcharts/modules/exporting')(Highcharts);
 
 class FcdrrSummaryDashboard extends React.Component {
 
@@ -132,6 +133,7 @@ class FcdrrSummaryDashboard extends React.Component {
                         total_comsumption: 0,
                         total_losses: 0,
                         current_stock: 0,
+                        resupply: 0
                     }
                     let accountabilitySummary = {
                         negative_adjustments: 0,
@@ -142,6 +144,7 @@ class FcdrrSummaryDashboard extends React.Component {
                         opening: 0,
                         closing: 0,
                         used: 0,
+                        resupply: 0
                     }
                     rps.forEach(report => {
                         stockStatusSummary.total_comsumption += (
@@ -149,6 +152,12 @@ class FcdrrSummaryDashboard extends React.Component {
                         )
                         stockStatusSummary.total_losses += (
                             report.losses_damages
+                        );
+                        stockStatusSummary.resupply += (
+                            report.qnty_requested_resupply
+                        );
+                        expiriesAnalysis.resupply += (
+                            report.qnty_requested_resupply
                         );
                         stockStatusSummary.current_stock += report.end_of_month_stock;
                         accountabilitySummary.negative_adjustments += (
@@ -361,6 +370,7 @@ class FcdrrSummaryDashboard extends React.Component {
                                 colors: ['#f7a35c', '#90ee7e', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee'],
                                 plotOptions: {
                                     pie: {
+                                        showInLegend:true,
                                         allowPointSelect: true,
                                         cursor: 'pointer',
                                         dataLabels: {
@@ -375,6 +385,7 @@ class FcdrrSummaryDashboard extends React.Component {
                                         ['Current Stock', this.state.stockStatusSummary.current_stock],
                                         ['Total Consumption', this.state.stockStatusSummary.total_comsumption],
                                         ['Total Losses', this.state.stockStatusSummary.total_losses],
+                                        ['Resupply requested', this.state.stockStatusSummary.resupply],
                                     ]
                                 }],
                                 credits: {
@@ -414,6 +425,7 @@ class FcdrrSummaryDashboard extends React.Component {
                                 colors: ['#f7a35c', '#90ee7e', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee'],
                                 plotOptions: {
                                     pie: {
+                                        showInLegend:true,
                                         allowPointSelect: true,
                                         cursor: 'pointer',
                                         dataLabels: {
@@ -463,6 +475,7 @@ class FcdrrSummaryDashboard extends React.Component {
                                 colors: ['#f7a35c', '#90ee7e', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee'],
                                 plotOptions: {
                                     pie: {
+                                        showInLegend:true,
                                         allowPointSelect: true,
                                         cursor: 'pointer',
                                         dataLabels: {
@@ -512,6 +525,7 @@ class FcdrrSummaryDashboard extends React.Component {
                                 // colors: ['#f7a35c', '#90ee7e', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee'],
                                 plotOptions: {
                                     pie: {
+                                        showInLegend:true,
                                         allowPointSelect: true,
                                         cursor: 'pointer',
                                         dataLabels: {
@@ -525,6 +539,7 @@ class FcdrrSummaryDashboard extends React.Component {
                                     { name: 'Opening balance', data: [this.state.expiriesAnalysis.opening] },
                                     { name: 'Closing Balance', data: [this.state.expiriesAnalysis.closing] },
                                     { name: 'Quantity used', data: [this.state.expiriesAnalysis.used] },
+                                    { name: 'Resupply requested', data: [this.state.expiriesAnalysis.resupply] },
                                 ],
                                 credits: {
                                     enabled: false

@@ -92,7 +92,7 @@ class RecentKit extends React.Component {
                     <td><input 
                         onChange={(event) => {
                             const origVal = event.target.checked;
-                            if(window && window.confirm('Are you sure you want to change this value?')){
+                            // if(window && window.confirm('Are you sure you want to change this value?')){
                                 // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultRecent(event, 'repeat', this.state.kitPositionInForm);
@@ -103,18 +103,18 @@ class RecentKit extends React.Component {
                                 this.setState({
                                     hasRecentControl: event.target.checked
                                 })
-                            }else{
-                                event.preventDefault();
-                                event.stopPropagation();
-                                event.target.checked = origVal;
-                            }
+                            // }else{
+                            //     event.preventDefault();
+                            //     event.stopPropagation();
+                            //     event.target.checked = origVal;
+                            // }
                         }}
                         checked={this.state.hasRecentControl}
                         value="c" type="checkbox" /></td>
                     <td><input 
                         onChange={(event) => {
                             const origVal = event.target.checked;
-                            if(window && window.confirm('Are you sure you want to change this value?')){
+                            // if(window && window.confirm('Are you sure you want to change this value?')){
                                 // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultRecent(event, 'repeat', this.state.kitPositionInForm);
@@ -125,18 +125,18 @@ class RecentKit extends React.Component {
                                 this.setState({
                                     hasRecentVerification: event.target.checked
                                 })
-                            }else{
-                                event.preventDefault();
-                                event.stopPropagation();
-                                event.target.checked = origVal;
-                            }
+                            // }else{
+                            //     event.preventDefault();
+                            //     event.stopPropagation();
+                            //     event.target.checked = origVal;
+                            // }
                         }}
                         checked={this.state.hasRecentVerification}
                         value="v" type="checkbox" /></td>
                     <td ><input 
                         onChange={(event) => {
                             const origVal = event.target.checked;
-                            if(window && window.confirm('Are you sure you want to change this value?')){
+                            // if(window && window.confirm('Are you sure you want to change this value?')){
                                 // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultRecent(event, 'repeat', this.state.kitPositionInForm);
@@ -147,11 +147,11 @@ class RecentKit extends React.Component {
                                 this.setState({
                                     hasRecentLongterm: event.target.checked
                                 })
-                            }else{
-                                event.preventDefault();
-                                event.stopPropagation();
-                                event.target.checked = origVal;
-                            }
+                            // }else{
+                            //     event.preventDefault();
+                            //     event.stopPropagation();
+                            //     event.target.checked = origVal;
+                            // }
                         }}
                         checked={this.state.hasRecentLongterm}
 

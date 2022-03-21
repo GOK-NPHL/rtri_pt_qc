@@ -224,8 +224,8 @@ class FcdrrToolSubmissions extends React.Component {
         let canSubmit = true;
         let isPastWindowPeriod = currDay > this.state.windowPeriod;
 
-        console.log('currYMonth:', currYMonth)
-        console.log('this.state.latestDate:', this.state.latestDate)
+        // console.log('currYMonth:', currYMonth)
+        // console.log('this.state.latestDate:', this.state.latestDate)
         // console.log('isPastWindowPeriod: ',isPastWindowPeriod)
 
         if (this.state.latestDate) { //check if has last months submission
@@ -265,6 +265,7 @@ class FcdrrToolSubmissions extends React.Component {
 
                     <tr key={uuidv4()}>
                         <td>{element['lab_name']}</td>
+                        <td>{new Date(element['created_at']).toDateString()}</td>
                         <td>{new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)}</td>
                         <td>{((element['submitted'] != null && element['submitted'] != undefined) && element['submitted']==true || element['submitted']==1) ? 'Yes' : 'No'}&nbsp;
                                 {element['submitted'] != 1 && element['submitted'] != true && this.state.userParams.permissions.includes("edit_fcdrr") && <a
@@ -436,6 +437,7 @@ class FcdrrToolSubmissions extends React.Component {
                                 <thead>
                                     <tr>
                                         <th>Laboratory</th>
+                                        <th>Reported on</th>
                                         <th>Reporting month</th>
                                         <th>Submitted?</th>
                                         <th>Action</th>

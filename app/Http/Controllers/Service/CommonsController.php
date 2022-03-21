@@ -32,6 +32,7 @@ class CommonsController extends Controller
                 'fcdrr_submissions.id',
                 'fcdrr_submissions.submitted',
                 'fcdrr_submissions.report_date',
+                'fcdrr_submissions.created_at',
                 'laboratories.lab_name',
                 'laboratories.mfl_code',
                 'laboratories.commodities',

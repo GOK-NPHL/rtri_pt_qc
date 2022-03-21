@@ -97,7 +97,7 @@ class LongtermKit extends React.Component {
                     <td ><input 
                         onChange={(event) => {
                             const origVal = event.target.checked;
-                            if(window && window.confirm('Are you sure you want to change this value?')){
+                            // if(window && window.confirm('Are you sure you want to change this value?')){
                                 // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultLongterm(event, 'repeat', this.state.kitPositionInForm);
@@ -108,11 +108,11 @@ class LongtermKit extends React.Component {
                                 this.setState({
                                     hasLongtermControl: event.target.checked
                                 })
-                            }else{
-                                event.preventDefault();
-                                event.stopPropagation();
-                                event.target.checked = origVal;
-                            }
+                            // }else{
+                            //     event.preventDefault();
+                            //     event.stopPropagation();
+                            //     event.target.checked = origVal;
+                            // }
                         }}
                         checked={this.state.hasLongtermControl}
 
@@ -121,7 +121,7 @@ class LongtermKit extends React.Component {
                     <td ><input 
                         onChange={(event) => {
                             const origVal = event.target.checked;
-                            if(window && window.confirm('Are you sure you want to change this value?')){
+                            // if(window && window.confirm('Are you sure you want to change this value?')){
                                 // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultLongterm(event, 'repeat', this.state.kitPositionInForm);
@@ -132,11 +132,11 @@ class LongtermKit extends React.Component {
                                 this.setState({
                                     hasLongtermVerification: event.target.checked
                                 })
-                            }else{
-                                event.preventDefault();
-                                event.stopPropagation();
-                                event.target.checked = origVal;
-                            }
+                            // }else{
+                            //     event.preventDefault();
+                            //     event.stopPropagation();
+                            //     event.target.checked = origVal;
+                            // }
                         }}
                         checked={this.state.hasLongtermVerification}
 
@@ -145,7 +145,7 @@ class LongtermKit extends React.Component {
                     <td ><input 
                         onChange={(event) => {
                             const origVal = event.target.checked;
-                            if(window && window.confirm('Are you sure you want to change this value?')){
+                            // if(window && window.confirm('Are you sure you want to change this value?')){
                                 // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultLongterm(event, 'repeat', this.state.kitPositionInForm);
@@ -156,12 +156,12 @@ class LongtermKit extends React.Component {
                                 this.setState({
                                     hasLongtermLongterm: event.target.checked
                                 })
-                            }else{
-                                // reset the value
-                                event.preventDefault();
-                                event.stopPropagation();
-                                event.target.checked = origVal;
-                            }
+                            // }else{
+                            //     // reset the value
+                            //     event.preventDefault();
+                            //     event.stopPropagation();
+                            //     event.target.checked = origVal;
+                            // }
                         }}
                         checked={this.state.hasLongtermLongterm}
 

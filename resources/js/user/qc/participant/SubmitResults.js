@@ -1200,7 +1200,7 @@ class SubmitResults extends React.Component {
                     <div className="d-flex w-100 justify-content-center">
 
                         <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">
-                            {this.props.isEdit ? 'Update' : 'Submit'}
+                            {this.props.isEdit ? 'Update' : 'Save changes and exit'}
                         </button>
 
                         <button type="button" onClick={() => {

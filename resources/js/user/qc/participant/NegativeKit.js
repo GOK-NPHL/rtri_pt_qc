@@ -106,7 +106,7 @@ class NegativeKit extends React.Component {
                         <input 
                         onChange={(event) => {
                             const origVal = event.target.checked;
-                            if(window && window.confirm('Are you sure you want to change this value?')){
+                            // if(window && window.confirm('Are you sure you want to change this value?')){
                                 // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
@@ -117,11 +117,11 @@ class NegativeKit extends React.Component {
                                 this.setState({
                                     hasNegativeControl: event.target.checked
                                 })
-                            }else{
-                                event.preventDefault();
-                                event.stopPropagation();
-                                event.target.checked = origVal;
-                            }
+                            // }else{
+                            //     event.preventDefault();
+                            //     event.stopPropagation();
+                            //     event.target.checked = origVal;
+                            // }
                         }}
                         checked={this.state.hasNegativeControl}
                         value="c" type="checkbox" />
@@ -130,7 +130,7 @@ class NegativeKit extends React.Component {
                         <input 
                         onChange={(event) => {
                             const origVal = event.target.checked;
-                            if(window && window.confirm('Are you sure you want to change this value?')){
+                            // if(window && window.confirm('Are you sure you want to change this value?')){
                                 // <moved from onclick
                                 if (this.props.isRepeat) {
                                     this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
@@ -141,11 +141,11 @@ class NegativeKit extends React.Component {
                                 this.setState({
                                     hasNegativeVerification: event.target.checked
                                 })
-                            }else{
-                                event.preventDefault();
-                                event.stopPropagation();
-                                event.target.checked = origVal;
-                            }
+                            // }else{
+                            //     event.preventDefault();
+                            //     event.stopPropagation();
+                            //     event.target.checked = origVal;
+                            // }
                         }}
                         checked={this.state.hasNegativeVerification}
                         value="v" type="checkbox" />
@@ -154,7 +154,7 @@ class NegativeKit extends React.Component {
                         <input 
                             onChange={(event) => {
                                 const origVal = event.target.checked;
-                                if(window && window.confirm('Are you sure you want to change this value?')){
+                                // if(window && window.confirm('Are you sure you want to change this value?')){
                                     // <moved from onclick
                                     if (this.props.isRepeat) {
                                         this.props.resultNegative(event, 'repeat', this.state.kitPositionInForm);
@@ -165,11 +165,11 @@ class NegativeKit extends React.Component {
                                     this.setState({
                                         hasNegativeLongterm: event.target.checked
                                     })
-                                }else{
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    event.target.checked = origVal;
-                                }
+                                // }else{
+                                //     event.preventDefault();
+                                //     event.stopPropagation();
+                                //     event.target.checked = origVal;
+                                // }
                             }}
                             checked={this.state.hasNegativeLongterm}
                             value="lt" type="checkbox" />

@@ -28,6 +28,7 @@ class FcdrrTool extends React.Component {
             all_commodities: [],
             commodities: [],
             filled_commodities: [],
+            other_comment: {},
         }
     }
 
@@ -194,7 +195,26 @@ class FcdrrTool extends React.Component {
                         <td></td>
                         <td><input className="width120px" defaultValue={value['losses_damages']} type="number" /></td>
                         {/* <td><input className="width120px" defaultValue={value['losses_errors']} type="number" /></td> */}
-                        <td><textarea style={{width: '240px'}} defaultValue={value['losses_comments']} rows={2} /></td>
+                        <td>
+                            {/* <textarea style={{width: '240px'}} defaultValue={value['losses_comments']} rows={2} /> */}
+                            <select defaultValue={value['losses_comments']}>
+                                <option value={""}>Pick one</option>
+                                <option value={"Damages"}>Damages</option>
+                                <option value={"Expiries"}>Expiries</option>
+                                <option value={"Unaccounted"}>Unaccounted for</option>
+                                <option value={"Other"+(this.state.other_comment[index+"_"] && this.state.other_comment[index+"_"].length>0 ? ": "+this.state.other_comment[index+"_"] : "")}>Other</option>
+                            </select>
+                            {/* {(value['losses_comments'].length>0 && value['losses_comments'].toLowerCase().includes('other')) ? <textarea style={{width: '240px'}} value={this.state.other_comment[index+"_"]} onChange={evt=>{
+                                let pl = {}
+                                pl[index+"_"] = evt.target.value;
+                                this.setState({
+                                    other_comment: {
+                                        ...this.state.other_comment,
+                                        ...pl
+                                    }
+                                })
+                            }} rows={2} /> : null} */}
+                        </td>
                         <td><input className="width120px" defaultValue={value['adjustments_positive']} type="number" /></td>
                         <td><input className="width120px" defaultValue={value['adjustments_negative']} type="number" /></td>
                         <td><input className="width120px" defaultValue={value['end_of_month_stock']} type="number" /></td>
@@ -225,7 +245,14 @@ class FcdrrTool extends React.Component {
                         <td></td>
                         <td><input className="width120px" type="number" /></td>
                         {/* <td><input className="width120px" type="number" /></td> */}
-                        <td><textarea style={{width: '240px'}} rows={2} /></td>
+                        <td>
+                            <select>
+                                <option value={"Damages"}>Damages</option>
+                                <option value={"Expiries"}>Expiries</option>
+                                <option value={"Unaccounted"}>Unaccounted for</option>
+                                <option value={"Other"}>Other</option>
+                            </select>    
+                        </td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -255,7 +282,16 @@ class FcdrrTool extends React.Component {
                         <td></td>
                         <td><input className="width120px" type="number" /></td>
                         {/* <td><input className="width120px" type="number" /></td> */}
-                        <td><textarea style={{width: '240px'}} rows={2} /></td>
+                        <td>
+                            {/* <textarea style={{width: '240px'}} rows={2} /> */}
+                            <select>
+                                <option value={""}>Pick one</option>
+                                <option value={"Damages"}>Damages</option>
+                                <option value={"Expiries"}>Expiries</option>
+                                <option value={"Unaccounted"}>Unaccounted for</option>
+                                <option value={"Other"}>Other</option>
+                            </select> 
+                        </td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -311,12 +347,12 @@ class FcdrrTool extends React.Component {
                                         </h4>
                                     </div>
                                     <div className="col-sm-2">
-                                        <button className="float-right" type="button"
+                                        <button type="button"
                                             onClick={
                                                 () => {
                                                     window.location.assign('/fcdrr-report')
                                                 }
-                                            } className="btn btn-primary float-left mx-2">
+                                            } className="btn btn-primary float-right mx-2">
                                             <i class="fas fa-arrow-left"></i> Back
                                         </button>
                                     </div>
@@ -324,16 +360,27 @@ class FcdrrTool extends React.Component {
                                 </div>
                                 :
                                 <>
-                                    <h4>CONSUMPTION DATA REPORT & REQUEST FOR ASANTE™ HIV-1 RAPID RECENCY® TEST KITS</h4>
-                                    <hr />
-                                    {
-                                        this.props.isEdit && !this.props.canUpdate ?
-                                            <p style={{ "backgroundColor": "red" }}>
-                                                Alter not allowed as date is past reporting period
-                                            </p>
-                                            :
-                                            ''
-                                    }
+                                    <div className="row">
+                                        <div className="col-sm-10">
+                                            <h4 className="float-left">
+                                                CONSUMPTION DATA REPORT & REQUEST FOR ASANTE™ HIV-1 RAPID RECENCY® TEST KITS
+                                            </h4>
+                                        </div>
+                                        <div className="col-sm-2">
+                                            <a className='btn btn-light btn-sm float-right' href="/fcdrr-report">&larr; Go back</a>
+                                        </div>
+                                        <hr/>
+                                        <div className='col-md-12'>
+                                            {
+                                                this.props.isEdit && !this.props.canUpdate ?
+                                                    <p style={{ "backgroundColor": "red" }}>
+                                                        Alter not allowed as date is past reporting period
+                                                    </p>
+                                                    :
+                                                    ''
+                                            }
+                                        </div>
+                                    </div>
                                 </>
                         }
                         <br />
@@ -358,11 +405,14 @@ class FcdrrTool extends React.Component {
                                     <DatePicker
                                         dateFormat="yyyy/MM"
                                         selected={this.state.reportDate}
-                                    // onChange={(date) => {
-                                    //     this.setState({
-                                    //         reportDate: date
-                                    //     })
-                                    // }}
+                                        onChange={(date) => {
+                                            console.log('currdate', this.state.reportDate)
+                                            console.log('newdate', date)
+                                            this.setState({
+                                                reportDate: date
+                                            })
+                                        }}
+                                        maxDate={new Date()}
                                     />
                                 </td>
                                 {/* <td>
@@ -443,7 +493,7 @@ class FcdrrTool extends React.Component {
                                         :
                                         ''
                                     :
-                                    <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Submit</button>
+                                    <button type="button " onClick={() => this.submitForm()} className="btn btn-info float-left mx-2">Save changes and exit</button>
                         }
                         {
                             this.props.isAdmin ?
