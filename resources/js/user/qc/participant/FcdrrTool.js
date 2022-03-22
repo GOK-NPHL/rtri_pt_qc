@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import './fcdrr.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import CreatableSelect from 'react-select/creatable';
 
 class FcdrrTool extends React.Component {
 
@@ -27,8 +28,7 @@ class FcdrrTool extends React.Component {
             dataRows: [],
             all_commodities: [],
             commodities: [],
-            filled_commodities: [],
-            other_comment: {},
+            select_styles: {},
         }
     }
 
@@ -71,7 +71,7 @@ class FcdrrTool extends React.Component {
                         let currDay = 30;
                         let currYear = reportDate.getUTCFullYear();
                         let currYMonth = reportDate.getUTCMonth()// + 1
-                        let dt = currYear + "-" + (parseInt(currYMonth)<10? '0'+currYMonth:currYMonth) + "-" + currDay;
+                        let dt = currYear + "-" + (parseInt(currYMonth) < 10 ? '0' + currYMonth : currYMonth) + "-" + currDay;
                         reportDate = new Date(currYear, currYMonth, currDay);
                         // reportDate.setMonth(reportDate.getMonth() - 1);
 
@@ -88,7 +88,7 @@ class FcdrrTool extends React.Component {
                             edittableSubmission: edittableSubmission,
                             commodities: Array.from(this.state.all_commodities, (x) => {
                                 return lab_comm_ids.includes(x.id) ? x : null;
-                            } ).filter(x => x != null), 
+                            }).filter(x => x != null),
                             rowsNumbers: lab_comm_ids.length,
                         });
                     }
@@ -107,10 +107,40 @@ class FcdrrTool extends React.Component {
                 console.log(error);
             }
         })();
+
+        this.setState({
+            select_styles: {
+                control: styles => ({ ...styles, backgroundColor: 'white', fontSize: '14px', padding: '0px' }),
+                option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                  return {
+                    ...styles,
+                    fontSize: '13px',
+                    padding: '2px',
+                    margin: '0px 0px',
+                  };
+                },
+              }
+        });
+              
     }
 
     componentDidUpdate(prevProps) {
 
+    }
+
+    handleChange(newValue, actionMeta) {
+        {
+            console.group('Value Changed');
+            console.log(newValue);
+            console.log(`action: ${actionMeta.action}`);
+            console.groupEnd();
+        };
+    }
+    handleInputChange(inputValue, actionMeta) {
+        console.group('Input Changed');
+        console.log(inputValue);
+        console.log(`action: ${actionMeta.action}`);
+        console.groupEnd();
     }
 
     submitForm() {
@@ -124,6 +154,7 @@ class FcdrrTool extends React.Component {
             let rowRawData = [];
 
             for (let i = 1; i < element.children.length; i++) {
+                // console.log('element '+i+1+':', element.children[i].children[0].value || element.children[i].children[1].value || element.children[i].children[2].value);
                 try {
                     if (element.children[i].children[0].value) {
                         rowRawData.push(element.children[i].children[0].value);
@@ -136,6 +167,10 @@ class FcdrrTool extends React.Component {
 
             if (rowRawData.length != elementsLength && rowRawData.length > 1) { //check if row has data
                 $('#returnedMessage').text("Kindly fill all elements in row " + (count + 1));
+                console.log("rowRawData.length:", rowRawData.length)
+                console.log("elementsLength:", elementsLength)
+                console.log("rowRawData:", rowRawData)
+                console.log("elements:", elementsLength)
                 $('#messageModal').modal('toggle');
                 return;
             }
@@ -195,25 +230,24 @@ class FcdrrTool extends React.Component {
                         <td></td>
                         <td><input className="width120px" defaultValue={value['losses_damages']} type="number" /></td>
                         {/* <td><input className="width120px" defaultValue={value['losses_errors']} type="number" /></td> */}
-                        <td>
+                        <td style={{minWidth: '240px'}}>
                             {/* <textarea style={{width: '240px'}} defaultValue={value['losses_comments']} rows={2} /> */}
-                            <select defaultValue={value['losses_comments']}>
-                                <option value={""}>Pick one</option>
-                                <option value={"Damages"}>Damages</option>
-                                <option value={"Expiries"}>Expiries</option>
-                                <option value={"Unaccounted"}>Unaccounted for</option>
-                                <option value={"Other"+(this.state.other_comment[index+"_"] && this.state.other_comment[index+"_"].length>0 ? ": "+this.state.other_comment[index+"_"] : "")}>Other</option>
-                            </select>
-                            {/* {(value['losses_comments'].length>0 && value['losses_comments'].toLowerCase().includes('other')) ? <textarea style={{width: '240px'}} value={this.state.other_comment[index+"_"]} onChange={evt=>{
-                                let pl = {}
-                                pl[index+"_"] = evt.target.value;
-                                this.setState({
-                                    other_comment: {
-                                        ...this.state.other_comment,
-                                        ...pl
-                                    }
-                                })
-                            }} rows={2} /> : null} */}
+                            <input type="hidden" defaultValue={value['losses_comments']} id={"edit_lc__"+index} />
+                            <div style={{minWidth: '240px'}}>
+                                <CreatableSelect
+                                    isClearable
+                                    onChange={(newValue, actionMeta) => {
+                                        document.getElementById(`edit_lc__${index}`).value = newValue.value;
+                                    }}
+                                    defaultValue={{value: value['losses_comments'], label: value['losses_comments']}}
+                                    styles={this.state.select_styles}
+                                    options={[
+                                        { value: 'Damages', label: 'Damages' },
+                                        { value: 'Expiries', label: 'Expiries' },
+                                        { value: 'Unaccounted', label: 'Unaccounted for' },
+                                    ]}
+                                />
+                            </div>
                         </td>
                         <td><input className="width120px" defaultValue={value['adjustments_positive']} type="number" /></td>
                         <td><input className="width120px" defaultValue={value['adjustments_negative']} type="number" /></td>
@@ -228,8 +262,8 @@ class FcdrrTool extends React.Component {
             if (this.state.all_commodities && this.state.all_commodities.length > 0 && this.state.commodities && this.state.commodities.length > 0 && this.state.commodities.length > currentRowLen) {
                 this.state.commodities.filter(cdt =>
                     !Array.from(
-                        this.state.edittableSubmission["results"], e=>
-                            this.state.all_commodities.find(c=>c.commodity_name==e.commodity_name).id
+                        this.state.edittableSubmission["results"], e =>
+                        this.state.all_commodities.find(c => c.commodity_name == e.commodity_name).id
                     ).includes(cdt)
                 ).map((cm, cx) => {
                     let { commodity_name, unit_of_issue } = this.state.all_commodities.find(w => w.id == cm) || {};
@@ -245,13 +279,22 @@ class FcdrrTool extends React.Component {
                         <td></td>
                         <td><input className="width120px" type="number" /></td>
                         {/* <td><input className="width120px" type="number" /></td> */}
-                        <td>
-                            <select>
-                                <option value={"Damages"}>Damages</option>
-                                <option value={"Expiries"}>Expiries</option>
-                                <option value={"Unaccounted"}>Unaccounted for</option>
-                                <option value={"Other"}>Other</option>
-                            </select>    
+                        <td style={{minWidth: '240px'}}>
+                            <input type="hidden" id={"losscomm__"+cx} />
+                            <div style={{minWidth: '240px'}}>
+                                <CreatableSelect
+                                    isClearable
+                                    onChange={(newValue, actionMeta) => {
+                                        document.getElementById(`losscomm__${cx}`).value = newValue.value;
+                                    }}
+                                    styles={this.state.select_styles}
+                                    options={[
+                                        { value: 'Damages', label: 'Damages' },
+                                        { value: 'Expiries', label: 'Expiries' },
+                                        { value: 'Unaccounted', label: 'Unaccounted for' },
+                                    ]}
+                                />
+                            </div>
                         </td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -282,15 +325,23 @@ class FcdrrTool extends React.Component {
                         <td></td>
                         <td><input className="width120px" type="number" /></td>
                         {/* <td><input className="width120px" type="number" /></td> */}
-                        <td>
+                        <td style={{minWidth: '240px'}}>
                             {/* <textarea style={{width: '240px'}} rows={2} /> */}
-                            <select>
-                                <option value={""}>Pick one</option>
-                                <option value={"Damages"}>Damages</option>
-                                <option value={"Expiries"}>Expiries</option>
-                                <option value={"Unaccounted"}>Unaccounted for</option>
-                                <option value={"Other"}>Other</option>
-                            </select> 
+                            <input type="hidden" id={"nw_lc__"+cx} />
+                            <div style={{minWidth: '240px'}}>
+                                <CreatableSelect
+                                    isClearable
+                                    onChange={(newValue, actionMeta) => {
+                                        document.getElementById(`nw_lc__${cx}`).value = newValue.value;
+                                    }}
+                                    styles={this.state.select_styles}
+                                    options={[
+                                        { value: 'Damages', label: 'Damages' },
+                                        { value: 'Expiries', label: 'Expiries' },
+                                        { value: 'Unaccounted', label: 'Unaccounted for' },
+                                    ]}
+                                />
+                            </div>
                         </td>
                         <td><input className="width120px" type="number" /></td>
                         <td><input className="width120px" type="number" /></td>
@@ -303,7 +354,7 @@ class FcdrrTool extends React.Component {
                 this.setState({
                     dataRows: dataRows
                 });
-            }else{
+            } else {
                 console.log('commodities error:', 'None assigned to this lab');
                 // console.log('this.state.commodities ', this.state.commodities)
             }
@@ -347,14 +398,9 @@ class FcdrrTool extends React.Component {
                                         </h4>
                                     </div>
                                     <div className="col-sm-2">
-                                        <button type="button"
-                                            onClick={
-                                                () => {
-                                                    window.location.assign('/fcdrr-report')
-                                                }
-                                            } className="btn btn-primary float-right mx-2">
+                                        <a href='/fcdrr-submissions' className="btn btn-primary float-right mx-2">
                                             <i class="fas fa-arrow-left"></i> Back
-                                        </button>
+                                        </a>
                                     </div>
 
                                 </div>
@@ -369,7 +415,7 @@ class FcdrrTool extends React.Component {
                                         <div className="col-sm-2">
                                             <a className='btn btn-light btn-sm float-right' href="/fcdrr-report">&larr; Go back</a>
                                         </div>
-                                        <hr/>
+                                        <hr />
                                         <div className='col-md-12'>
                                             {
                                                 this.props.isEdit && !this.props.canUpdate ?
@@ -406,8 +452,8 @@ class FcdrrTool extends React.Component {
                                         dateFormat="yyyy/MM"
                                         selected={this.state.reportDate}
                                         onChange={(date) => {
-                                            console.log('currdate', this.state.reportDate)
-                                            console.log('newdate', date)
+                                            // console.log('currdate', this.state.reportDate)
+                                            // console.log('newdate', date)
                                             this.setState({
                                                 reportDate: date
                                             })
@@ -440,8 +486,8 @@ class FcdrrTool extends React.Component {
                     <div style={{ "height": "15px", "marginBottom": "3px" }}></div>
                 </div>
 
-                <div style={{ "overflowX": "auto" }} className="row scroll2">
-                    <table id="select" className="unstrip">
+                <div style={{ "overflowX": "auto", padding: '1.4em 0' }} className="row scroll2">
+                    <table id="select" className="unstrip" style={{marginBottom: '3em'}}>
                         <tbody>
                             <tr className="boldTdChildText">
                                 <td rowSpan={2}>#</td>
@@ -466,7 +512,7 @@ class FcdrrTool extends React.Component {
                                 <td>Number of<br /> Tests done <br />(include repeats, QA/QC)</td>
                                 <td>Losses (damages, expiries & unaccounted for) </td>
                                 {/* <td>Losses (errors, invalid & undetermined) </td> */}
-                                <td>Losses reasons (Comments) </td>
+                                <td style={{width: '300px'}}>Losses reasons (Comments) </td>
                                 <td>Positive</td>
                                 <td>Negative</td>
                             </tr>
