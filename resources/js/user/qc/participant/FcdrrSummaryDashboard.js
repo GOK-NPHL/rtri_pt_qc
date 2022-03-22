@@ -291,34 +291,36 @@ class FcdrrSummaryDashboard extends React.Component {
                                         ))}
                                     </select>
                                 </div>
+                                {(this.state.userParams && this.state.userParams.permissions && this.state.userParams.permissions.includes('view_national_fcdrr_dash')) && <>
                                 <div className='col-sm-4'>
-                                    <span>
-                                        <small style={{color: '#9a9a9a', fontSize: '11px', lineHeight:'0.9'}}>County:</small>
-                                        &nbsp;
-                                        <small style={{
-                                            // backgroundColor: '#e4f0f5', padding: '0px 2px', border: '1px solid #d8d8fa', borderRadius:'4px',
-                                             whiteSpace: 'nowrap', fontSize: '13px'}}>{this.state.reportsQuery.county_name ? this.state.reportsQuery.county_name : this.state.reportsQuery.county_id ? this.state.counties.find(ct => ct.id == this.state.reportsQuery.county_id)?.name : 'National (Kenya)'}</small>
-                                    </span>
-                                    <select className='form-control' value={this.state.reportsQuery.county_id} style={{ padding: '2px', fontSize: '14px', color: '#228ccc', backgroundColor: '#f4f4fc', height: '33px' }} onChange={ev => {
-                                        let qry = this.state.reportsQuery;
-                                        if(ev.target.value != '-'){
-                                            qry.county_id = ev.target.value;
-                                        }else{
-                                            qry.county_id = null;
-                                        }
-                                        this.setState({
-                                            reportsQuery: qry
-                                        })
-                                        this.fetchReportingRates(qry);
-                                        this.fetchAllReports(qry);
-                                    }}>
-                                        <option value={"-"} disabled>Select County</option>
-                                        <option value={"-"}>National (Kenya)</option>
-                                        {this.state.counties && this.state.counties.length>0 && this.state.counties.map((county,ky) => {
-                                            return <option key={county.id+"-"+ky} value={county.id || "-"}>{county.name || "-"}</option>
-                                        })}
-                                    </select>
+                                        <span>
+                                            <small style={{color: '#9a9a9a', fontSize: '11px', lineHeight:'0.9'}}>County:</small>
+                                            &nbsp;
+                                            <small style={{
+                                                // backgroundColor: '#e4f0f5', padding: '0px 2px', border: '1px solid #d8d8fa', borderRadius:'4px',
+                                                whiteSpace: 'nowrap', fontSize: '13px'}}>{this.state.reportsQuery.county_name ? this.state.reportsQuery.county_name : this.state.reportsQuery.county_id ? this.state.counties.find(ct => ct.id == this.state.reportsQuery.county_id)?.name : 'National (Kenya)'}</small>
+                                        </span>
+                                        <select className='form-control' value={this.state.reportsQuery.county_id} style={{ padding: '2px', fontSize: '14px', color: '#228ccc', backgroundColor: '#f4f4fc', height: '33px' }} onChange={ev => {
+                                            let qry = this.state.reportsQuery;
+                                            if(ev.target.value != '-'){
+                                                qry.county_id = ev.target.value;
+                                            }else{
+                                                qry.county_id = null;
+                                            }
+                                            this.setState({
+                                                reportsQuery: qry
+                                            })
+                                            this.fetchReportingRates(qry);
+                                            this.fetchAllReports(qry);
+                                        }}>
+                                            <option value={"-"} disabled>Select County</option>
+                                            <option value={"-"}>National (Kenya)</option>
+                                            {this.state.counties && this.state.counties.length>0 && this.state.counties.map((county,ky) => {
+                                                return <option key={county.id+"-"+ky} value={county.id || "-"}>{county.name || "-"}</option>
+                                            })}
+                                        </select>
                                 </div>
+                                </>}
                                 <div className='col-sm-4'>
                                     <span>
                                         <small style={{color: '#9a9a9a', fontSize: '11px', lineHeight:'0.9'}}>Commodity:</small>
