@@ -86,6 +86,7 @@ class ParticipantController extends Controller
                 'password' => Hash::make($request->personel['password']),
                 'has_qc_access' => $request->personel['has_qc_access'],
                 'has_pt_access' => $request->personel['has_pt_access'],
+                'roles' => json_encode($request->personel['roles']) ?? array(),
             ]);
             $lab = Laboratory::find($request->personel['facility']);
             $lab->personel()->save($user);

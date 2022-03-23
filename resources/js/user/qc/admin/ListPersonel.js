@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
-import { FetchLabPersonel, exportToExcel } from '../../../components/utils/Helpers';
+import { FetchLabPersonel, exportToExcel, getAMresource} from '../../../components/utils/Helpers';
 
 
 class ListPersonel extends React.Component {
@@ -19,6 +19,7 @@ class ListPersonel extends React.Component {
             startTableData: 0,
             endeTableData: 10,
             activePage: 1,
+            allRoles: [],
         }
         this.handlePageChange = this.handlePageChange.bind(this)
     }
@@ -26,13 +27,31 @@ class ListPersonel extends React.Component {
     componentDidMount() {
 
         (async () => {
-            let response = await FetchLabPersonel();
-            this.setState({
-                data: response
-            });
+            let returnedData = await getAMresource('roles');
+            if (returnedData.status === 200) {
+                this.setState({
+                    allRoles: returnedData.data,
+                });
+            } else {
+                this.setState({
+                    allRoles: [],
+                    message: returnedData.statusText || returnedData.message || 'An error occured while fetching roles'
+                });
+            }
         })();
+        setTimeout(() => {
+            (async () => {
+                let response = await FetchLabPersonel();
+                this.setState({
+                    data: response
+                });
+            })();
+        }, 200);
+
 
     }
+
+    
 
     handlePageChange(pageNumber) {
         let pgNumber = pageNumber * 10 + 1;
@@ -71,6 +90,17 @@ class ListPersonel extends React.Component {
                     <td>{element.lab_name}</td>
                     <td>{element.name} {element.second_name}</td>
                     <td>{element.phone_number}</td>
+                    <td style={{textAlign: 'left'}}><small><ul style={{listStyleType:'disc', margin:'0', padding: '0 12px'}}>{
+                    (element.roles && element.roles.length>0 && this.state.allRoles.length>0) ? 
+                    Array.from(this.state.allRoles, r=>{
+                        if (JSON.parse(element.roles).includes(r.id)) {
+                            return r.name
+                        }
+                    }).map(x=>{
+                        if(x && x.length>0){
+                            return <li key={x}>{x}</li>
+                        }
+                    }) : null}</ul></small></td>
                     <td>{element.email}</td>
                     <td>{element.is_active ? 'Active' : 'Inactive'}</td>
 
@@ -167,6 +197,7 @@ class ListPersonel extends React.Component {
                             <th scope="col">Laboratory Name</th>
                             <th scope="col">Personel Name</th>
                             <th scope="col">Cell/Mobile</th>
+                            <th scope="col">Roles</th>
                             <th scope="col">Primary Email</th>
                             <th scope="col">Status</th>
                             <th scope="col">Action</th>

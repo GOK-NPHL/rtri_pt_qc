@@ -303,7 +303,7 @@ class PersonelForm extends React.Component {
 
                 <div className="card" style={{ "backgroundColor": "#ecf0f1" }}>
                     <div className="card-body">
-                        <h5 className="card-title">Add New Lab Personel</h5><br />
+                        <h5 className="card-title">Add New Lab Personel.</h5><br />
                         <hr />
                         <div>
                             <form action="#" >
@@ -436,8 +436,8 @@ class PersonelForm extends React.Component {
                                             })}
                                         // onChange={this.handleRolesChange}
                                         />
-                                        {/* <pre>All: {JSON.stringify(this.state.allRoles)}</pre>
-                                        <pre>Picked: {JSON.stringify(this.state.userRoles)}</pre> */}
+                                        {/* <pre>All: {JSON.stringify(this.state.allRoles)}</pre> */}
+                                        <pre>Picked: {JSON.stringify(this.state.userRoles)}</pre>
                                     </>}
                                 </div>
 
