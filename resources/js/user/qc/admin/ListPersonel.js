@@ -114,7 +114,7 @@ class ListPersonel extends React.Component {
                                         window.location.assign('edit-personel/' + element.id)
                                     }
                                 }
-                                style={{ 'marginRight': '5px' }}
+                                style={{ 'marginRight': '5px', display:'flex', alignItems: 'center' }}
                                 className="d-none d-sm-inline-block btn btn-sm btn-info shadow-sm text-white">
                                 <i className="fas fa-edit"></i> Edit
                             </a>
