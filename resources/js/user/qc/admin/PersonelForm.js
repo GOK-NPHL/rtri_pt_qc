@@ -268,6 +268,10 @@ class PersonelForm extends React.Component {
     componentDidUpdate() {
         try {
             $('#u_facility').selectpicker();
+            if(this.state.facility && this.state.facility != '' && this.state.facility != null){
+                $('#u_facility').val(this.state.facility);
+                $('#u_facility').selectpicker('refresh');
+            }
         } catch (err) {
 
         }
