@@ -1048,6 +1048,7 @@ class SubmitResults extends React.Component {
                                     value={this.state.testJustification} onChange={() => this.onTestJustificationHandler(event)}
                                     className="custom-select" aria-label="Default select example">
                                     <option selected>Biweekly testing as per the protocol</option>
+                                    <option>Monthly testing as per the protocol</option>
                                     <option>New kit lot/batch</option>
                                     <option>Change in environmental conditions</option>
                                 </select>
