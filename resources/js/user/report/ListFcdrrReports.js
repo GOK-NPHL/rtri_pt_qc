@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Pagination from "react-js-pagination";
-import { FetchAllFcdrrReports } from '../../components/utils/Helpers';
+import { FetchAllFcdrrReports, exportToExcel, getAllCommodities } from '../../components/utils/Helpers';
 
 
 class ListFcdrrReports extends React.Component {
@@ -31,6 +31,21 @@ class ListFcdrrReports extends React.Component {
             this.setState({
                 data: response
             });
+        })();
+
+        (async () => {
+            let al_c = await getAllCommodities();
+            if (al_c.status == 200) {
+                this.setState({
+                    all_commodities: al_c.data
+                });
+                console.log(al_c.data);
+            } else {
+                this.setState({
+                    all_commodities: []
+                });
+                console.log(al_c);
+            }
         })();
 
     }
@@ -149,17 +164,23 @@ class ListFcdrrReports extends React.Component {
                     </div>
                     <div className='col-md-2 text-right'>
                         <button type="button" className="btn btn-success btn-sm mx-1" onClick={() => {
-                            if(this.state.data && this.state.data.length > 0){
+                            if (this.state.data && this.state.data.length > 0) {
                                 let final_data = this.state.data.map(element => {
+                                    console.log('>>> ', element)
                                     return {
+                                        'Submitted': (element['submitted'] == 1 || element['submitted'] == 'true' || element['submitted'] == true) ? 'YES' : 'NO',
+                                        'Commodities': JSON.parse(element['commodities']).map(cdt => {
+                                            let nm = this.state.all_commodities.find(elem => elem['id'] == cdt);
+                                            return nm ? nm['commodity_name'] : cdt;
+                                        }).join(','),
                                         'County': element.county,
                                         'Lab/Facility': element.lab_name,
                                         'Start month': new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1),
-                                        'End month': new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1)
+                                        'End month': new Date(element['report_date']).getUTCFullYear() + '-' + (new Date(element['report_date']).getUTCMonth() + 1),
                                     }
                                 })
-                                exportToExcel(final_data, 'Users');
-                            }else{
+                                exportToExcel(final_data, 'fcdrr-reports');
+                            } else {
                                 console.error('No data to export');
                                 alert('No data to export')
                             }
@@ -197,7 +218,7 @@ class ListFcdrrReports extends React.Component {
                     onChange={this.handlePageChange.bind(this)}
                 />
             </div>
-        </div>;
+        </div >;
 
         return (
             <React.Fragment>
