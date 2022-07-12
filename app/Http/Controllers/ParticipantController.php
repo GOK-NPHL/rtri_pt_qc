@@ -32,7 +32,10 @@ class ParticipantController extends Controller
 
     public function createParticipant(Request $request)
     {
-
+        // verify csrf 
+        if (!$request->ajax()) {
+            return response()->json(['Message' => 'Invalid request'], 400);
+        }
         try {
             Laboratory::create([
                 'institute_name' => $request->lab['institute_name'],

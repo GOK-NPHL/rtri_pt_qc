@@ -12,7 +12,7 @@
             color:white;">
                 <div>
 
-                    <h3 class="color:white;">Participant Login - <span> RTRI Quality Control</span></h3>
+                    <h3 class="color:white;">Participant Signup - <span> RTRI Quality Control</span></h3>
                 </div>
                 <form name="loginForm" id="login_form" class="form-vertical" method="POST" action="{{ route('participant-login') }}">
                     @csrf
@@ -21,9 +21,29 @@
                     @endif
                     <input id="user_type" type="text" class="form-control" value="participant" name="user_type" hidden>
                     <div class="form-group">
+                        <label for="fname" class="uname" data-icon="u"> First name </label>
+
+                        <input id="fname" name="fname" class="isRequired form-control" title="Please enter your first name" type="text" placeholder="John" />
+                        @error('fname')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="lname" class="uname" data-icon="u"> Last name </label>
+
+                        <input id="lname" name="lname" class="isRequired form-control" title="Please enter your last name" type="text" placeholder="Ndiema" />
+                        @error('lname')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="email" class="uname" data-icon="u"> Email address </label>
 
-                        <input id="email" name="email" class="isRequired form-control" title="Please enter your email address" type="text" placeholder="mymail@mail.com" />
+                        <input id="email" name="email" class="isRequired form-control" title="Please enter your email address" type="email" placeholder="mymail@mail.com" />
                         @error('email')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -41,30 +61,20 @@
                         @enderror
                     </div>
 
-                    <div class="box-footer">
-                        <input type="submit" class="btn col-md-12 btn-lg btn-info" value="Sign in" />
+                    <div class="box-footer text-center">
+                        <input type="submit" class="btn col-md-12 btn-lg btn-info" value="Sign up" />
+                        <hr/>
+                        <p>Have an account? <a href="{{route('participant-login')}}">Log in</a></p>
                     </div>
 
                     <div>
-                        <div class="form-check" style="margin-top: 12px;">
-                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                            <label class="form-check-label" for="remember">
-                                {{ __('Remember Me') }}
-                            </label>
+                        <hr/>
+                        <div class="form-check text-center">
+                            <p>Your account will need to be approved before you can log in. Please contact the administrator to activate your account.</p>
+                            <a style="display: inline-block;" class="btn btn-link" href="http://helpdesk.nphl.go.ke/index.php?a=add">
+                                RTRI HELP DESK
+                            </a>
                         </div>
-                        <!-- <a href="/auth/reset-password" style="font-size:0.8em;color:white;">Forgot Password?</a> -->
-                        <!--<a href="/contact-us" style="">Don't have a login ? Click here to contact us</a>-->
-
-                        <a style="display: inline-block;" class="btn btn-link" href="{{ route('participant-signup') }}">
-                            {{ __('Don\'t have an account?') }}
-                        </a>
-                        | <a style="display: inline-block;" class="btn btn-link" href="{{ route('password.request') }}">
-                            {{ __('Forgot Your Password?') }}
-                        </a>
-                        | <a style="display: inline-block;" class="btn btn-link" href="http://helpdesk.nphl.go.ke/index.php?a=add">
-                            RTRI HELP DESK
-                        </a>
                     </div>
 
                 </form>
