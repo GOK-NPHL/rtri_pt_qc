@@ -20,6 +20,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        #app{
+            min-height: 94vh;
+        }
+    </style>
 </head>
 
 <body style="background-image: url('{{asset('images/pt.png')}}');
@@ -32,7 +37,7 @@
         </main>
     </div>
 
-    <footer class="text-center" id="footerz" style="background-color: black; position: absolute; bottom: 0; width: 100%;">
+    <footer class="text-center" id="footerz" style="background-color: black; position: relative; bottom: 0; width: 100%;">
 
         <div class="row d-flex justify-content-center">
             <!--Grid column-->

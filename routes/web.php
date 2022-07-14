@@ -34,6 +34,7 @@ Route::get('participant-login', [CustomAuthController::class, 'getParticipantLog
 Route::get('participant-signup', [CustomAuthController::class, 'getParticipantSignupPage'])->name('participant-signup');
 Route::get('login', [CustomAuthController::class, 'index'])->name('login');
 Route::post('participant-login', [CustomAuthController::class, 'doLogin'])->name('participant-login');
+Route::post('participant-signup', [CustomAuthController::class, 'doSignup'])->name('participant-signup');
 Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
 Route::post('custom-registration', [CustomAuthController::class, 'customRegistration'])->name('register.custom');
 Route::get('logout', [CustomAuthController::class, 'signOut'])->name('logout');

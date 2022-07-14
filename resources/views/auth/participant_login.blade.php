@@ -5,7 +5,7 @@
 
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="login-box home-purple" style="max-width: 430px; margin: auto; 
+            <div class="login-box home-purple" style="max-width: 550px; margin: auto; 
             padding:15px;
             margin-top: 100px; 
             background-color: purple;
@@ -17,7 +17,15 @@
                 <form name="loginForm" id="login_form" class="form-vertical" method="POST" action="{{ route('participant-login') }}">
                     @csrf
                     @if($errors->any())
-                    <span style="color:red">{{$errors->first()}}</span>
+                    <hr/>
+                    <div class="alert alert-danger" style="white-space: pre-line; overflow: auto">{{$errors->first()}}</div>
+                    </hr/>
+                    @endif
+                    <!-- show success msg for successful signups -->
+                    @if(session()->has('success'))
+                    <hr/>
+                    <div class="alert alert-success" style="white-space: pre-line; overflow: auto">{{session()->get('success')}}</div>
+                    </hr/>
                     @endif
                     <input id="user_type" type="text" class="form-control" value="participant" name="user_type" hidden>
                     <div class="form-group">
@@ -44,6 +52,10 @@
                     <div class="box-footer">
                         <input type="submit" class="btn col-md-12 btn-lg btn-info" value="Sign in" />
                     </div>
+                    <hr />
+                    <div class="box-footer text-center">
+                        <p>Don't have an account? <a href="{{route('participant-signup')}}">Sign up</a></p>
+                    </div>
 
                     <div>
                         <div class="form-check" style="margin-top: 12px;">
@@ -53,8 +65,6 @@
                                 {{ __('Remember Me') }}
                             </label>
                         </div>
-                        <!-- <a href="/auth/reset-password" style="font-size:0.8em;color:white;">Forgot Password?</a> -->
-                        <!--<a href="/contact-us" style="">Don't have a login ? Click here to contact us</a>-->
 
                         <a style="display: inline-block;" class="btn btn-link" href="{{ route('participant-signup') }}">
                             {{ __('Don\'t have an account?') }}

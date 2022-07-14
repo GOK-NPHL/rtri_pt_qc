@@ -7,17 +7,19 @@
         <div class="col-md-8">
             <div class="login-box home-purple" style="max-width: 430px; margin: auto; 
             padding:15px;
-            margin-top: 100px; 
+            margin-top: 70px; 
             background-color: purple;
             color:white;">
                 <div>
 
                     <h3 class="color:white;">Participant Signup - <span> RTRI Quality Control</span></h3>
                 </div>
-                <form name="loginForm" id="login_form" class="form-vertical" method="POST" action="{{ route('participant-login') }}">
+                <form name="signupForm" id="signup_form" class="form-vertical" method="POST" action="{{ route('participant-signup') }}">
                     @csrf
                     @if($errors->any())
-                    <span style="color:red">{{$errors->first()}}</span>
+                        <hr/>
+                        <div class="alert alert-danger" style="white-space: pre-line; overflow: auto">{{$errors->first()}}</div>
+                        </hr/>
                     @endif
                     <input id="user_type" type="text" class="form-control" value="participant" name="user_type" hidden>
                     <div class="form-group">
@@ -51,10 +53,30 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="phone" class="uname" data-icon="u"> Phone number </label>
+
+                        <input id="phone" name="phone" class="isRequired form-control" title="Please enter your phone nymber" type="number" placeholder="0712345678" />
+                        @error('phone')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $phone }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="password" class="youpasswd" data-icon="p"> Password </label>
 
                         <input id="password" name="password" class="isRequired form-control" title="Please enter your password" type="password" placeholder="eg. X8df!90EO" />
                         @error('password')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="password_repeat" class="youpasswd" data-icon="p"> Repeat password </label>
+
+                        <input id="password_repeat" name="password_repeat" class="isRequired form-control" title="Please repeat your password" type="password" placeholder="eg. X8df!90EO" />
+                        @error('password_repeat')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -85,7 +107,7 @@
 
     <style>
         #footer {
-            position: absolute;
+            /* position: absolute; */
             bottom: 0;
             width: 100%;
             height: 60px;
