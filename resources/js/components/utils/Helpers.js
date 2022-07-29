@@ -1002,11 +1002,18 @@ export async function SaveFcdrrSetting(value, name) {
     }
 }
 
-export async function saveCommodity(payload) {
+export async function saveCommodity(payload, id) {
     try {
+        let url = `${settings.serverBaseApi}/fcdrr/commodities`
+        let method = 'post'
+        if(id && id != null && id != ''){
+            url += `/${id}`
+            method = 'put'
+            // delete payload.id
+        }
         const response = await axios({
-            method: 'post',
-            url: `${settings.serverBaseApi}/fcdrr/commodities`,
+            method: method,
+            url: url,
             data: {
                 ...payload
             }

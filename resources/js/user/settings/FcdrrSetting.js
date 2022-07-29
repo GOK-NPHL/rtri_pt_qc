@@ -15,6 +15,7 @@ class FcdrrSetting extends React.Component {
                 unit_of_issue: "",
                 manufacturer: ""
             },
+            editState: false,
             commodities: [],
         }
         this.windowPeriodhandler = this.windowPeriodhandler.bind(this);
@@ -69,6 +70,7 @@ class FcdrrSetting extends React.Component {
             newCommodity: {
                 ...commodity
             },
+            editState: true
         })
     }
 
@@ -109,7 +111,12 @@ class FcdrrSetting extends React.Component {
             return;
         }
         (async () => {
-            let response = await saveCommodity(newCommodity);
+            let response 
+            if(this.state.editState){
+                response = await saveCommodity(newCommodity, this.state.newCommodity.id);
+            }else{
+                response = await saveCommodity(newCommodity);
+            }
             if (response.status == 200) {
                 this.setState({
                     message: response?.data?.Message || response?.message || response?.message || 'Commodity saved successfully',
@@ -129,7 +136,7 @@ class FcdrrSetting extends React.Component {
             } else {
                 console.error(response);
                 this.setState({
-                    message: response?.data?.Message || response?.message || response?.message || 'Error saving commodity',
+                    message: response?.data?.Message || response?.message || response?.message || 'Error saving commodity: '+(response.data.message || ''),
                 });
                 $('#settingModal').modal('toggle');
             }
