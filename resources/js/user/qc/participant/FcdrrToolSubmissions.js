@@ -239,23 +239,24 @@ class FcdrrToolSubmissions extends React.Component {
         let canSubmit = true;
         let isPastWindowPeriod = currDay > this.state.windowPeriod;
 
-        // console.log('currYMonth:', currYMonth)
-        // console.log('this.state.latestDate:', this.state.latestDate)
-        // console.log('isPastWindowPeriod: ',isPastWindowPeriod)
-
-        if (this.state.latestDate) { //check if has last months submission
-            // console.log("latestDate");
+        if (this.state.latestDate) {
             let lastReportDate = new Date(this.state.latestDate);
+            // console.log("latestDate: ", this.state.latestDate);
+            // console.log("lastReportDate: ", lastReportDate);
+            // console.log("currYear: ", currYear);
+            // console.log("currYMonth: ", currYMonth);
+            // console.log("lastReportDate.getUTCMonth(): ", lastReportDate.getUTCMonth());
             if (
                 (
                     currYear == lastReportDate.getUTCFullYear()
                     &&
-                    (currYMonth - lastReportDate.getUTCMonth()) == 1
+                    ((currYMonth-1) - lastReportDate.getUTCMonth()) == 1
                 )
                 ||
                 isPastWindowPeriod
             ) {
                 canSubmit = false
+                // console.log('canSubmit 1: ', canSubmit)
             }
 
             if ( //for new year and old comparision
@@ -268,9 +269,11 @@ class FcdrrToolSubmissions extends React.Component {
                 isPastWindowPeriod
             ) {
                 canSubmit = false
+                // console.log('canSubmit 2: ', canSubmit)
             }
         } else {
             // console.log("NOT latestdate");
+            // console.log('canSubmit 3: ', canSubmit)
             canSubmit = !isPastWindowPeriod;
         }
 
