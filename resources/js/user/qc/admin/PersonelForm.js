@@ -441,7 +441,7 @@ class PersonelForm extends React.Component {
                                         // onChange={this.handleRolesChange}
                                         />
                                         {/* <pre>All: {JSON.stringify(this.state.allRoles)}</pre> */}
-                                        <pre>Picked: {JSON.stringify(this.state.userRoles)}</pre>
+                                        {/* <pre>Picked: {JSON.stringify(this.state.userRoles)}</pre> */}
                                     </>}
                                 </div>
 
