@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Hash;
 use Session;
 use App\User;
+use App\UserRoles;
 use Facade\FlareClient\View;
 use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Hash as FacadesHash;
@@ -99,7 +100,7 @@ class CustomAuthController extends Controller
             $user->is_active = 0;
             $user->has_qc_access = 0;
             $user->has_pt_access = 0;
-            $user->roles = '[1]';
+            $user->roles = '[1]'; //[UserRoles::where('name', 'like', '%guest%')->first()->id];
             $user->save();
             return redirect()->route('participant-login')->with('success', 'User created successfully. Please wait for administrator to activate your account.');
         } catch (\Exception $e) {
