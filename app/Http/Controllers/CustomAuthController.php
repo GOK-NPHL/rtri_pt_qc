@@ -31,7 +31,7 @@ class CustomAuthController extends Controller
     }
     public function getParticipantSignupPage()
     {
-        return view('auth.participant_signup');
+        return view('auth.participant_signup', ['laboratories' => Laboratory::all()]);
     }
 
     public function doLogin(Request $request)
@@ -93,7 +93,7 @@ class CustomAuthController extends Controller
             $user = new User;
             $user->name = $request->fname;
             $user->second_name = $request->lname;
-            $user->laboratory_id = Laboratory::where('institute_name', 'like', '%demo%')->first()->id ?? 8;
+            $user->laboratory_id = $request->laboratory; //Laboratory::where('institute_name', 'like', '%demo%')->first()->id ?? 8;
             $user->email = $request->email;
             $user->phone_number = $request->phone;
             $user->password = FacadesHash::make($request->password);

@@ -62,6 +62,16 @@
                         </span>
                         @enderror
                     </div>
+                    <!-- laboratory -->
+                    <div class="form-group">
+                        <label for="laboratory" class="uname" data-icon="u"> Laboratory/Facility</label>
+                        <select id="laboratory" name="laboratory" class="form-control" title="Please select your laboratory">
+                            <option value="">Select Laboratory</option>
+                            @foreach($laboratories as $laboratory)
+                            <option value="{{ $laboratory->id }}">{{ $laboratory->lab_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="password" class="youpasswd" data-icon="p"> Password </label>
 
