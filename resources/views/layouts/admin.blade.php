@@ -87,7 +87,7 @@ use Illuminate\Support\Facades\Gate;
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{route('list-personel')}}">QC Lab Personel</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{route('fcdrr-settings')}}">Fcdrr Settings</a>
+                                    {{-- <a class="dropdown-item" href="{{route('fcdrr-settings')}}">Fcdrr Settings</a> --}}
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
@@ -105,11 +105,11 @@ use Illuminate\Support\Facades\Gate;
                                 </div>
                             </li>
 
-                            <li class="nav-item dropdown">
+                             {{--<li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Reports
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{route('fcdrr-report')}}">FCDRR Submissions</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{route('fcdrr-indicators')}}">FCDRR Indicators</a>
@@ -118,7 +118,7 @@ use Illuminate\Support\Facades\Gate;
 
                                     <!--    <a class="dropdown-item" href="#">Something else here</a> -->
                                 </div>
-                            </li>
+                            </li>--}}
 
                         </ul>
 

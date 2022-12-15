@@ -114,7 +114,7 @@ use Illuminate\Routing\Router;
                         <?php } ?>
 
                         <?php if (Gate::allows('view_qc_component')) { ?>
-                            <li class="nav-item has-treeview menu-open mb-2">
+                            {{-- <li class="nav-item has-treeview menu-open mb-2">
                                 <a href="{{ route('fcdrr-dashboard') }}" class="nav-link {{ Route::is('fcdrr-dashboard') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-boxes"></i>
                                     <p>
@@ -129,7 +129,7 @@ use Illuminate\Routing\Router;
                                         FCDRR Submissions
                                     </p>
                                 </a>
-                            </li>
+                            </li> --}}
                         <?php } ?>
 
                         <!-- <?php

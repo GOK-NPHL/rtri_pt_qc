@@ -69,15 +69,15 @@ Route::get('list-readiness', [PTAdminController::class, 'listReadiness'])->name(
 Route::get('edit-readiness/{readinessId}', [PTAdminController::class, 'editReadiness'])->name('edit-readiness');
 Route::get('add-readiness', [PTAdminController::class, 'addReadiness'])->name('add-readiness');
 
-Route::get('fcdrr-dashboard', [QCParticipantController::class, 'fcdrrDashboard'])->name('fcdrr-dashboard');
-Route::get('fcdrr-submissions', [QCParticipantController::class, 'fcdrrSubmissions'])->name('fcdrr-submissions');
+// Route::get('fcdrr-dashboard', [QCParticipantController::class, 'fcdrrDashboard'])->name('fcdrr-dashboard');
+// Route::get('fcdrr-submissions', [QCParticipantController::class, 'fcdrrSubmissions'])->name('fcdrr-submissions');
 
-Route::get('fcdrr-report', 'QC\QCAdminController@listFcdrrReports')->name('fcdrr-report');
-Route::get('get-fcdrr-report/{id}', 'QC\QCAdminController@fcdrrReport')->name('get-fcdrr-report');
+// Route::get('fcdrr-report', 'QC\QCAdminController@listFcdrrReports')->name('fcdrr-report');
+// Route::get('get-fcdrr-report/{id}', 'QC\QCAdminController@fcdrrReport')->name('get-fcdrr-report');
 
-Route::get('fcdrr-indicators', 'QC\QCAdminController@fcdrrIndicators')->name('fcdrr-indicators');
+// Route::get('fcdrr-indicators', 'QC\QCAdminController@fcdrrIndicators')->name('fcdrr-indicators');
 
-Route::get('fcdrr-settings', 'QC\QCAdminController@fcdrrSettings')->name('fcdrr-settings');
+// Route::get('fcdrr-settings', 'QC\QCAdminController@fcdrrSettings')->name('fcdrr-settings');
 
 Route::prefix('access-management')->group(function () {
     Route::redirect('/', '/access-management/roles');
