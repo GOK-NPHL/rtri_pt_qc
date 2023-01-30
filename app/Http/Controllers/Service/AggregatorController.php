@@ -138,6 +138,12 @@ class AggregatorController extends Controller
             ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
             ->where('qcsubmissions.qc_tested', 1)
+            /** TODO
+             * Scenario 1: control line is 0 and longterm line is 0 and verification line is 0
+             * Scenario 2: control line is 0 and longterm line is 0 and verification line is 1
+             * Scenario 3: control line is 0 and longterm line is 1 and verification line is 1
+             * Scenario 4: control line is 1 and longterm line is 1 and verification line is 0
+             */
             ->where(function ($q) {
                 $q->where('qc_submission_results.control_line', 0)
                     ->orWhere(function ($q) {
