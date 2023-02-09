@@ -23,7 +23,7 @@ services:
   rtriqc_app:
     build:
       args:
-        user: duncan
+        user: bbett
         uid: 1000
       context: ./
       dockerfile: Dockerfile

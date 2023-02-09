@@ -48,7 +48,7 @@ class AggregatorController extends Controller
             laboratories.id as lab_id,
                 qcsubmissions.qc_lot_no,
                 counties.name as county_name,
-                count(*) as correct_count,
+                count(qcsubmissions.id) as correct_count,
                 CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
             '
         )
@@ -60,6 +60,8 @@ class AggregatorController extends Controller
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 1)
             ->where('qc_submission_results.type', 'recent')
+            // TODO: check 'submitted' status - DONE - Update legacy data first before activating this
+            // ->where('qcsubmissions.submitted', 1)
             ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'recent');
@@ -75,7 +77,7 @@ class AggregatorController extends Controller
                 laboratories.id as lab_id,
                     qcsubmissions.qc_lot_no,
                     counties.name as county_name,
-                    count(*) as correct_count,
+                    count(qcsubmissions.id) as correct_count,
                     CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
                     '
         )
@@ -87,6 +89,8 @@ class AggregatorController extends Controller
             ->where('qc_submission_results.longterm_line', 1)
             ->where('qc_submission_results.verification_line', 1)
             ->where('qc_submission_results.type', 'longterm')
+            // TODO: check 'submitted' status - DONE - Update legacy data first before activating this
+            // ->where('qcsubmissions.submitted', 1)
             ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'longterm');
@@ -102,7 +106,7 @@ class AggregatorController extends Controller
                     laboratories.id as lab_id,
                         qcsubmissions.qc_lot_no,
                         counties.name as county_name,
-                        count(*) as correct_count,
+                        count(qcsubmissions.id) as correct_count,
                         CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
                         '
         )
@@ -114,6 +118,8 @@ class AggregatorController extends Controller
             ->where('qc_submission_results.longterm_line', 0)
             ->where('qc_submission_results.verification_line', 0)
             ->where('qc_submission_results.type', 'negative')
+            // TODO: check 'submitted' status - DONE - Update legacy data first before activating this
+            // ->where('qcsubmissions.submitted', 1)
             ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no');
 
         $results = $this->joinToTotalTested($correctCounts, 'negative');
@@ -130,7 +136,7 @@ class AggregatorController extends Controller
                     laboratories.id as lab_id,
                         qcsubmissions.qc_lot_no,
                         counties.name as county_name,
-                        count(*) as correct_count,
+                        count(qcsubmissions.id) as correct_count,
                         CONCAT(CAST(YEAR(qcsubmissions.testing_date) as CHAR),"-",CAST(MONTH(qcsubmissions.testing_date) as CHAR)) as testing_date
                         '
         )
@@ -138,12 +144,41 @@ class AggregatorController extends Controller
             ->join('counties', 'counties.id', '=', 'laboratories.county')
             ->join('qc_submission_results', 'qc_submission_results.qcsubmission_id', '=', 'qcsubmissions.id')
             ->where('qcsubmissions.qc_tested', 1)
-            /** TODO
-             * Scenario 1: control line is 0 and longterm line is 0 and verification line is 0
-             * Scenario 2: control line is 0 and longterm line is 0 and verification line is 1
-             * Scenario 3: control line is 0 and longterm line is 1 and verification line is 1
-             * Scenario 4: control line is 1 and longterm line is 1 and verification line is 0
-             */
+            // ---------- < START SCENARIOS ----------
+            /* TODO 1:
+             * Scenario 1: CONTROL_LINE is 0 and LONGTERM(LT) is 0 and VERIFICATION_LINE is 0
+            */
+            // ->where(function ($query) {
+            //     $query->where('qc_submission_results.control_line', 0)
+            //         ->where('qc_submission_results.longterm_line', 0)
+            //         ->where('qc_submission_results.verification_line', 0);
+            
+            //     })
+            // /* TODO 2:
+            //  * Scenario 2: CONTROL_LINE is 0 and LONGTERM(LT) is 0 and VERIFICATION_LINE is 1
+            // */
+            // ->orWhere(function ($q) {
+            //     $q->where('qc_submission_results.control_line', 0)
+            //         ->where('qc_submission_results.longterm_line', 0)
+            //         ->where('qc_submission_results.verification_line', 1);
+            // })
+            // /* TODO 3:
+            //  * Scenario 3: CONTROL_LINE is 0 and LONGTERM(LT) is 1 and VERIFICATION_LINE is 1
+            // */
+            // ->orWhere(function ($q) {
+            //     $q->where('qc_submission_results.control_line', 0)
+            //         ->where('qc_submission_results.longterm_line', 1)
+            //         ->where('qc_submission_results.verification_line', 1);
+            // })
+            // /* TODO 4:
+            //  * Scenario 4: CONTROL_LINE is 1 and LONGTERM(LT) is 1 and VERIFICATION_LINE is 0
+            // */
+            // ->orWhere(function ($q) {
+            //     $q->where('qc_submission_results.control_line', 1)
+            //         ->where('qc_submission_results.longterm_line', 1)
+            //         ->where('qc_submission_results.verification_line', 0);
+            // })
+            // ---------- END SCENARIOS /> ----------
             ->where(function ($q) {
                 $q->where('qc_submission_results.control_line', 0)
                     ->orWhere(function ($q) {
@@ -153,6 +188,8 @@ class AggregatorController extends Controller
                             ->where('qc_submission_results.type', 'longterm');
                     });
             })
+            // TODO: check 'submitted' status - DONE - Update legacy data first before activating this
+            // ->where('qcsubmissions.submitted', 1)
             ->groupBy('laboratories.id', 'counties.name', 'testing_date', 'qcsubmissions.qc_lot_no');
         $results = $this->joinToTotalTested($correctCounts, "invalids");
 
